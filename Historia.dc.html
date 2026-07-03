@@ -49,6 +49,8 @@
   .acg-dd{position:absolute;top:100%;left:-12px;margin-top:8px;background:#fff;border:1px solid #E9EEF4;border-radius:14px;padding:8px 0;min-width:200px;box-shadow:0 12px 32px rgba(10,42,94,.12);opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .2s,visibility .2s,transform .2s;z-index:900}
   .acg-dd-link{display:block;padding:9px 18px;text-decoration:none;color:#33414F;font:500 13.5px 'Public Sans';white-space:nowrap;transition:background .15s,color .15s}
   .acg-dd-link:hover{background:#F0F4F9;color:#0A2A5E}
+  .acg-mob-overlay{position:fixed;inset:0;z-index:790;background:rgba(7,30,69,.64);backdrop-filter:blur(7px);padding:86px 16px 16px}
+  .acg-mob-menu{background:#0A2A5E;border-radius:24px;padding:22px 20px 26px;box-shadow:0 32px 70px rgba(10,42,94,.32)}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"PoliticalParty","name":"Acción Civil Gandia","alternateName":"Acció Civil Gandia","url":"https://accioncivilgandia.org","description":"Partido político local, ciudadano e independiente de Gandia, Valencia. Formación municipalista centrada en los problemas reales de los vecinos de Gandia, el Grao de Gandia y la Playa de Gandia.","foundingDate":"2022","address":{"@type":"PostalAddress","streetAddress":"Avda. República Argentina 42, entresuelo","addressLocality":"Gandia","addressRegion":"Valencia","postalCode":"46702","addressCountry":"ES"},"areaServed":{"@type":"City","name":"Gandia","containedInPlace":{"@type":"AdministrativeArea","name":"Valencia, Comunitat Valenciana, España"}},"knowsLanguage":["es","ca"],"keywords":"partido político Gandia, elecciones municipales Gandia, propuestas Gandia, participación ciudadana Gandia, Grao de Gandia, Playa de Gandia, seguridad Gandia, policía proximidad Gandia, pequeño comercio Gandia, municipalista Gandia"}
@@ -93,9 +95,32 @@
             <button class="acg-btn" onClick="{{ setVA }}" style="border:none;cursor:pointer;font:700 12.5px 'Public Sans';padding:6px 11px;border-radius:7px;background:{{ vaBg }};color:{{ vaCol }}">VA</button>
           </div>
           <a href="Participacion.dc.html" class="acg-btn" style="display:{{ ctaHeadDisp }};text-decoration:none;background:#1563C4;color:#fff;font:700 14px 'Public Sans';padding:11px 18px;border-radius:11px;box-shadow:0 8px 20px rgba(21,99,196,.26)">{{ t.participa }}</a>
+          <button class="acg-btn" onClick="{{ toggleMenu }}" style="display:{{ hamDisp }};width:40px;height:40px;border-radius:11px;border:none;background:#0A2A5E;cursor:pointer;align-items:center;justify-content:center" aria-label="Menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+          </button>
         </div>
       </div>
     </header>
+
+    <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+      <div class="acg-mob-overlay" onClick="{{ closeMenu }}">
+        <div class="acg-mob-menu" onClick="{{ stopEvt }}">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px">
+            <div style="font:800 22px 'Bricolage Grotesque';color:#fff">{{ t.menuTitle }}</div>
+            <button class="acg-btn" onClick="{{ closeMenu }}" style="width:40px;height:40px;border-radius:11px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);cursor:pointer;display:flex;align-items:center;justify-content:center">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+            </button>
+          </div>
+          <div style="display:flex;flex-direction:column">
+            <sc-for list="{{ nav }}" as="n" hint-placeholder-count="7">
+              <a href="{{ n.href }}" onClick="{{ closeMenu }}" style="text-decoration:none;color:#fff;font:700 22px 'Bricolage Grotesque';padding:13px 0;border-bottom:1px solid rgba(255,255,255,.1)">{{ n.label }}</a>
+            </sc-for>
+          </div>
+          <a href="Participacion.dc.html" onClick="{{ closeMenu }}" class="acg-btn" style="margin-top:18px;text-decoration:none;background:#F6BE18;color:#0A2A5E;font:800 15px 'Public Sans';padding:15px 20px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%">{{ t.participa }}</a>
+        </div>
+      </div>
+    </sc-if>
+
 
     <!-- BREADCRUMB -->
     <main id="main-content">
@@ -244,8 +269,12 @@
 <script type="text/x-dc" data-dc-script>
 
 class Component extends DCLogic {
-  state = { lang:this.initLang(), device:'desktop' };
+  state = { lang:this.initLang(), device:null, viewportW:this.vw(), menuOpen:false };
   initLang(){ try{ return localStorage.getItem('acg_lang')||'es'; }catch(e){ return 'es'; } }
+  vw(){ try{ return Math.max(document.documentElement?document.documentElement.clientWidth:0, window.innerWidth||0, 320); }catch(e){ return 1280; } }
+  syncVp(){ const w=this.vw(); try{ document.documentElement.setAttribute('data-acg-mobile',w<=900?'1':'0'); }catch(e){} this.setState({viewportW:w}); }
+  componentDidMount(){ this._onR=()=>this.syncVp(); this._onR(); try{ window.addEventListener('resize',this._onR,{passive:true}); }catch(e){ window.addEventListener('resize',this._onR); } }
+  componentWillUnmount(){ if(this._onR) window.removeEventListener('resize',this._onR); }
 
   data(lang){
     const es=lang==='es', V=(a,b)=>es?a:b;
@@ -278,6 +307,7 @@ class Component extends DCLogic {
         inicio:V('Inicio','Inici'),
         conocenos:V('Conócenos','Coneix-nos'),
         participa:V('Participa','Participa'),
+        menuTitle:V('Menú','Menú'),
         pageTitle:V('Nuestra historia','La nostra història'),
         heroTag:V('Historia','Història'),
         heroTitle:V('De vecinos hartos de promesas a formación política de Gandia','De veïns farts de promeses a formació política de Gandia'),
@@ -326,14 +356,17 @@ class Component extends DCLogic {
   }
 
   renderVals(){
-    const s=this.state, d=this.data(s.lang), es=s.lang==='es', isMob=s.device==='mobile';
+    const s=this.state, d=this.data(s.lang), es=s.lang==='es';
+    const viewportW=s.viewportW||1280;
+    const forcedMob=s.device==='mobile';
+    const isMob=forcedMob||(!s.device&&viewportW<=900);
     return {
       ...d, lang:s.lang, isMob,
       footerPad: isMob?'36px 0 24px':'64px 0 30px',
       footerGrid: isMob?'1fr':'1.6fr 1fr 1fr 1.4fr',
       footerGap: isMob?'28px':'44px',
-      frameMax: isMob?'430px':'1240px',
-      frameStyle: isMob?'box-shadow:0 30px 80px rgba(10,42,94,.28);border-radius:34px;overflow:hidden;margin-top:24px;margin-bottom:24px;border:10px solid #0B1F3F;background:#F4F7FB':'background:transparent',
+      frameMax: forcedMob?'430px':'100%',
+      frameStyle: forcedMob?'box-shadow:0 30px 80px rgba(10,42,94,.28);border-radius:34px;overflow:hidden;margin-top:24px;margin-bottom:24px;border:10px solid #0B1F3F;background:#F4F7FB':'background:transparent',
       pagePad: isMob?'0 16px':'0 40px',
       heroPad: isMob?'30px 16px 34px':'50px 40px 50px',
       secPad: isMob?'34px 16px':'52px 40px',
@@ -351,6 +384,12 @@ class Component extends DCLogic {
       mobBtnBg:isMob?'#0A2A5E':'transparent', mobBtnCol:isMob?'#fff':'#5C6B7A',
       setES:()=>{ try{localStorage.setItem('acg_lang','es');}catch(e){} this.setState({lang:'es'}); },
       setVA:()=>{ try{localStorage.setItem('acg_lang','va');}catch(e){} this.setState({lang:'va'}); },
+
+      menuOpen:s.menuOpen,
+      hamDisp: isMob?'flex':'none',
+      toggleMenu:()=>this.setState(x=>({menuOpen:!x.menuOpen})),
+      closeMenu:()=>this.setState({menuOpen:false}),
+      stopEvt:(e)=>{e.stopPropagation();},
       setDesktop:()=>this.setState({device:'desktop'}),
       setMobile:()=>this.setState({device:'mobile'})
     };
