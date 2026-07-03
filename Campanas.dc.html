@@ -48,8 +48,11 @@
   .acg-dd{position:absolute;top:100%;left:-12px;margin-top:8px;background:#fff;border:1px solid #E9EEF4;border-radius:14px;padding:8px 0;min-width:200px;box-shadow:0 12px 32px rgba(10,42,94,.12);opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .2s,visibility .2s,transform .2s;z-index:900}
   .acg-dd-link{display:block;padding:9px 18px;text-decoration:none;color:#33414F;font:500 13.5px 'Public Sans';white-space:nowrap;transition:background .15s,color .15s}
   .acg-dd-link:hover{background:#F0F4F9;color:#0A2A5E}
-  .acg-mob-overlay{position:fixed;inset:0;z-index:790;background:rgba(7,30,69,.64);backdrop-filter:blur(7px);padding:86px 16px 16px}
-  .acg-mob-menu{background:#0A2A5E;border-radius:24px;padding:22px 20px 26px;box-shadow:0 32px 70px rgba(10,42,94,.32)}
+  .acg-bn{display:flex;flex-direction:column;align-items:center;text-decoration:none;color:#5C6B7A;font:600 10px 'Public Sans';gap:2px;padding:6px 2px;flex:1;text-align:center;border:none;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .acg-sheet{position:fixed;inset:0;z-index:850;background:rgba(7,30,69,.5);backdrop-filter:blur(4px)}
+  .acg-sheet-body{position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:24px 24px 0 0;padding:12px 20px max(20px,env(safe-area-inset-bottom));max-height:75vh;overflow-y:auto;box-shadow:0 -12px 40px rgba(10,42,94,.18)}
+  html[data-acg-mobile='1'] body{padding-bottom:68px}
+  html[data-acg-mobile='1'] [data-om-raster]{display:none!important}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"PoliticalParty","name":"Acción Civil Gandia","alternateName":"Acció Civil Gandia","url":"https://accioncivilgandia.org","description":"Partido político local, ciudadano e independiente de Gandia, Valencia. Formación municipalista centrada en los problemas reales de los vecinos de Gandia, el Grao de Gandia y la Playa de Gandia.","foundingDate":"2022","address":{"@type":"PostalAddress","streetAddress":"Avda. República Argentina 42, entresuelo","addressLocality":"Gandia","addressRegion":"Valencia","postalCode":"46702","addressCountry":"ES"},"areaServed":{"@type":"City","name":"Gandia","containedInPlace":{"@type":"AdministrativeArea","name":"Valencia, Comunitat Valenciana, España"}},"knowsLanguage":["es","ca"],"keywords":"partido político Gandia, elecciones municipales Gandia, propuestas Gandia, participación ciudadana Gandia, Grao de Gandia, Playa de Gandia, seguridad Gandia, policía proximidad Gandia, pequeño comercio Gandia, municipalista Gandia"}
@@ -95,34 +98,10 @@
             <button class="acg-btn" onClick="{{ setVA }}" style="border:none;cursor:pointer;font:700 12.5px 'Public Sans';padding:6px 11px;border-radius:7px;background:{{ vaBg }};color:{{ vaCol }}">VA</button>
           </div>
           <a href="Participacion.dc.html" class="acg-btn" style="display:{{ ctaHeadDisp }};text-decoration:none;background:#1563C4;color:#fff;font:700 14px 'Public Sans';padding:11px 18px;border-radius:11px;box-shadow:0 8px 20px rgba(21,99,196,.26)">{{ t.participa }}</a>
-          <button class="acg-btn" onClick="{{ toggleMenu }}" style="display:{{ hamDisp }};width:40px;height:40px;border-radius:11px;border:none;background:#0A2A5E;cursor:pointer;align-items:center;justify-content:center" aria-label="Menu">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
-          </button>
         </div>
       </div>
     </header>
-
-    <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
-      <div class="acg-mob-overlay" onClick="{{ closeMenu }}">
-        <div class="acg-mob-menu" onClick="{{ stopEvt }}">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px">
-            <div style="font:800 22px 'Bricolage Grotesque';color:#fff">{{ t.menuTitle }}</div>
-            <button class="acg-btn" onClick="{{ closeMenu }}" style="width:40px;height:40px;border-radius:11px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);cursor:pointer;display:flex;align-items:center;justify-content:center">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg>
-            </button>
-          </div>
-          <div style="display:flex;flex-direction:column">
-            <sc-for list="{{ nav }}" as="n" hint-placeholder-count="7">
-              <a href="{{ n.href }}" onClick="{{ closeMenu }}" style="text-decoration:none;color:#fff;font:700 22px 'Bricolage Grotesque';padding:13px 0;border-bottom:1px solid rgba(255,255,255,.1)">{{ n.label }}</a>
-            </sc-for>
-          </div>
-          <a href="Participacion.dc.html" onClick="{{ closeMenu }}" class="acg-btn" style="margin-top:18px;text-decoration:none;background:#F6BE18;color:#0A2A5E;font:800 15px 'Public Sans';padding:15px 20px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%">{{ t.participa }}</a>
-        </div>
-      </div>
-    </sc-if>
-
-
-    <!-- BREADCRUMB -->
+<!-- BREADCRUMB -->
     <main id="main-content">
     <div style="padding:{{ pagePad }};background:#fff;border-bottom:1px solid #EEF2F7">
       <div style="display:flex;align-items:center;gap:8px;height:44px;font-size:13.5px;color:#5C6B7A">
@@ -281,6 +260,52 @@
     <div class="acg-seo-keywords" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0" aria-hidden="true">
       <p>Acción Civil Gandia - partido político local municipalista Gandia Valencia. Propuestas políticas Gandia 2027. Elecciones municipales Gandia. Vecinos de Gandia, Grao de Gandia, Playa de Gandia, Benipeixcar, Beniopa, Santa Anna, Corea, Marchuquera. Seguridad ciudadana Gandia, policía de proximidad, cámaras de seguridad, antiokupación. Pequeño comercio Gandia, empleo juvenil, cultura accesible, desestacionalización playa, transporte público Gandia, limpieza urbana, participación ciudadana. Partido político independiente Gandia. Formación política local Gandia.</p>
     </div>
+
+  <!-- BOTTOM NAV (mobile) -->
+  <nav style="display:{{ btNavDisp }};position:fixed;bottom:0;left:0;right:0;z-index:800;background:#fff;border-top:1px solid #E9EEF4;padding:6px 0 max(8px,env(safe-area-inset-bottom));justify-content:space-around;align-items:stretch;box-shadow:0 -4px 20px rgba(10,42,94,.08)">
+    <a href="Acción Civil Gandia.dc.html" class="acg-bn">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+      {{ t.bnInicio }}
+    </a>
+    <a href="Propuestas.dc.html" class="acg-bn">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"></path></svg>
+      {{ t.bnPrograma }}
+    </a>
+    <a href="Participacion.dc.html" class="acg-bn" style="position:relative">
+      <div style="width:46px;height:46px;border-radius:50%;background:#0A2A5E;display:flex;align-items:center;justify-content:center;margin:-16px 0 0;box-shadow:0 4px 14px rgba(10,42,94,.3)">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+      </div>
+      {{ t.bnParticipa }}
+    </a>
+    <a href="Actualidad.dc.html" class="acg-bn">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M19 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12l4 4V6a2 2 0 0 0-2-2z"></path></svg>
+      {{ t.bnNoticias }}
+    </a>
+    <button class="acg-bn" onClick="{{ toggleMenu }}">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>
+      {{ t.bnMas }}
+    </button>
+  </nav>
+
+  <!-- BOTTOM SHEET -->
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div class="acg-sheet" onClick="{{ closeMenu }}">
+      <div class="acg-sheet-body" onClick="{{ stopEvt }}">
+        <div style="width:40px;height:4px;background:#D1D9E3;border-radius:4px;margin:0 auto 16px"></div>
+        <div style="display:flex;flex-direction:column">
+          <sc-for list="{{ nav }}" as="n" hint-placeholder-count="8">
+            <a href="{{ n.href }}" style="text-decoration:none;color:#0A2A5E;font:700 16px 'Public Sans';padding:13px 0;border-bottom:1px solid #EEF2F7;display:block">{{ n.label }}</a>
+            <sc-if value="{{ n.sub }}">
+              <sc-for list="{{ n.sub }}" as="s" hint-placeholder-count="3">
+                <a href="{{ s.href }}" style="text-decoration:none;color:#5C6B7A;font:500 14px 'Public Sans';padding:9px 0 9px 16px;display:block">{{ s.label }}</a>
+              </sc-for>
+            </sc-if>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
 </div>
 
 </x-dc>
@@ -330,6 +355,11 @@ class Component extends DCLogic {
         campanas:V('Campañas','Campanyes'),
         participa:V('Participa','Participa'),
         menuTitle:V('Menú','Menú'),
+        bnInicio:V('Inicio','Inici'),
+        bnPrograma:V('Programa','Programa'),
+        bnParticipa:V('Participa','Participa'),
+        bnNoticias:V('Noticias','Not\u00edcies'),
+        bnMas:V('M\u00e1s','M\u00e9s'),
         destacada:V('Campaña destacada','Campanya destacada'),
         provisional:V('Imagen provisional','Imatge provisional'),
         apoyos:V('apoyos','suports'),
@@ -409,7 +439,7 @@ class Component extends DCLogic {
       setVA:()=>{ try{localStorage.setItem('acg_lang','va');}catch(e){} this.setState({lang:'va'}); },
 
       menuOpen:s.menuOpen,
-      hamDisp: isMob?'flex':'none',
+      btNavDisp: isMob?'flex':'none',
       toggleMenu:()=>this.setState(x=>({menuOpen:!x.menuOpen})),
       closeMenu:()=>this.setState({menuOpen:false}),
       stopEvt:(e)=>{e.stopPropagation();},
