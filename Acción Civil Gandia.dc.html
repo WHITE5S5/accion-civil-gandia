@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Acción Civil Gandia — Participación ciudadana independiente</title>
+<meta name="description" content="Acción Civil Gandia — partido político local y municipalista. Propuestas para Gandia, el Grao y la Playa de Gandia. Seguridad, empleo, cultura y participación ciudadana.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://accioncivilgandia.org/">
+<link rel="alternate" hreflang="es" href="https://accioncivilgandia.org/">
+<link rel="alternate" hreflang="ca" href="https://accioncivilgandia.org/?lang=va">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Acción Civil Gandia — Participación ciudadana independiente">
+<meta property="og:description" content="Plataforma ciudadana independiente de Gandia. Haz propuestas, apoya iniciativas y participa en la política local.">
+<meta property="og:url" content="https://accioncivilgandia.org/">
+<meta property="og:site_name" content="Acción Civil Gandia">
+<meta property="og:locale" content="es_ES">
+<meta property="og:locale:alternate" content="ca_ES">
+<meta property="og:image" content="https://accioncivilgandia.org/assets/og-home.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Acción Civil Gandia — Participación ciudadana">
+<meta name="twitter:description" content="Plataforma ciudadana independiente de Gandia. Propuestas, campañas y acción vecinal.">
+<meta name="twitter:image" content="https://accioncivilgandia.org/assets/og-home.jpg">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "name": "Acción Civil Gandia",
+      "url": "https://accioncivilgandia.org",
+      "logo": "https://accioncivilgandia.org/assets/logo-full.png",
+      "description": "Formación ciudadana independiente, local y comprometida con Gandia.",
+      "address": { "@type": "PostalAddress", "addressLocality": "Gandia", "addressRegion": "Valencia", "addressCountry": "ES" }
+    },
+    {
+      "@type": "WebSite",
+      "name": "Acción Civil Gandia",
+      "url": "https://accioncivilgandia.org",
+      "potentialAction": { "@type": "SearchAction", "target": "https://accioncivilgandia.org/buscar?q={search_term_string}", "query-input": "required name=search_term_string" }
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Public+Sans:ital,wght@0,400..700;1,400&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0}
+  ::selection{background:#F6BE18;color:#0A2A5E}
+  @keyframes acgFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+  @keyframes acgSun{0%,100%{transform:rotate(0)}50%{transform:rotate(18deg)}}
+  .acg-lift{transition:transform .28s cubic-bezier(.2,.7,.3,1),box-shadow .28s}
+  .acg-lift:hover{transform:translateY(-6px);box-shadow:0 22px 44px rgba(10,42,94,.16)}
+  .acg-nav a{transition:color .18s}
+  .acg-nav-link{font:600 clamp(12.5px,1vw,14.5px) 'Public Sans';line-height:1.15}
+  .acg-btn{transition:transform .2s,box-shadow .2s,background .2s,filter .2s}
+  .acg-btn:hover{filter:brightness(1.05)}
+  .acg-btn:active{transform:translateY(1px)}
+  .acg-tile{transition:transform .24s,box-shadow .24s,border-color .24s}
+  .acg-tile:hover{transform:translateY(-4px);border-color:#1563C4;box-shadow:0 16px 32px rgba(10,42,94,.12)}
+  header>div[style*='height:74px']{padding:0 28px!important;gap:18px!important}
+  header>div[style*='height:74px']>a:first-child img{height:42px!important;width:42px!important}
+  header>div[style*='height:74px']>.acg-nav{flex:1 1 auto!important;min-width:0!important;justify-content:center!important;gap:clamp(10px,1vw,18px)!important;margin-left:0!important}
+  header>div[style*='height:74px']>.acg-nav a{font-size:clamp(12.5px,1vw,14.5px)!important;line-height:1.15!important}
+  header>div[style*='height:74px']>div[style*='margin-left:auto']{gap:8px!important}
+  header>div[style*='height:74px']>div[style*='margin-left:auto']>button:first-child{width:40px!important;padding:0!important;font-size:0!important;gap:0!important}
+  header>div[style*='height:74px']>div[style*='margin-left:auto']>div button{font-size:12px!important;padding:6px 9px!important}
+  header>div[style*='height:74px']>div[style*='margin-left:auto']>a:nth-of-type(1){width:40px!important;height:40px!important;padding:0!important;font-size:0!important;gap:0!important;justify-content:center!important}
+  header>div[style*='height:74px']>div[style*='margin-left:auto']>a:nth-of-type(2){font-size:14px!important;padding:10px 16px!important;white-space:nowrap!important}
+  .acg-skip{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:9999}
+  .acg-skip:focus{position:fixed;top:12px;left:12px;width:auto;height:auto;padding:12px 20px;background:#1563C4;color:#fff;font:700 14px 'Public Sans';border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.25);text-decoration:none;outline:none}
+  :focus-visible{outline:3px solid #1563C4;outline-offset:2px;border-radius:4px}
+  [data-om-raster]{display:none!important}
+  .acg-cookie-banner{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9000;background:#fff;border-radius:18px;box-shadow:0 12px 48px rgba(10,42,94,.18);padding:20px 24px;max-width:460px;width:calc(100% - 32px);font-family:'Public Sans',sans-serif}
+  .acg-cookie-banner.hidden{display:none}
+  .acg-nav-item{position:relative}
+  .acg-nav-item:hover .acg-dd{opacity:1;visibility:visible;transform:translateY(0)}
+  .acg-dd{position:absolute;top:100%;left:-12px;margin-top:8px;background:#fff;border:1px solid #E9EEF4;border-radius:14px;padding:8px 0;min-width:200px;box-shadow:0 12px 32px rgba(10,42,94,.12);opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .2s,visibility .2s,transform .2s;z-index:900}
+  .acg-dd-link{display:block;padding:9px 18px;text-decoration:none;color:#33414F;font:500 13.5px Public Sans;white-space:nowrap;transition:background .15s,color .15s}
+  .acg-dd-link:hover{background:#F0F4F9;color:#0A2A5E}
+</style>
+</helmet>
+
+<div id="top" style="font-family:'Public Sans',system-ui,-apple-system,sans-serif;color:#17232F;background:#fff;-webkit-font-smoothing:antialiased;line-height:1.55;position:relative">
+  <a href="#main-content" class="acg-skip">Saltar al contenido</a>
+
+  <!-- ============ PREVIEW CONTROL (aid) ============ -->
+  <div data-om-raster style="position:fixed;right:18px;bottom:18px;z-index:9000;display:flex;gap:8px;align-items:center;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border:1px solid #E4EBF2;border-radius:14px;padding:8px;box-shadow:0 12px 30px rgba(10,42,94,.16)">
+    <div style="display:flex;background:#F0F4F9;border-radius:9px;padding:3px">
+      <button class="acg-btn" onClick="{{ setDesktop }}" style="border:none;cursor:pointer;font:600 12px 'Public Sans';padding:6px 12px;border-radius:7px;background:{{ deskBtnBg }};color:{{ deskBtnCol }}">Escritorio</button>
+      <button class="acg-btn" onClick="{{ setMobile }}" style="border:none;cursor:pointer;font:600 12px 'Public Sans';padding:6px 12px;border-radius:7px;background:{{ mobBtnBg }};color:{{ mobBtnCol }}">Móvil</button>
+    </div>
+  </div>
+
+  <!-- ============ GLOBAL SEARCH ============ -->
+  <sc-if value="{{ searchOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeSearch }}" style="position:fixed;inset:0;z-index:2000;background:rgba(8,22,48,.52);backdrop-filter:blur(7px);display:flex;justify-content:center;align-items:flex-start;padding:76px 20px 20px">
+    <div onClick="{{ stopEvt }}" style="width:100%;max-width:640px;background:#fff;border-radius:22px;box-shadow:0 44px 100px rgba(8,22,48,.42);overflow:hidden;display:flex;flex-direction:column;max-height:82vh">
+      <div style="display:flex;align-items:center;gap:13px;padding:18px 22px;border-bottom:1px solid #EEF2F7;flex-shrink:0">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1563C4" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.2-3.2"></path></svg>
+        <input autofocus placeholder="{{ t.searchPh }}" style="flex:1;min-width:0;border:none;outline:none;font:500 18px 'Public Sans';color:#17232F;background:transparent">
+        <button class="acg-btn" onClick="{{ closeSearch }}" style="border:1px solid #E4EBF2;background:#F4F7FB;color:#5C6B7A;font:700 11px 'Public Sans';padding:5px 10px;border-radius:8px;cursor:pointer">ESC</button>
+      </div>
+      <div style="padding:16px 22px 4px;flex-shrink:0">
+        <div style="font:700 11px 'Public Sans';letter-spacing:.12em;text-transform:uppercase;color:#94A3B2;margin-bottom:10px">{{ t.recientesTitle }}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <sc-for list="{{ recientes }}" as="r" hint-placeholder-count="4">
+            <button class="acg-btn" style="display:inline-flex;align-items:center;gap:7px;border:1px solid #E4EBF2;background:#fff;color:#33414F;font:600 13px 'Public Sans';padding:7px 13px;border-radius:999px;cursor:pointer"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#94A3B2" stroke-width="2"><circle cx="12" cy="12" r="8"></circle><path d="M12 8v4l3 2"></path></svg>{{ r }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="overflow-y:auto;padding:8px 12px 16px">
+        <sc-for list="{{ searchGroups }}" as="g" hint-placeholder-count="3">
+          <div style="padding:13px 10px 5px;font:700 11px 'Public Sans';letter-spacing:.12em;text-transform:uppercase;color:#0FA6B6">{{ g.label }}</div>
+          <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3">
+            <a href="{{ it.href }}" onClick="{{ closeSearch }}" class="acg-tile" style="display:flex;align-items:center;gap:14px;text-decoration:none;padding:11px 10px;border-radius:13px">
+              <span style="width:40px;height:40px;flex-shrink:0;border-radius:11px;background:#EAF3FC;display:flex;align-items:center;justify-content:center;color:#1563C4"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{ it.iconPath }}"></path></svg></span>
+              <div style="flex:1;min-width:0"><div style="font:700 15px 'Public Sans';color:#17232F">{{ it.label }}</div><div style="font-size:13px;color:#5C6B7A;margin-top:1px">{{ it.meta }}</div></div>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#B8C4D2" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+            </a>
+          </sc-for>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ================= DESKTOP ================= -->
+  <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+  <div>
+    <!-- HEADER -->
+    <header style="position:sticky;top:0;z-index:800;background:rgba(255,255,255,.86);backdrop-filter:blur(14px);border-bottom:1px solid #E9EEF4">
+      <div style="max-width:1240px;margin:0 auto;padding:0 28px;height:74px;display:flex;align-items:center;gap:18px">
+        <a href="#top" style="display:flex;align-items:center;text-decoration:none;flex-shrink:0">
+          <img src="assets/logo-icon.png" alt="Acción Civil Gandia" style="height:46px;width:46px;object-fit:contain">
+        </a>
+        <nav class="acg-nav" aria-label="Navegación principal" style="display:flex;align-items:center;gap:22px;margin-left:8px;flex-wrap:nowrap;overflow:hidden">
+          <sc-for list="{{ nav }}" as="n" hint-placeholder-count="7">
+            <div class="acg-nav-item" style="position:relative">
+              <a href="{{ n.href }}" style="text-decoration:none;color:{{ n.col }};font:{{ n.weight }} 14.5px 'Public Sans';white-space:nowrap;display:flex;align-items:center;gap:4px">
+                {{ n.label }}
+                <sc-if value="{{ n.arrow }}">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"></path></svg>
+                </sc-if>
+              </a>
+              <sc-if value="{{ n.sub }}">
+                <div class="acg-dd">
+                  <sc-for list="{{ n.sub }}" as="s" hint-placeholder-count="3">
+                    <a href="{{ s.href }}" class="acg-dd-link">{{ s.label }}</a>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </nav>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:12px;flex-shrink:0">
+          <button class="acg-btn" onClick="{{ openSearch }}" title="{{ t.buscar }}" style="height:40px;border-radius:11px;border:1px solid #E4EBF2;background:#fff;cursor:pointer;display:flex;align-items:center;gap:9px;justify-content:center;color:#5C6B7A;padding:0 14px;font:500 13.5px 'Public Sans'">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.2-3.2"></path></svg>{{ t.buscar }}
+          </button>
+          <div style="display:flex;background:#F0F4F9;border-radius:10px;padding:3px">
+            <button class="acg-btn" onClick="{{ setES }}" style="border:none;cursor:pointer;font:700 12.5px 'Public Sans';padding:6px 11px;border-radius:7px;background:{{ esBg }};color:{{ esCol }}">ES</button>
+            <button class="acg-btn" onClick="{{ setVA }}" style="border:none;cursor:pointer;font:700 12.5px 'Public Sans';padding:6px 11px;border-radius:7px;background:{{ vaBg }};color:{{ vaCol }}">VA</button>
+          </div>
+          <a href="Participa.dc.html" style="text-decoration:none;font:600 14px 'Public Sans';color:#0A2A5E;display:flex;align-items:center;gap:7px;padding:0 6px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.4"></circle><path d="M5.5 20a6.5 6.5 0 0 1 13 0"></path></svg>
+            {{ t.area }}
+          </a>
+          <a href="Participacion.dc.html" class="acg-btn" style="text-decoration:none;background:#1563C4;color:#fff;font:700 14.5px 'Public Sans';padding:11px 20px;border-radius:11px;box-shadow:0 8px 20px rgba(21,99,196,.28)">{{ t.participa }}</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <main id="main-content">
+    <section style="background:linear-gradient(180deg,#EAF3FC 0%,#F6FAFE 46%,#fff 100%);position:relative;overflow:hidden">
+      <div style="max-width:1240px;margin:0 auto;padding:76px 40px 92px;display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center">
+        <div>
+          <span style="display:inline-flex;align-items:center;gap:9px;background:#fff;border:1px solid #DBE7F4;color:#0FA6B6;font:700 12.5px 'Public Sans';letter-spacing:.02em;padding:8px 15px;border-radius:999px;box-shadow:0 4px 14px rgba(10,42,94,.05)">
+            <span style="width:8px;height:8px;border-radius:50%;background:#0FA6B6;display:inline-block"></span>{{ t.heroEyebrow }}
+          </span>
+          <h1 style="font:800 60px/1.04 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.02em;margin:22px 0 0;text-wrap:balance">{{ t.heroTitle }}</h1>
+          <p style="font-size:20px;color:#42525F;max-width:520px;margin:22px 0 34px;text-wrap:pretty">{{ t.heroText }}</p>
+          <div style="display:flex;gap:14px;flex-wrap:wrap">
+            <a href="Participacion.dc.html" class="acg-btn" style="text-decoration:none;background:#1563C4;color:#fff;font:700 16px 'Public Sans';padding:16px 28px;border-radius:13px;box-shadow:0 12px 26px rgba(21,99,196,.3);display:inline-flex;align-items:center;gap:10px">
+              {{ t.heroCta1 }}
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+            </a>
+            <a href="Conocenos.dc.html" class="acg-btn" style="text-decoration:none;background:#fff;color:#0A2A5E;font:700 16px 'Public Sans';padding:16px 28px;border-radius:13px;border:1.5px solid #CFDDEC">{{ t.heroCta2 }}</a>
+          </div>
+          <div style="display:flex;gap:30px;margin-top:44px">
+            <sc-for list="{{ heroStats }}" as="s" hint-placeholder-count="3">
+              <div>
+                <div style="font:800 30px 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.01em">{{ s.value }}</div>
+                <div style="font-size:13.5px;color:#5C6B7A;margin-top:2px">{{ s.label }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="position:relative">
+          <div style="position:relative;border-radius:26px;overflow:hidden;aspect-ratio:4/4.4;background-image:repeating-linear-gradient(135deg,#D3E2F2 0 15px,#E4EFFA 15px 30px);box-shadow:0 30px 60px rgba(10,42,94,.18);display:flex;align-items:flex-end;justify-content:center;padding:22px">
+            <span style="position:absolute;top:16px;left:16px;display:inline-flex;align-items:center;gap:6px;background:#F6BE18;color:#0A2A5E;font:800 10.5px 'Public Sans';letter-spacing:.04em;text-transform:uppercase;padding:5px 11px;border-radius:999px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="9" cy="11" r="2"></circle><path d="m3 17 5-4 4 3 3-2 6 4"></path></svg>{{ t.provisional }}</span>
+            <span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.06em;color:#3F5165;background:rgba(255,255,255,.82);padding:7px 12px;border-radius:8px;text-transform:uppercase">{{ t.heroImg }}</span>
+          </div>
+          <div style="position:absolute;left:-28px;bottom:44px;background:#fff;border-radius:18px;padding:16px 20px;box-shadow:0 18px 40px rgba(10,42,94,.16);display:flex;align-items:center;gap:14px;animation:acgFloat 5s ease-in-out infinite">
+            <div style="width:46px;height:46px;border-radius:12px;background:#EAF3FC;display:flex;align-items:center;justify-content:center;color:#1563C4">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"></circle><path d="M2.5 19a6.5 6.5 0 0 1 13 0M16 6a3 3 0 0 1 0 5.6M21 19a5.5 5.5 0 0 0-4-5.3"></path></svg>
+            </div>
+            <div>
+              <div style="font:800 22px 'Bricolage Grotesque';color:#0A2A5E">{{ heroBadgeN }}</div>
+              <div style="font-size:12.5px;color:#5C6B7A">{{ t.heroStatLabel }}</div>
+            </div>
+          </div>
+          <div style="position:absolute;right:-14px;top:26px;width:70px;height:70px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#FFD65C,#F6BE18);box-shadow:0 12px 26px rgba(246,190,24,.4);animation:acgSun 9s ease-in-out infinite"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRIORIDADES -->
+    <section style="scroll-margin-top:88px;padding:92px 0">
+      <div style="max-width:1240px;margin:0 auto;padding:0 40px">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:44px">
+          <div>
+            <span style="font:700 12.5px 'Public Sans';letter-spacing:.16em;text-transform:uppercase;color:#0FA6B6">{{ t.prioTag }}</span>
+            <h2 style="font:800 40px/1.08 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.015em;margin:12px 0 0;max-width:640px">{{ t.prioTitle }}</h2>
+          </div>
+          <a href="Propuestas.dc.html" style="text-decoration:none;color:#1563C4;font:700 15px 'Public Sans';display:flex;align-items:center;gap:8px;white-space:nowrap">{{ t.verPrograma }}
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </a>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px">
+          <sc-for list="{{ prioridades }}" as="p" hint-placeholder-count="6">
+            <a href="Propuestas.dc.html" class="acg-lift" style="text-decoration:none;background:#fff;border:1px solid #E9EEF4;border-radius:20px;padding:28px;display:block">
+              <div style="width:54px;height:54px;border-radius:15px;background:#EAF3FC;display:flex;align-items:center;justify-content:center;color:#1563C4;margin-bottom:20px">
+                <svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="{{ p.iconPath }}"></path></svg>
+              </div>
+              <h3 style="font:700 21px 'Bricolage Grotesque';color:#17232F;margin:0 0 8px">{{ p.title }}</h3>
+              <p style="font-size:15px;color:#5C6B7A;margin:0 0 16px;text-wrap:pretty">{{ p.summary }}</p>
+              <span style="display:inline-flex;align-items:center;gap:7px;color:#1563C4;font:700 14px 'Public Sans'">{{ t.verProp }}
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+              </span>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <!-- PARTICIPACION (navy) -->
+    <section id="participacion" style="scroll-margin-top:88px;background:linear-gradient(160deg,#0A2A5E,#0E356F);color:#fff;position:relative;overflow:hidden">
+      <div style="position:absolute;right:-80px;top:-80px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(15,166,182,.35),transparent 70%)"></div>
+      <div style="max-width:1240px;margin:0 auto;padding:88px 40px;position:relative">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center">
+          <div>
+            <span style="font:700 12.5px 'Public Sans';letter-spacing:.16em;text-transform:uppercase;color:#5FD4E2">{{ t.partTag }}</span>
+            <h2 style="font:800 46px/1.06 'Bricolage Grotesque';letter-spacing:-.02em;margin:14px 0 16px;text-wrap:balance">{{ t.partTitle }}</h2>
+            <p style="font-size:18px;color:#C4D6EC;max-width:480px;margin:0 0 30px">{{ t.partText }}</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:460px">
+              <sc-for list="{{ partActions }}" as="a" hint-placeholder-count="4">
+                <a href="{{ a.href }}" class="acg-btn" style="text-decoration:none;display:flex;align-items:center;gap:12px;background:{{ a.bg }};color:{{ a.col }};border:{{ a.border }};padding:14px 16px;border-radius:13px;font:700 15px 'Public Sans'">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="{{ a.iconPath }}"></path></svg>
+                  {{ a.label }}
+                </a>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <sc-for list="{{ counters }}" as="c" hint-placeholder-count="5">
+              <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:22px 24px">
+                <div style="font:800 36px 'Bricolage Grotesque';letter-spacing:-.01em;color:#fff">{{ c.value }}</div>
+                <div style="font-size:14px;color:#9FBBDD;margin-top:4px">{{ c.label }}</div>
+              </div>
+            </sc-for>
+            <div style="background:linear-gradient(135deg,#F6BE18,#FFCF43);border-radius:18px;padding:22px 24px;color:#0A2A5E">
+              <div style="font:800 17px 'Bricolage Grotesque'">{{ t.partCtaTitle }}</div>
+              <div style="font-size:13.5px;margin-top:4px;opacity:.85">{{ t.partCtaText }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TENDENCIA -->
+    <section style="scroll-margin-top:88px;background:#F4F7FB;padding:92px 0">
+      <div style="max-width:1240px;margin:0 auto;padding:0 40px">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px">
+          <div>
+            <span style="font:700 12.5px 'Public Sans';letter-spacing:.16em;text-transform:uppercase;color:#0FA6B6">{{ t.trendTag }}</span>
+            <h2 style="font:800 40px/1.08 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.015em;margin:12px 0 0">{{ t.trendTitle }}</h2>
+          </div>
+          <a href="Participacion.dc.html" style="text-decoration:none;color:#1563C4;font:700 15px 'Public Sans';display:flex;align-items:center;gap:8px;white-space:nowrap">{{ t.explorarTodas }}
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </a>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px">
+          <sc-for list="{{ tendencias }}" as="tp" hint-placeholder-count="3">
+            <div class="acg-lift" style="background:#fff;border:1px solid #E9EEF4;border-radius:20px;padding:24px;display:flex;flex-direction:column">
+              <div style="display:flex;align-items:center;gap:11px;margin-bottom:14px">
+                <span style="width:40px;height:40px;flex-shrink:0;border-radius:12px;background:{{ tp.avBg }};color:#fff;font:800 14px 'Public Sans';display:flex;align-items:center;justify-content:center">{{ tp.ini }}</span>
+                <div style="min-width:0;flex:1">
+                  <div style="font:700 14px 'Public Sans';color:#17232F;line-height:1.2">{{ tp.autor }}</div>
+                  <div style="display:inline-flex;align-items:center;gap:5px;color:#94A3B2;font-size:12.5px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-5.6 7-11a7 7 0 0 0-14 0c0 5.4 7 11 7 11Z"></path><circle cx="12" cy="10" r="2.4"></circle></svg>{{ tp.barrio }}</div>
+                </div>
+                <span style="background:#EAF3FC;color:#1563C4;font:700 12px 'Public Sans';padding:5px 11px;border-radius:999px;white-space:nowrap">{{ tp.cat }}</span>
+              </div>
+              <a href="Propuesta.dc.html" style="text-decoration:none"><h3 style="font:700 20px/1.24 'Bricolage Grotesque';color:#17232F;margin:0 0 12px;min-height:50px">{{ tp.title }}</h3></a>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+                <span style="font:700 13px 'Public Sans';color:{{ tp.estadoColor }};background:{{ tp.estadoTint }};padding:4px 11px;border-radius:999px">{{ tp.estado }}</span>
+                <sc-if value="{{ tp.oficial }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;background:#EAF3FC;color:#0A2A5E;font:700 12px 'Public Sans';padding:4px 11px;border-radius:999px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"></path></svg>{{ t.respuestaOficial }}</span></sc-if>
+              </div>
+              <div style="font-size:13.5px;color:#5C6B7A;margin-bottom:8px">{{ tp.umbral }}</div>
+              <div style="height:8px;background:#EDF1F6;border-radius:999px;overflow:hidden;margin-bottom:16px">
+                <div style="height:100%;border-radius:999px;background:{{ tp.estadoColor }};width:{{ tp.barW }};transition:width 1.1s cubic-bezier(.2,.7,.3,1)"></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:18px;color:#5C6B7A;font-size:13.5px;margin-bottom:18px">
+                <span style="display:inline-flex;align-items:center;gap:6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 2.6 2.6L12 9h6a2 2 0 0 1 2 2.4l-1.5 6a2 2 0 0 1-2 1.6H7"></path></svg>{{ tp.apoyos }}</span>
+                <span style="display:inline-flex;align-items:center;gap:6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"></path></svg>{{ tp.coment }}</span>
+                <span style="display:inline-flex;align-items:center;gap:6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 5c-4 0-7 3-9 7 2 4 5 7 9 7s7-3 9-7c-2-4-5-7-9-7ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"></path></svg>{{ tp.seguidores }}</span>
+                <span style="margin-left:auto;color:#94A3B2;font-size:12.5px">{{ tp.ultima }}</span>
+              </div>
+              <div style="display:flex;gap:10px;margin-top:auto">
+                <button class="acg-btn" style="flex:1;border:none;cursor:pointer;background:#1563C4;color:#fff;font:700 14px 'Public Sans';padding:11px;border-radius:11px;display:flex;align-items:center;justify-content:center;gap:7px">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 2.6 2.6L12 9h6a2 2 0 0 1 2 2.4l-1.5 6a2 2 0 0 1-2 1.6H7"></path></svg>{{ t.apoyar }}</button>
+                <a href="Propuesta.dc.html" class="acg-btn" style="text-decoration:none;flex:1;text-align:center;border:1px solid #E4EBF2;background:#fff;color:#0A2A5E;font:700 14px 'Public Sans';padding:11px;border-radius:11px;display:flex;align-items:center;justify-content:center;gap:7px">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"></path></svg>{{ t.comentar }}</a>
+                <button class="acg-btn" title="Compartir" style="width:44px;border:1px solid #E4EBF2;cursor:pointer;background:#fff;color:#33414F;border-radius:11px;display:flex;align-items:center;justify-content:center">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="6" cy="12" r="2.5"></circle><circle cx="17" cy="6" r="2.5"></circle><circle cx="17" cy="18" r="2.5"></circle><path d="M8.2 10.8 14.8 7.2M8.2 13.2l6.6 3.6"></path></svg>
+                </button>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <!-- CAMPAÑA DESTACADA -->
+    <section id="campana" style="scroll-margin-top:88px;padding:92px 0">
+      <div style="max-width:1240px;margin:0 auto;padding:0 40px">
+        <div style="border-radius:28px;overflow:hidden;background:#fff;border:1px solid #E9EEF4;box-shadow:0 22px 50px rgba(10,42,94,.1);display:grid;grid-template-columns:1.05fr 1fr">
+          <div style="position:relative;background-image:repeating-linear-gradient(135deg,#0E356F 0 16px,#12408A 16px 32px);min-height:420px;display:flex;flex-direction:column;justify-content:space-between;padding:34px;color:#fff">
+            <span style="align-self:flex-start;background:#F6BE18;color:#0A2A5E;font:800 12px 'Public Sans';letter-spacing:.1em;text-transform:uppercase;padding:8px 14px;border-radius:999px">{{ campana.tag }}</span>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+              <span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.06em;color:rgba(255,255,255,.72);text-transform:uppercase">{{ campana.img }}</span>
+              <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(246,190,24,.92);color:#0A2A5E;font:800 10.5px 'Public Sans';letter-spacing:.04em;text-transform:uppercase;padding:5px 11px;border-radius:999px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="9" cy="11" r="2"></circle><path d="m3 17 5-4 4 3 3-2 6 4"></path></svg>{{ t.provisional }}</span>
+            </div>
+          </div>
+          <div style="padding:44px 46px;display:flex;flex-direction:column;justify-content:center">
+            <h2 style="font:800 36px/1.1 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.015em;margin:0 0 14px">{{ campana.title }}</h2>
+            <p style="font-size:16.5px;color:#5C6B7A;margin:0 0 26px;text-wrap:pretty">{{ campana.text }}</p>
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:8px">
+              <div><span style="font:800 30px 'Bricolage Grotesque';color:#0A2A5E">{{ campana.apoyos }}</span><span style="font-size:15px;color:#5C6B7A"> / {{ campana.meta }} {{ t.apoyosLabel }}</span></div>
+              <span style="font:700 14px 'Public Sans';color:#0FA6B6">{{ campana.pct }}%</span>
+            </div>
+            <div style="height:12px;background:#EDF1F6;border-radius:999px;overflow:hidden;margin-bottom:14px">
+              <div style="height:100%;border-radius:999px;background:linear-gradient(90deg,#0FA6B6,#1563C4);width:{{ campana.barW }};transition:width 1.2s cubic-bezier(.2,.7,.3,1)"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;color:#5C6B7A;font-size:14px;margin-bottom:26px">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M3 9h18M8 3v4M16 3v4"></path></svg>
+              {{ campana.fecha }}
+            </div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+              <a href="Campanas.dc.html" class="acg-btn" style="text-decoration:none;background:#1563C4;color:#fff;font:700 15px 'Public Sans';padding:14px 26px;border-radius:12px;box-shadow:0 10px 22px rgba(21,99,196,.28)">{{ campana.cta }}</a>
+              <a href="Campanas.dc.html" class="acg-btn" style="text-decoration:none;background:#fff;color:#0A2A5E;font:700 15px 'Public Sans';padding:14px 22px;border-radius:12px;border:1.5px solid #CFDDEC">{{ t.material }}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACCION EN GANDIA -->
+    <section id="accion" style="scroll-margin-top:88px;background:#F4F7FB;padding:92px 0">
+      <div style="max-width:1240px;margin:0 auto;padding:0 40px">
+        <div style="text-align:center;margin-bottom:46px">
+          <span style="font:700 12.5px 'Public Sans';letter-spacing:.16em;text-transform:uppercase;color:#0FA6B6">{{ t.accTag }}</span>
+          <h2 style="font:800 40px/1.08 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.015em;margin:12px auto 12px;max-width:640px">{{ t.accTitle }}</h2>
+          <p style="font-size:17px;color:#5C6B7A;max-width:560px;margin:0 auto">{{ t.accText }}</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1.15fr 1fr;gap:24px;align-items:stretch">
+          <div style="position:relative;border-radius:22px;overflow:hidden;min-height:460px;border:1px solid #E9EEF4">
+            <div id="acg-map" style="width:100%;height:460px"></div>
+            <span style="position:absolute;top:18px;left:18px;z-index:500;font-family:ui-monospace,Menlo,monospace;font-size:11.5px;letter-spacing:.05em;color:#3F5165;background:rgba(255,255,255,.85);padding:6px 11px;border-radius:8px;text-transform:uppercase">{{ t.mapaLabel }}</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <sc-for list="{{ acciones }}" as="ac" hint-placeholder-count="4">
+              <div class="acg-tile" style="background:#fff;border:1px solid #E9EEF4;border-radius:16px;padding:18px 20px;display:flex;align-items:center;gap:16px;cursor:pointer">
+                <div style="width:44px;height:44px;flex-shrink:0;border-radius:12px;background:{{ ac.tintBg }};display:flex;align-items:center;justify-content:center;color:{{ ac.estadoColor }}">
+                  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{ ac.iconPath }}"></path></svg>
+                </div>
+                <div style="flex:1;min-width:0">
+                  <h3 style="font:700 16px 'Public Sans';color:#17232F;margin:0 0 4px">{{ ac.title }}</h3>
+                  <div style="font-size:13px;color:#5C6B7A">{{ ac.barrio }} · {{ ac.fecha }}</div>
+                </div>
+                <span style="flex-shrink:0;background:{{ ac.tintBg }};color:{{ ac.estadoColor }};font:700 12.5px 'Public Sans';padding:6px 12px;border-radius:999px">{{ ac.estado }}</span>
+              </div>
+            </sc-for>
+            <a href="Accion.dc.html" style="text-decoration:none;color:#1563C4;font:700 15px 'Public Sans';display:flex;align-items:center;gap:8px;margin-top:6px;padding:0 4px">{{ t.verMapaCompleto }}
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMPROMISOS -->
+    <section style="scroll-margin-top:88px;padding:92px 0">
+      <div style="max-width:1240px;margin:0 auto;padding:0 40px">
+        <div style="display:grid;grid-template-columns:.85fr 1.15fr;gap:56px;align-items:center">
+          <div>
+            <span style="font:700 12.5px 'Public Sans';letter-spacing:.16em;text-transform:uppercase;color:#0FA6B6">{{ t.compTag }}</span>
+            <h2 style="font:800 40px/1.08 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.015em;margin:12px 0 16px">{{ t.compTitle }}</h2>
+            <p style="font-size:16.5px;color:#5C6B7A;margin:0 0 28px;text-wrap:pretty">{{ t.compText }}</p>
+            <div style="background:#F4F7FB;border:1px solid #E9EEF4;border-radius:18px;padding:22px 24px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+                <span style="font:700 15px 'Public Sans';color:#0A2A5E">{{ t.cumplimiento }}</span>
+                <span style="font:800 22px 'Bricolage Grotesque';color:#2E9E5B">{{ compPct }}%</span>
+              </div>
+              <div style="height:14px;background:#E7ECF2;border-radius:999px;overflow:hidden">
+                <div style="height:100%;border-radius:999px;background:linear-gradient(90deg,#2E9E5B,#57C07E);width:{{ compBarW }};transition:width 1.2s cubic-bezier(.2,.7,.3,1)"></div>
+              </div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <sc-for list="{{ compromisos }}" as="cm" hint-placeholder-count="4">
+              <div style="background:#fff;border:1px solid #E9EEF4;border-radius:18px;padding:24px;border-left:5px solid {{ cm.color }}">
+                <div style="font:800 40px 'Bricolage Grotesque';color:{{ cm.color }};letter-spacing:-.02em">{{ cm.value }}</div>
+                <div style="font-size:15px;color:#42525F;margin-top:4px;font-weight:600">{{ cm.label }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NUESTRA GENTE -->
+    <section style="scroll-margin-top:88px;background:#F4F7FB;padding:92px 0">
+      <div style="max-width:1240px;margin:0 auto;padding:0 40px">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px">
+          <div>
+            <span style="font:700 12.5px 'Public Sans';letter-spacing:.16em;text-transform:uppercase;color:#0FA6B6">{{ t.genteTag }}</span>
+            <h2 style="font:800 40px/1.08 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.015em;margin:12px 0 0">{{ t.genteTitle }}</h2>
+          </div>
+          <a href="Conocenos.dc.html" style="text-decoration:none;color:#1563C4;font:700 15px 'Public Sans';display:flex;align-items:center;gap:8px;white-space:nowrap">{{ t.verEquipo }}
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </a>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px">
+          <sc-for list="{{ gente }}" as="g" hint-placeholder-count="4">
+            <div class="acg-lift" style="background:#fff;border:1px solid #E9EEF4;border-radius:20px;overflow:hidden">
+              <div style="aspect-ratio:1/1;background-image:repeating-linear-gradient(135deg,#D3E2F2 0 14px,#E4EFFA 14px 28px);display:flex;align-items:flex-end;justify-content:center;padding:12px">
+                <span style="font-family:ui-monospace,Menlo,monospace;font-size:10.5px;color:#3F5165;background:rgba(255,255,255,.85);padding:5px 9px;border-radius:7px;text-transform:uppercase">FOTO</span>
+              </div>
+              <div style="padding:20px">
+                <h3 style="font:700 18px 'Bricolage Grotesque';color:#17232F;margin:0 0 2px">{{ g.name }}</h3>
+                <div style="font:700 13px 'Public Sans';color:#1563C4;margin-bottom:10px">{{ g.role }}</div>
+                <div style="display:flex;flex-wrap:wrap;gap:6px">
+                  <span style="background:#EAF3FC;color:#33414F;font-size:12px;padding:4px 10px;border-radius:999px">{{ g.area }}</span>
+                  <span style="background:#EAF3FC;color:#33414F;font-size:12px;padding:4px 10px;border-radius:999px">{{ g.barrio }}</span>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACTUALIDAD + AGENDA -->
+    <section id="actualidad" style="scroll-margin-top:88px;padding:92px 0">
+      <div style="max-width:1240px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1.5fr 1fr;gap:44px">
+        <div>
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:28px">
+            <div>
+              <span style="font:700 12.5px 'Public Sans';letter-spacing:.16em;text-transform:uppercase;color:#0FA6B6">{{ t.newsTag }}</span>
+              <h2 style="font:800 34px 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.015em;margin:10px 0 0">{{ t.newsTitle }}</h2>
+            </div>
+            <a href="Actualidad.dc.html" style="text-decoration:none;color:#1563C4;font:700 14px 'Public Sans'">{{ t.verTodo }}</a>
+          </div>
+          <a href="Actualidad.dc.html" class="acg-lift" style="text-decoration:none;display:block;border-radius:20px;overflow:hidden;border:1px solid #E9EEF4;background:#fff;margin-bottom:16px">
+            <div style="position:relative;aspect-ratio:16/7;background-image:repeating-linear-gradient(135deg,#D3E2F2 0 15px,#E4EFFA 15px 30px);display:flex;align-items:flex-end;padding:16px">
+              <span style="position:absolute;top:14px;right:14px;display:inline-flex;align-items:center;gap:6px;background:#F6BE18;color:#0A2A5E;font:800 10px 'Public Sans';letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:999px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="9" cy="11" r="2"></circle><path d="m3 17 5-4 4 3 3-2 6 4"></path></svg>{{ t.provisional }}</span>
+              <span style="background:#F6BE18;color:#0A2A5E;font:800 11.5px 'Public Sans';letter-spacing:.06em;text-transform:uppercase;padding:6px 12px;border-radius:999px">{{ newsFeat.cat }}</span>
+            </div>
+            <div style="padding:22px 24px">
+              <h3 style="font:700 23px/1.2 'Bricolage Grotesque';color:#17232F;margin:0 0 8px">{{ newsFeat.title }}</h3>
+              <div style="font-size:13.5px;color:#94A3B2">{{ newsFeat.date }}</div>
+            </div>
+          </a>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <sc-for list="{{ noticias }}" as="nt" hint-placeholder-count="3">
+              <a href="Actualidad.dc.html" class="acg-tile" style="text-decoration:none;display:flex;align-items:center;gap:16px;background:#fff;border:1px solid #E9EEF4;border-radius:14px;padding:14px 16px">
+                <div style="width:82px;height:60px;flex-shrink:0;border-radius:10px;background-image:repeating-linear-gradient(135deg,#D3E2F2 0 12px,#E4EFFA 12px 24px)"></div>
+                <div style="flex:1;min-width:0">
+                  <span style="font:700 11px 'Public Sans';letter-spacing:.08em;text-transform:uppercase;color:#0FA6B6">{{ nt.cat }}</span>
+                  <h3 style="font:700 16px/1.25 'Public Sans';color:#17232F;margin:4px 0 4px">{{ nt.title }}</h3>
+                  <div style="font-size:12.5px;color:#94A3B2">{{ nt.date }}</div>
+                </div>
+              </a>
+            </sc-for>
+          </div>
+        </div>
+        <div>
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:28px">
+            <h2 style="font:800 26px 'Bricolage Grotesque';color:#0A2A5E;margin:0">{{ t.eventsTitle }}</h2>
+          <a href="Agenda.dc.html" style="text-decoration:none;color:#1563C4;font:700 14px 'Public Sans'">{{ t.verAgenda }}</a>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <sc-for list="{{ eventos }}" as="ev" hint-placeholder-count="3">
+              <div class="acg-tile" style="background:#fff;border:1px solid #E9EEF4;border-radius:16px;padding:16px;display:flex;gap:16px;align-items:center;cursor:pointer">
+                <div style="width:60px;height:60px;flex-shrink:0;border-radius:13px;background:#EAF3FC;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#0A2A5E">
+                  <span style="font:800 22px 'Bricolage Grotesque';line-height:1">{{ ev.day }}</span>
+                  <span style="font:700 11px 'Public Sans';letter-spacing:.08em;text-transform:uppercase;color:#1563C4">{{ ev.month }}</span>
+                </div>
+                <div style="flex:1;min-width:0">
+                  <h3 style="font:700 16px 'Public Sans';color:#17232F;margin:0 0 5px">{{ ev.title }}</h3>
+                  <div style="display:flex;gap:14px;color:#5C6B7A;font-size:12.5px">
+                    <span style="display:inline-flex;align-items:center;gap:5px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-5.6 7-11a7 7 0 0 0-14 0c0 5.4 7 11 7 11Z"></path><circle cx="12" cy="10" r="2.4"></circle></svg>{{ ev.place }}</span>
+                    <span style="display:inline-flex;align-items:center;gap:5px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"></circle><path d="M12 8v4l3 2"></path></svg>{{ ev.time }}</span>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="margin-top:16px;border-radius:18px;overflow:hidden;position:relative;background-image:repeating-linear-gradient(135deg,#0E356F 0 15px,#12408A 15px 30px);aspect-ratio:16/9;display:flex;align-items:center;justify-content:center">
+            <div style="width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(0,0,0,.25)">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="#0A2A5E"><path d="M8 5v14l11-7z"></path></svg>
+            </div>
+            <span style="position:absolute;bottom:12px;left:14px;font-family:ui-monospace,Menlo,monospace;font-size:11px;color:rgba(255,255,255,.75);text-transform:uppercase">{{ t.ultimoVideo }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRANSPARENCIA -->
+    <section id="transparencia" style="scroll-margin-top:88px;background:#EAF3FC;padding:88px 0">
+      <div style="max-width:1240px;margin:0 auto;padding:0 40px">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:38px">
+          <div>
+            <span style="font:700 12.5px 'Public Sans';letter-spacing:.16em;text-transform:uppercase;color:#0FA6B6">{{ t.transpTag }}</span>
+            <h2 style="font:800 40px/1.08 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.015em;margin:12px 0 6px">{{ t.transpTitle }}</h2>
+            <p style="font-size:16px;color:#42525F;max-width:520px;margin:0">{{ t.transpText }}</p>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:14px">
+          <sc-for list="{{ transparencia }}" as="tr" hint-placeholder-count="6">
+            <a href="Transparencia.dc.html" class="acg-tile" style="text-decoration:none;background:#fff;border:1px solid #DBE7F4;border-radius:16px;padding:22px 18px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px">
+              <div style="width:48px;height:48px;border-radius:13px;background:#EAF3FC;display:flex;align-items:center;justify-content:center;color:#1563C4">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="{{ tr.iconPath }}"></path></svg>
+              </div>
+              <span style="font:700 14px 'Public Sans';color:#17232F">{{ tr.label }}</span>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <section style="background:linear-gradient(150deg,#0A2A5E,#0F3B7D);color:#fff;position:relative;overflow:hidden">
+      <div style="position:absolute;left:-60px;bottom:-60px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(246,190,24,.3),transparent 70%)"></div>
+      <div style="max-width:1000px;margin:0 auto;padding:88px 40px;text-align:center;position:relative">
+        <h2 style="font:800 48px/1.08 'Bricolage Grotesque';letter-spacing:-.02em;margin:0 0 16px;text-wrap:balance">{{ t.ctaTitle }}</h2>
+        <p style="font-size:19px;color:#C4D6EC;max-width:560px;margin:0 auto 34px">{{ t.ctaText }}</p>
+        <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+          <a href="Participa.dc.html" class="acg-btn" style="text-decoration:none;background:#F6BE18;color:#0A2A5E;font:800 16px 'Public Sans';padding:16px 32px;border-radius:13px;box-shadow:0 12px 26px rgba(246,190,24,.3)">{{ t.ctaBtn1 }}</a>
+          <a href="Crear.dc.html" class="acg-btn" style="text-decoration:none;background:rgba(255,255,255,.1);color:#fff;font:700 16px 'Public Sans';padding:16px 30px;border-radius:13px;border:1.5px solid rgba(255,255,255,.28)">{{ t.ctaBtn2 }}</a>
+          <a href="Participa.dc.html" class="acg-btn" style="text-decoration:none;background:rgba(255,255,255,.1);color:#fff;font:700 16px 'Public Sans';padding:16px 30px;border-radius:13px;border:1.5px solid rgba(255,255,255,.28)">{{ t.ctaBtn3 }}</a>
+        </div>
+      </div>
+    </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="footer" role="contentinfo" style="background:#071E45;color:#B7C7DD;padding:64px 0 30px">
+      <div style="max-width:1240px;margin:0 auto;padding:0 40px">
+        <div style="display:grid;grid-template-columns:1.6fr 1fr 1fr 1.4fr;gap:44px;padding-bottom:44px;border-bottom:1px solid rgba(255,255,255,.1)">
+          <div>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+              <div style="background:#fff;border-radius:50%;padding:8px;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.12)"><img src="assets/logo-icon.png" alt="Acción Civil Gandia" style="height:44px;width:44px;object-fit:contain"></div>
+            </div>
+            <p style="font-size:14.5px;color:#8FA6C4;max-width:320px;margin:0 0 18px">{{ t.footerDesc }}</p>
+            <div style="display:flex;gap:10px">
+              <sc-for list="{{ social }}" as="so" hint-placeholder-count="4">
+                <a href="#" style="width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#B7C7DD;text-decoration:none">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{ so.iconPath }}"></path></svg>
+                </a>
+              </sc-for>
+            </div>
+          </div>
+          <div>
+            <div style="font:700 13px 'Public Sans';letter-spacing:.1em;text-transform:uppercase;color:#fff;margin-bottom:16px">{{ t.footerNavTitle }}</div>
+            <div style="display:flex;flex-direction:column;gap:11px">
+              <sc-for list="{{ footerNav1 }}" as="f" hint-placeholder-count="5">
+                <a href="{{ f.href }}" style="text-decoration:none;color:#8FA6C4;font-size:14.5px">{{ f.label }}</a>
+              </sc-for>
+            </div>
+          </div>
+          <div>
+            <div style="font:700 13px 'Public Sans';letter-spacing:.1em;text-transform:uppercase;color:#fff;margin-bottom:16px">{{ t.footerLegalTitle }}</div>
+            <div style="display:flex;flex-direction:column;gap:11px">
+              <sc-for list="{{ footerNav2 }}" as="f" hint-placeholder-count="5">
+                <a href="{{ f.href }}" style="text-decoration:none;color:#8FA6C4;font-size:14.5px">{{ f.label }}</a>
+              </sc-for>
+            </div>
+          </div>
+          <div>
+            <div style="font:700 13px 'Public Sans';letter-spacing:.1em;text-transform:uppercase;color:#fff;margin-bottom:16px">{{ t.newsletter }}</div>
+            <p style="font-size:14px;color:#8FA6C4;margin:0 0 14px">{{ t.newsletterText }}</p>
+            <div style="display:flex;gap:8px;margin-bottom:18px">
+              <input placeholder="{{ t.newsletterPh }}" style="flex:1;min-width:0;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:11px;padding:12px 14px;color:#fff;font:400 14px 'Public Sans';outline:none">
+              <button class="acg-btn" style="border:none;cursor:pointer;background:#F6BE18;color:#0A2A5E;font:700 14px 'Public Sans';padding:0 18px;border-radius:11px">{{ t.suscribir }}</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;color:#8FA6C4;font-size:13.5px">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18"></path></svg>
+              Castellano · Valencià
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding-top:24px;flex-wrap:wrap;gap:12px">
+          <span style="font-size:13px;color:#6E86A6">© 2026 Acción Civil Gandia · {{ t.footerRights }}</span>
+          <span style="font-size:13px;color:#6E86A6">{{ t.footerMade }}</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+  </sc-if>
+
+  <!-- ================= MOBILE (placeholder, replaced next) ================= -->
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+  <div style="background:#fff;min-height:100vh">
+    <div style="width:100%;max-width:none;background:#fff;border:none;border-radius:0;box-shadow:none;overflow:hidden;position:relative;min-height:100vh">
+
+      <!-- mobile header -->
+      <div style="height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid #EEF2F7;position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);z-index:40">
+        <div style="display:flex;align-items:center;gap:9px">
+          <img src="assets/logo-icon.png" alt="Acción Civil Gandia" style="height:36px;width:36px;object-fit:contain">
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="display:flex;background:#F0F4F9;border-radius:9px;padding:2px">
+            <button class="acg-btn" onClick="{{ setES }}" style="border:none;cursor:pointer;font:700 11px 'Public Sans';padding:5px 8px;border-radius:6px;background:{{ esBg }};color:{{ esCol }}">ES</button>
+            <button class="acg-btn" onClick="{{ setVA }}" style="border:none;cursor:pointer;font:700 11px 'Public Sans';padding:5px 8px;border-radius:6px;background:{{ vaBg }};color:{{ vaCol }}">VA</button>
+          </div>
+          <button class="acg-btn" onClick="{{ openSearch }}" title="{{ t.buscar }}" style="width:40px;height:40px;border-radius:11px;border:1px solid #E4EBF2;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#33414F">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.2-3.2"></path></svg>
+          </button>
+          <button class="acg-btn" onClick="{{ toggleMenu }}" style="width:40px;height:40px;border-radius:11px;border:none;background:#0A2A5E;cursor:pointer;display:flex;align-items:center;justify-content:center">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- mobile menu overlay -->
+      <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;background:linear-gradient(160deg,#0A2A5E,#0F3B7D);z-index:60;padding:22px 22px 30px;display:flex;flex-direction:column">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:26px">
+            <span style="font:800 18px 'Bricolage Grotesque';color:#fff">Menú</span>
+            <button class="acg-btn" onClick="{{ closeMenu }}" style="width:40px;height:40px;border-radius:11px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+          </div>
+          <div style="display:flex;flex-direction:column">
+            <sc-for list="{{ nav }}" as="n" hint-placeholder-count="9">
+              <a href="{{ n.href }}" onClick="{{ closeMenu }}" style="text-decoration:none;color:#fff;font:700 22px 'Bricolage Grotesque';padding:13px 0;border-bottom:1px solid rgba(255,255,255,.1)">{{ n.label }}</a>
+            </sc-for>
+          </div>
+          <div style="margin-top:auto;display:flex;flex-direction:column;gap:10px;padding-top:24px">
+            <a href="Crear.dc.html" class="acg-btn" style="text-decoration:none;text-align:center;background:#F6BE18;color:#0A2A5E;font:800 15px 'Public Sans';padding:15px;border-radius:13px">{{ crearLabel }}</a>
+            <a href="Participa.dc.html" class="acg-btn" style="text-decoration:none;text-align:center;background:rgba(255,255,255,.1);color:#fff;font:700 15px 'Public Sans';padding:15px;border-radius:13px;border:1px solid rgba(255,255,255,.22)">{{ t.area }}</a>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- HERO -->
+      <div style="padding:26px 20px 30px;background:linear-gradient(180deg,#F4FAFF,#fff)">
+        <span style="display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid #DBE7F4;color:#0FA6B6;font:700 11px 'Public Sans';padding:6px 12px;border-radius:999px"><span style="width:6px;height:6px;border-radius:50%;background:#0FA6B6"></span>{{ t.heroEyebrow }}</span>
+        <h1 style="font:800 34px/1.08 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.02em;margin:16px 0 12px">{{ t.heroTitle }}</h1>
+        <p style="font-size:16px;color:#42525F;margin:0 0 20px">{{ t.heroText }}</p>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:22px">
+          <a href="Participacion.dc.html" class="acg-btn" style="text-decoration:none;text-align:center;background:#1563C4;color:#fff;font:700 16px 'Public Sans';padding:15px;border-radius:13px;box-shadow:0 10px 22px rgba(21,99,196,.28)">{{ t.heroCta1 }}</a>
+          <a href="Conocenos.dc.html" class="acg-btn" style="text-decoration:none;text-align:center;background:#fff;color:#0A2A5E;font:700 16px 'Public Sans';padding:15px;border-radius:13px;border:1.5px solid #CFDDEC">{{ t.heroCta2 }}</a>
+        </div>
+        <div style="position:relative;border-radius:20px;overflow:hidden;aspect-ratio:16/11;background-image:repeating-linear-gradient(135deg,#D3E2F2 0 14px,#E4EFFA 14px 28px);display:flex;align-items:flex-end;padding:14px">
+          <span style="position:absolute;top:12px;left:12px;display:inline-flex;align-items:center;gap:5px;background:#F6BE18;color:#0A2A5E;font:800 9.5px 'Public Sans';letter-spacing:.03em;text-transform:uppercase;padding:4px 9px;border-radius:999px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="9" cy="11" r="2"></circle><path d="m3 17 5-4 4 3 3-2 6 4"></path></svg>{{ t.provisional }}</span>
+          <span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#3F5165;background:rgba(255,255,255,.85);padding:5px 10px;border-radius:7px;text-transform:uppercase">{{ t.heroImg }}</span>
+        </div>
+      </div>
+
+      <!-- PRIORIDADES -->
+      <div style="padding:28px 20px">
+        <span style="font:700 11px 'Public Sans';letter-spacing:.14em;text-transform:uppercase;color:#0FA6B6">{{ t.prioTag }}</span>
+        <h2 style="font:800 24px/1.12 'Bricolage Grotesque';color:#0A2A5E;margin:8px 0 18px">{{ t.prioTitle }}</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <sc-for list="{{ prioridades }}" as="p" hint-placeholder-count="6">
+            <div style="background:#fff;border:1px solid #E9EEF4;border-radius:16px;padding:16px">
+              <div style="width:42px;height:42px;border-radius:12px;background:#EAF3FC;display:flex;align-items:center;justify-content:center;color:#1563C4;margin-bottom:12px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="{{ p.iconPath }}"></path></svg></div>
+              <h3 style="font:700 16px 'Bricolage Grotesque';color:#17232F;margin:0">{{ p.title }}</h3>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- PARTICIPACION -->
+      <div style="padding:30px 20px;background:linear-gradient(160deg,#0A2A5E,#0E356F);color:#fff">
+        <span style="font:700 11px 'Public Sans';letter-spacing:.14em;text-transform:uppercase;color:#5FD4E2">{{ t.partTag }}</span>
+        <h2 style="font:800 27px/1.1 'Bricolage Grotesque';margin:8px 0 12px">{{ t.partTitle }}</h2>
+        <p style="font-size:14.5px;color:#C4D6EC;margin:0 0 18px">{{ t.partText }}</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+          <sc-for list="{{ partActions }}" as="a" hint-placeholder-count="4">
+            <a href="{{ a.href }}" class="acg-btn" style="text-decoration:none;display:flex;align-items:center;gap:9px;background:{{ a.bg }};color:{{ a.col }};border:{{ a.border }};padding:12px 13px;border-radius:12px;font:700 13.5px 'Public Sans'"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="{{ a.iconPath }}"></path></svg>{{ a.label }}</a>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <sc-for list="{{ counters }}" as="c" hint-placeholder-count="4">
+            <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:14px 16px">
+              <div style="font:800 24px 'Bricolage Grotesque'">{{ c.value }}</div>
+              <div style="font-size:12px;color:#9FBBDD;margin-top:2px">{{ c.label }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- TENDENCIA -->
+      <div style="padding:28px 20px;background:#F4F7FB">
+        <span style="font:700 11px 'Public Sans';letter-spacing:.14em;text-transform:uppercase;color:#0FA6B6">{{ t.trendTag }}</span>
+        <h2 style="font:800 24px/1.12 'Bricolage Grotesque';color:#0A2A5E;margin:8px 0 16px">{{ t.trendTitle }}</h2>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <sc-for list="{{ tendencias }}" as="tp" hint-placeholder-count="3">
+            <div style="background:#fff;border:1px solid #E9EEF4;border-radius:16px;padding:18px">
+              <div style="display:flex;align-items:center;gap:9px;margin-bottom:11px">
+                <span style="width:34px;height:34px;flex-shrink:0;border-radius:10px;background:{{ tp.avBg }};color:#fff;font:800 12px 'Public Sans';display:flex;align-items:center;justify-content:center">{{ tp.ini }}</span>
+                <div style="flex:1;min-width:0"><div style="font:700 13px 'Public Sans';color:#17232F;line-height:1.15">{{ tp.autor }}</div><div style="font-size:11.5px;color:#94A3B2">{{ tp.barrio }} · {{ tp.ultima }}</div></div>
+                <span style="background:#EAF3FC;color:#1563C4;font:700 11px 'Public Sans';padding:4px 9px;border-radius:999px;white-space:nowrap">{{ tp.cat }}</span>
+              </div>
+              <a href="Propuesta.dc.html" style="text-decoration:none"><h3 style="font:700 17px/1.22 'Bricolage Grotesque';color:#17232F;margin:0 0 10px">{{ tp.title }}</h3></a>
+              <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:10px"><span style="font:700 11.5px 'Public Sans';color:{{ tp.estadoColor }};background:{{ tp.estadoTint }};padding:3px 9px;border-radius:999px">{{ tp.estado }}</span><sc-if value="{{ tp.oficial }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:4px;background:#EAF3FC;color:#0A2A5E;font:700 11px 'Public Sans';padding:3px 9px;border-radius:999px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"></path></svg>{{ t.respuestaOficial }}</span></sc-if></div>
+              <div style="font-size:12px;color:#5C6B7A;margin-bottom:7px">{{ tp.umbral }}</div>
+              <div style="height:7px;background:#EDF1F6;border-radius:999px;overflow:hidden;margin-bottom:14px"><div style="height:100%;border-radius:999px;background:{{ tp.estadoColor }};width:{{ tp.barW }};transition:width 1.1s cubic-bezier(.2,.7,.3,1)"></div></div>
+              <div style="display:flex;gap:10px">
+                <button class="acg-btn" style="flex:1;border:none;cursor:pointer;background:#1563C4;color:#fff;font:700 13.5px 'Public Sans';padding:10px;border-radius:11px;display:flex;align-items:center;justify-content:center;gap:6px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 2.6 2.6L12 9h6a2 2 0 0 1 2 2.4l-1.5 6a2 2 0 0 1-2 1.6H7"></path></svg>{{ t.apoyar }}</button>
+                <button class="acg-btn" style="width:42px;border:1px solid #E4EBF2;cursor:pointer;background:#fff;color:#33414F;border-radius:11px;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="6" cy="12" r="2.5"></circle><circle cx="17" cy="6" r="2.5"></circle><circle cx="17" cy="18" r="2.5"></circle><path d="M8.2 10.8 14.8 7.2M8.2 13.2l6.6 3.6"></path></svg></button>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- CAMPAÑA -->
+      <div style="padding:28px 20px">
+        <div style="border-radius:22px;overflow:hidden;border:1px solid #E9EEF4;box-shadow:0 16px 36px rgba(10,42,94,.1)">
+          <div style="position:relative;background-image:repeating-linear-gradient(135deg,#0E356F 0 15px,#12408A 15px 30px);height:150px;padding:16px;display:flex;align-items:flex-start"><span style="background:#F6BE18;color:#0A2A5E;font:800 11px 'Public Sans';letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border-radius:999px">{{ campana.tag }}</span></div>
+          <div style="padding:22px">
+            <h2 style="font:800 23px/1.12 'Bricolage Grotesque';color:#0A2A5E;margin:0 0 10px">{{ campana.title }}</h2>
+            <p style="font-size:14.5px;color:#5C6B7A;margin:0 0 18px">{{ campana.text }}</p>
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:7px"><span><span style="font:800 24px 'Bricolage Grotesque';color:#0A2A5E">{{ campana.apoyos }}</span><span style="font-size:13px;color:#5C6B7A"> / {{ campana.meta }}</span></span><span style="font:700 13px 'Public Sans';color:#0FA6B6">{{ campana.pct }}%</span></div>
+            <div style="height:10px;background:#EDF1F6;border-radius:999px;overflow:hidden;margin-bottom:18px"><div style="height:100%;border-radius:999px;background:linear-gradient(90deg,#0FA6B6,#1563C4);width:{{ campana.barW }};transition:width 1.2s cubic-bezier(.2,.7,.3,1)"></div></div>
+            <a href="Campanas.dc.html" class="acg-btn" style="text-decoration:none;display:block;text-align:center;background:#1563C4;color:#fff;font:700 15px 'Public Sans';padding:14px;border-radius:12px">{{ campana.cta }}</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACCION -->
+      <div style="padding:28px 20px;background:#F4F7FB">
+        <span style="font:700 11px 'Public Sans';letter-spacing:.14em;text-transform:uppercase;color:#0FA6B6">{{ t.accTag }}</span>
+        <h2 style="font:800 24px/1.12 'Bricolage Grotesque';color:#0A2A5E;margin:8px 0 16px">{{ t.accTitle }}</h2>
+        <div id="acg-map-mobile" style="width:100%;height:280px;border-radius:18px;overflow:hidden;margin-bottom:18px;border:1px solid #E4EBF2"></div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <sc-for list="{{ acciones }}" as="ac" hint-placeholder-count="4">
+            <div style="background:#fff;border:1px solid #E9EEF4;border-radius:14px;padding:14px;display:flex;align-items:center;gap:13px">
+              <div style="width:40px;height:40px;flex-shrink:0;border-radius:11px;background:{{ ac.tintBg }};display:flex;align-items:center;justify-content:center;color:{{ ac.estadoColor }}"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{ ac.iconPath }}"></path></svg></div>
+              <div style="flex:1;min-width:0"><h3 style="font:700 14.5px 'Public Sans';color:#17232F;margin:0 0 3px">{{ ac.title }}</h3><div style="font-size:12px;color:#5C6B7A">{{ ac.barrio }} · {{ ac.fecha }}</div></div>
+              <span style="flex-shrink:0;background:{{ ac.tintBg }};color:{{ ac.estadoColor }};font:700 11px 'Public Sans';padding:5px 10px;border-radius:999px">{{ ac.estado }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- COMPROMISOS -->
+      <div style="padding:28px 20px">
+        <span style="font:700 11px 'Public Sans';letter-spacing:.14em;text-transform:uppercase;color:#0FA6B6">{{ t.compTag }}</span>
+        <h2 style="font:800 24px/1.12 'Bricolage Grotesque';color:#0A2A5E;margin:8px 0 16px">{{ t.compTitle }}</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+          <sc-for list="{{ compromisos }}" as="cm" hint-placeholder-count="4">
+            <div style="background:#fff;border:1px solid #E9EEF4;border-radius:14px;padding:16px;border-left:5px solid {{ cm.color }}"><div style="font:800 30px 'Bricolage Grotesque';color:{{ cm.color }}">{{ cm.value }}</div><div style="font-size:13px;color:#42525F;font-weight:600">{{ cm.label }}</div></div>
+          </sc-for>
+        </div>
+        <div style="background:#F4F7FB;border:1px solid #E9EEF4;border-radius:14px;padding:16px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px"><span style="font:700 14px 'Public Sans';color:#0A2A5E">{{ t.cumplimiento }}</span><span style="font:800 18px 'Bricolage Grotesque';color:#2E9E5B">{{ compPct }}%</span></div>
+          <div style="height:12px;background:#E7ECF2;border-radius:999px;overflow:hidden"><div style="height:100%;border-radius:999px;background:linear-gradient(90deg,#2E9E5B,#57C07E);width:{{ compBarW }};transition:width 1.2s cubic-bezier(.2,.7,.3,1)"></div></div>
+        </div>
+      </div>
+
+      <!-- GENTE -->
+      <div style="padding:28px 20px;background:#F4F7FB">
+        <span style="font:700 11px 'Public Sans';letter-spacing:.14em;text-transform:uppercase;color:#0FA6B6">{{ t.genteTag }}</span>
+        <h2 style="font:800 24px/1.12 'Bricolage Grotesque';color:#0A2A5E;margin:8px 0 16px">{{ t.genteTitle }}</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <sc-for list="{{ gente }}" as="g" hint-placeholder-count="4">
+            <div style="background:#fff;border:1px solid #E9EEF4;border-radius:16px;overflow:hidden">
+              <div style="aspect-ratio:1/1;background-image:repeating-linear-gradient(135deg,#D3E2F2 0 12px,#E4EFFA 12px 24px)"></div>
+              <div style="padding:14px"><h3 style="font:700 15px 'Bricolage Grotesque';color:#17232F;margin:0 0 2px">{{ g.name }}</h3><div style="font:700 12px 'Public Sans';color:#1563C4">{{ g.role }}</div></div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- ACTUALIDAD + AGENDA -->
+      <div style="padding:28px 20px">
+        <span style="font:700 11px 'Public Sans';letter-spacing:.14em;text-transform:uppercase;color:#0FA6B6">{{ t.newsTag }}</span>
+        <h2 style="font:800 24px/1.12 'Bricolage Grotesque';color:#0A2A5E;margin:8px 0 16px">{{ t.newsTitle }}</h2>
+        <div style="border-radius:18px;overflow:hidden;border:1px solid #E9EEF4;margin-bottom:12px">
+          <div style="aspect-ratio:16/8;background-image:repeating-linear-gradient(135deg,#D3E2F2 0 14px,#E4EFFA 14px 28px);display:flex;align-items:flex-end;padding:12px"><span style="background:#F6BE18;color:#0A2A5E;font:800 10.5px 'Public Sans';letter-spacing:.06em;text-transform:uppercase;padding:5px 11px;border-radius:999px">{{ newsFeat.cat }}</span></div>
+          <div style="padding:16px"><h3 style="font:700 18px/1.2 'Bricolage Grotesque';color:#17232F;margin:0 0 6px">{{ newsFeat.title }}</h3><div style="font-size:12.5px;color:#94A3B2">{{ newsFeat.date }}</div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px">
+          <sc-for list="{{ noticias }}" as="nt" hint-placeholder-count="3">
+            <div style="display:flex;align-items:center;gap:13px;background:#fff;border:1px solid #E9EEF4;border-radius:13px;padding:12px">
+              <div style="width:64px;height:52px;flex-shrink:0;border-radius:9px;background-image:repeating-linear-gradient(135deg,#D3E2F2 0 11px,#E4EFFA 11px 22px)"></div>
+              <div style="flex:1;min-width:0"><span style="font:700 10px 'Public Sans';letter-spacing:.08em;text-transform:uppercase;color:#0FA6B6">{{ nt.cat }}</span><h3 style="font:700 14px/1.25 'Public Sans';color:#17232F;margin:3px 0">{{ nt.title }}</h3><div style="font-size:11.5px;color:#94A3B2">{{ nt.date }}</div></div>
+            </div>
+          </sc-for>
+        </div>
+        <h3 style="font:800 20px 'Bricolage Grotesque';color:#0A2A5E;margin:0 0 14px">{{ t.eventsTitle }}</h3>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <sc-for list="{{ eventos }}" as="ev" hint-placeholder-count="3">
+            <div style="background:#fff;border:1px solid #E9EEF4;border-radius:14px;padding:13px;display:flex;gap:13px;align-items:center">
+              <div style="width:52px;height:52px;flex-shrink:0;border-radius:12px;background:#EAF3FC;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#0A2A5E"><span style="font:800 19px 'Bricolage Grotesque';line-height:1">{{ ev.day }}</span><span style="font:700 9px 'Public Sans';letter-spacing:.06em;color:#1563C4">{{ ev.month }}</span></div>
+              <div style="flex:1;min-width:0"><h3 style="font:700 14.5px 'Public Sans';color:#17232F;margin:0 0 3px">{{ ev.title }}</h3><div style="font-size:12px;color:#5C6B7A">{{ ev.place }} · {{ ev.time }}</div></div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- TRANSPARENCIA -->
+      <div style="padding:28px 20px;background:#EAF3FC">
+        <span style="font:700 11px 'Public Sans';letter-spacing:.14em;text-transform:uppercase;color:#0FA6B6">{{ t.transpTag }}</span>
+        <h2 style="font:800 24px/1.12 'Bricolage Grotesque';color:#0A2A5E;margin:8px 0 16px">{{ t.transpTitle }}</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+          <sc-for list="{{ transparencia }}" as="tr" hint-placeholder-count="6">
+            <a href="Transparencia.dc.html" style="text-decoration:none;background:#fff;border:1px solid #DBE7F4;border-radius:14px;padding:16px 10px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:9px"><div style="width:40px;height:40px;border-radius:11px;background:#EAF3FC;display:flex;align-items:center;justify-content:center;color:#1563C4"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="{{ tr.iconPath }}"></path></svg></div><span style="font:700 12px 'Public Sans';color:#17232F">{{ tr.label }}</span></a>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- CTA FINAL -->
+      <div style="padding:34px 22px;background:linear-gradient(150deg,#0A2A5E,#0F3B7D);color:#fff;text-align:center">
+        <h2 style="font:800 28px/1.1 'Bricolage Grotesque';margin:0 0 12px">{{ t.ctaTitle }}</h2>
+        <p style="font-size:15px;color:#C4D6EC;margin:0 0 22px">{{ t.ctaText }}</p>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <a href="Participa.dc.html" class="acg-btn" style="text-decoration:none;background:#F6BE18;color:#0A2A5E;font:800 15px 'Public Sans';padding:15px;border-radius:13px">{{ t.ctaBtn1 }}</a>
+          <a href="Crear.dc.html" class="acg-btn" style="text-decoration:none;background:rgba(255,255,255,.1);color:#fff;font:700 15px 'Public Sans';padding:15px;border-radius:13px;border:1.5px solid rgba(255,255,255,.28)">{{ t.ctaBtn2 }}</a>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div style="padding:26px 22px 20px;background:#071E45;color:#8FA6C4">
+        <div style="margin-bottom:12px"><div style="background:#fff;border-radius:50%;padding:7px;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.12)"><img src="assets/logo-icon.png" alt="Acción Civil Gandia" style="height:38px;width:38px;object-fit:contain"></div></div>
+        <p style="font-size:13px;margin:0 0 16px">{{ t.footerDesc }}</p>
+        <div style="display:flex;gap:9px;margin-bottom:18px">
+          <sc-for list="{{ social }}" as="so" hint-placeholder-count="4">
+            <a href="#" style="width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#B7C7DD"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{ so.iconPath }}"></path></svg></a>
+          </sc-for>
+        </div>
+        <div style="font-size:11.5px;color:#6E86A6;border-top:1px solid rgba(255,255,255,.1);padding-top:14px">© 2026 Acción Civil Gandia · {{ t.footerRights }}</div>
+      </div>
+
+      <!-- bottom tab bar -->
+      <div style="position:sticky;bottom:0;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-top:1px solid #E9EEF4;display:flex;align-items:center;justify-content:space-around;padding:9px 8px 12px">
+        <sc-for list="{{ tabBar }}" as="tb" hint-placeholder-count="4">
+          <a href="{{ tb.href }}" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:3px;color:{{ tb.col }};flex:1"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{ tb.iconPath }}"></path></svg><span style="font:600 10px 'Public Sans'">{{ tb.label }}</span></a>
+        </sc-for>
+          <a href="Crear.dc.html" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:3px;flex:1"><span style="width:44px;height:34px;margin-top:-14px;border-radius:12px;background:#1563C4;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 18px rgba(21,99,196,.35)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg></span><span style="font:600 10px 'Public Sans';color:#1563C4">{{ tabCrear }}</span></a>
+      </div>
+
+    </div>
+  </div>
+  </sc-if>
+
+  <div class="acg-cookie-banner {{ cookieClass }}">
+    <p style="font-size:14px;color:#17232F;margin:0 0 14px;line-height:1.5">{{ t.cookieText }}</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button onClick="{{ acceptCookies }}" class="acg-btn" style="border:none;cursor:pointer;background:#1563C4;color:#fff;font:700 13.5px 'Public Sans';padding:10px 18px;border-radius:10px;flex:1">{{ t.cookieAccept }}</button>
+      <button onClick="{{ acceptCookies }}" class="acg-btn" style="border:none;cursor:pointer;background:#F0F4F9;color:#0A2A5E;font:700 13.5px 'Public Sans';padding:10px 18px;border-radius:10px;flex:1">{{ t.cookieNecessary }}</button>
+      <a href="Cookies.dc.html" style="text-decoration:none;color:#1563C4;font:600 13px 'Public Sans';padding:10px 6px;display:flex;align-items:center">{{ t.cookieMore }}</a>
+    </div>
+  </div>
+
+
+    <!-- SEO semantic content -->
+    <div class="acg-seo-keywords" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0" aria-hidden="true">
+      <p>Acción Civil Gandia - partido político local municipalista Gandia Valencia. Propuestas políticas Gandia 2027. Elecciones municipales Gandia. Vecinos de Gandia, Grao de Gandia, Playa de Gandia, Benipeixcar, Beniopa, Santa Anna, Corea, Marchuquera. Seguridad ciudadana Gandia, policía de proximidad, cámaras de seguridad, antiokupación. Pequeño comercio Gandia, empleo juvenil, cultura accesible, desestacionalización playa, transporte público Gandia, limpieza urbana, participación ciudadana. Partido político independiente Gandia. Formación política local Gandia.</p>
+    </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { lang: this.initLang(), device:null, viewportW:this.viewportWidth(), menuOpen:false, searchOpen:false, anim:0, mounted:false };
+  initLang(){ try{ return localStorage.getItem('acg_lang')||'es'; }catch(e){ return 'es'; } }
+
+  viewportWidth(){
+    try{
+      return Math.max(document.documentElement ? document.documentElement.clientWidth : 0, window.innerWidth || 0, 320);
+    }catch(e){
+      return 1280;
+    }
+  }
+
+  componentDidMount(){
+    this._onResize=()=>this.setState({viewportW:this.viewportWidth()});
+    this._onResize();
+    try{ window.addEventListener('resize', this._onResize, {passive:true}); }catch(e){ window.addEventListener('resize', this._onResize); }
+    const dur=1500, t0=performance.now();
+    const tick=(now)=>{ let p=Math.min(1,(now-t0)/dur); p=1-Math.pow(1-p,3); this.setState({anim:p}); if(p<1) this._raf=requestAnimationFrame(tick); };
+    this._raf=requestAnimationFrame(tick);
+    this._to=setTimeout(()=>this.setState({mounted:true}),90);
+    this._mapTo=setTimeout(()=>this.initMap(),300);
+  }
+  componentWillUnmount(){ if(this._raf) cancelAnimationFrame(this._raf); if(this._to) clearTimeout(this._to); if(this._mapTo) clearTimeout(this._mapTo); if(this._onResize) window.removeEventListener('resize', this._onResize); if(this._map) this._map.remove(); if(this._mapMobile) this._mapMobile.remove(); }
+
+  initMap(){
+    if(!window.L) return;
+    const es=this.state.lang==='es';
+    const markers=[
+      [38.9683,-0.1793,'#2E9E5B',es?'Mesa informativa Jardinet':'Taula informativa Jardinet'],
+      [38.9587,-0.1687,'#1563C4',es?'Mesa informativa Beniopa':'Taula informativa Beniopa'],
+      [38.9724,-0.1871,'#F6BE18',es?'Nit dels Ciris Benipeixcar':'Nit dels Ciris Benipeixcar'],
+      [38.9458,-0.1542,'#0FA6B6',es?'Propuesta seguridad barrios':'Proposta seguretat barris'],
+      [38.9951,-0.1621,'#D24B4B',es?'Oficina antiokupación':'Oficina antiokupació'],
+      [38.9712,-0.1812,'#6B4EE6',es?'Modernización del partido':'Modernització del partit']
+    ];
+    const tile='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+    const tileOpts={attribution:'&copy; <a href="https://carto.com/">CARTO</a>',maxZoom:19,subdomains:'abcd'};
+    const addMarkers=(m)=>{markers.forEach(([lat,lng,color,title])=>{const ic=L.divIcon({className:'',html:'<div style="width:18px;height:18px;border-radius:50%;background:'+color+';border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.25)"></div>',iconSize:[18,18],iconAnchor:[9,9]});L.marker([lat,lng],{icon:ic}).addTo(m).bindPopup('<b>'+title+'</b>');});};
+    const el=document.getElementById('acg-map');
+    if(el){const map=L.map(el,{scrollWheelZoom:false,zoomControl:true}).setView([38.9667,-0.1833],14);L.tileLayer(tile,tileOpts).addTo(map);addMarkers(map);this._map=map;}
+    const elM=document.getElementById('acg-map-mobile');
+    if(elM){const mapM=L.map(elM,{scrollWheelZoom:false,zoomControl:false,dragging:true}).setView([38.9667,-0.1833],13);L.tileLayer(tile,tileOpts).addTo(mapM);addMarkers(mapM);this._mapMobile=mapM;}
+  }
+
+  fmt(n){ return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.'); }
+
+  content(lang){
+    const es = lang==='es';
+    const V=(a,b)=> es?a:b;
+    return {
+      nav:[
+        {label:V('Inicio','Inici'),href:'Acción Civil Gandia.dc.html',col:'#0A2A5E',weight:700,arrow:false,sub:null},
+        {label:V('Conócenos','Coneix-nos'),href:'Conocenos.dc.html',col:'#33414F',weight:600,arrow:true,sub:[
+          {label:V('Historia','Història'),href:'Historia.dc.html'},
+          {label:V('Equipo','Equip'),href:'Equipo.dc.html'},
+          {label:V('Valores','Valors'),href:'Valores.dc.html'},
+          {label:V('Preguntas frecuentes','Preguntes freqüents'),href:'FAQ.dc.html'}
+        ]},
+        {label:V('Propuestas','Propostes'),href:'Propuestas.dc.html',col:'#33414F',weight:600,arrow:true,sub:[
+          {label:V('Programa político','Programa polític'),href:'Propuestas.dc.html'},
+          {label:V('Propuestas ciudadanas','Propostes ciutadanes'),href:'Participacion.dc.html'}
+        ]},
+        {label:V('Participación','Participació'),href:'Participacion.dc.html',col:'#33414F',weight:600,arrow:true,sub:[
+          {label:V('Cómo funciona','Com funciona'),href:'ComoFunciona.dc.html'},
+          {label:V('Crear propuesta','Crear propuesta'),href:'CrearPropuesta.dc.html'},
+          {label:V('Contacto','Contacte'),href:'Contacto.dc.html'}
+        ]},
+        {label:V('Acción','Acció'),href:'Accion.dc.html',col:'#33414F',weight:600,arrow:false,sub:null},
+        {label:V('Campañas','Campanyes'),href:'Campanas.dc.html',col:'#33414F',weight:600,arrow:false,sub:null},
+        {label:V('Transparencia','Transparència'),href:'Transparencia.dc.html',col:'#33414F',weight:600,arrow:false,sub:null}
+      ],
+      footerNav1:[
+        {label:V('Propuestas','Propostes'),href:'Propuestas.dc.html'},
+        {label:V('Participación ciudadana','Participació ciutadana'),href:'Participacion.dc.html'},
+        {label:V('Acción en Gandia','Acció a Gandia'),href:'Accion.dc.html'},
+        {label:V('Campañas','Campanyes'),href:'Campanas.dc.html'},
+        {label:V('Transparencia','Transparència'),href:'Transparencia.dc.html'}
+      ],
+      footerNav2:[
+        {label:V('Aviso legal','Avís legal'),href:'AvisoLegal.dc.html'},
+        {label:V('Política de privacidad','Política de privacitat'),href:'Privacidad.dc.html'},
+        {label:V('Cookies','Galetes'),href:'Cookies.dc.html'},
+        {label:V('Accesibilidad','Accessibilitat'),href:'Accesibilidad.dc.html'},
+        {label:V('Canal de denuncias','Canal de denúncies'),href:'mailto:info@accioncivilgandia.org'}
+      ],
+      social:[
+        {iconPath:'M18 2h-3a4 4 0 0 0-4 4v3H8v4h3v9h4v-9h3l1-4h-4V6a1 1 0 0 1 1-1h3z'},
+        {iconPath:'M23 4.5a8 8 0 0 1-2.3.6A4 4 0 0 0 22.4 3a8 8 0 0 1-2.5 1A4 4 0 0 0 13 7.5a11 11 0 0 1-8-4 4 4 0 0 0 1.2 5.3A4 4 0 0 1 4.5 8v.1a4 4 0 0 0 3.2 4 4 4 0 0 1-1.8.1 4 4 0 0 0 3.7 2.8A8 8 0 0 1 3 16.6 11 11 0 0 0 20 7.2a8 8 0 0 0 3-2.7z'},
+        {iconPath:'M16 3H8a5 5 0 0 0-5 5v8a5 5 0 0 0 5 5h8a5 5 0 0 0 5-5V8a5 5 0 0 0-5-5zM12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8zM17.5 6.5h.01'},
+        {iconPath:'M21 6.5a3 3 0 0 0-2-2C17 4 12 4 12 4s-5 0-7 .5a3 3 0 0 0-2 2A31 31 0 0 0 2.5 12 31 31 0 0 0 3 17.5a3 3 0 0 0 2 2c2 .5 7 .5 7 .5s5 0 7-.5a3 3 0 0 0 2-2 31 31 0 0 0 .5-5.5 31 31 0 0 0-.5-5.5zM10 15V9l5 3z'}
+      ],
+      heroStats:[
+        {value:'8', label:V('miembros en la junta','membres a la junta')},
+        {value:'5', label:V('ejes de acción política','eixos d\'acció política')},
+        {value:'2027', label:V('próximas elecciones','pròximes eleccions')}
+      ],
+      heroBadgeN:'2022',
+      prioridades:[
+        {iconPath:'M4 11.5 12 5l8 6.5M6 10.5V19h4v-5h4v5h4v-8.5', title:V('Servicios básicos','Serveis bàsics'), summary:V('Transporte, limpieza y mantenimiento con control público y respuesta rápida.','Transport, neteja i manteniment amb control públic i resposta ràpida.')},
+        {iconPath:'M12 4c3 3.6 5 6.4 5 9a5 5 0 0 1-10 0c0-2.6 2-5.4 5-9Z', title:V('Gandia unida: Ciudad y Playa','Gandia unida: Ciutat i Platja'), summary:V('Acciones coordinadas todo el año para que la vida no dependa solo del verano.','Accions coordinades tot l\'any perquè la vida no depenga sols de l\'estiu.')},
+        {iconPath:'M12 4 5 6.5V11c0 4.2 3 7 7 8.3 4-1.3 7-4.1 7-8.3V6.5L12 4Z', title:V('Seguridad cercana y útil','Seguretat propera i útil'), summary:V('Policía de proximidad, a pie y por barrios, con disponibilidad real.','Policia de proximitat, a peu i per barris, amb disponibilitat real.')},
+        {iconPath:'M12 3v18M8 7h6a2.5 2.5 0 0 1 0 5H9a2.5 2.5 0 0 0 0 5h6', title:V('Empleo y futuro','Ocupació i futur'), summary:V('Impulsar actividad productiva, facilitar el empleo y recuperar la ambición de Gandia.','Impulsar activitat productiva, facilitar l\'ocupació i recuperar l\'ambició de Gandia.')},
+        {iconPath:'M12 3v18M8 8l4-5 4 5M6 14h12M8 20h8', title:V('Cultura accesible','Cultura accessible'), summary:V('Plazas vivas, cultura en los barrios, programación para todos.','Places vives, cultura als barris, programació per a tots.')}
+      ],
+      partActions:[
+        {label:V('Crear propuesta','Crear proposta'), href:'Crear.dc.html', iconPath:'M12 5v14M5 12h14', bg:'#F6BE18', col:'#0A2A5E', border:'none'},
+        {label:V('Explorar','Explorar'), href:'Participacion.dc.html', iconPath:'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14ZM20 20l-3.5-3.5', bg:'rgba(255,255,255,.08)', col:'#fff', border:'1px solid rgba(255,255,255,.2)'},
+        {label:V('Cercanas','Pròximes'), href:'Participacion.dc.html', iconPath:'M12 21s7-5.6 7-11a7 7 0 0 0-14 0c0 5.4 7 11 7 11ZM12 10a1.5 1.5 0 1 0 0-.01', bg:'rgba(255,255,255,.08)', col:'#fff', border:'1px solid rgba(255,255,255,.2)'},
+        {label:V('Tendencia','Tendència'), href:'Participacion.dc.html', iconPath:'M3 17l6-6 4 4 8-8M21 7v5M21 7h-5', bg:'rgba(255,255,255,.08)', col:'#fff', border:'1px solid rgba(255,255,255,.2)'}
+      ],
+      tendencias:[
+        {cat:V('Seguridad','Seguretat'), barrio:V('Gandia','Gandia'), title:V('Policía de proximidad por barrios','Policia de proximitat per barris'), autor:'Acción Civil', ini:'AC', avBg:'#0A2A5E', apoyos:'—', coment:'—', seguidores:'—', estado:V('Propuesta activa','Proposta activa'), estadoColor:'#1563C4', pct:50, oficial:false, ultima:V('jun 2026','juny 2026'), umbral:V('Eje: Seguridad cercana y útil','Eix: Seguretat propera i útil')},
+        {cat:V('Empleo','Ocupació'), barrio:V('Gandia','Gandia'), title:V('Reactivación del pequeño comercio','Reactivació del xicotet comerç'), autor:'Acción Civil', ini:'AC', avBg:'#2E9E5B', apoyos:'—', coment:'—', seguidores:'—', estado:V('En desarrollo','En desenvolupament'), estadoColor:'#0FA6B6', pct:40, oficial:false, ultima:V('jun 2026','juny 2026'), umbral:V('Eje: Empleo y futuro','Eix: Ocupació i futur')},
+        {cat:V('Ciudad','Ciutat'), barrio:V('Platja de Gandia','Platja de Gandia'), title:V('Desestacionalización de la Playa de Gandia','Desestacionalització de la Platja de Gandia'), autor:'Acción Civil', ini:'AC', avBg:'#0FA6B6', apoyos:'—', coment:'—', seguidores:'—', estado:V('Eje prioritario','Eix prioritari'), estadoColor:'#2E9E5B', pct:60, oficial:false, ultima:V('jun 2026','juny 2026'), umbral:V('Eje: Gandia unida','Eix: Gandia unida')}
+      ],
+      campana:{
+        tag:V('Campaña destacada','Campanya destacada'),
+        img:'FOTO · Seguridad ciudadana en Gandia',
+        title:V('38 cámaras de seguridad para Gandia','38 càmeres de seguretat per a Gandia'),
+        text:V('Esperamos que estas 38 cámaras sean suficientes. Su colocación debe ser precisa y servir a un propósito claro de seguridad ciudadana.','Esperem que estes 38 càmeres siguen suficients. La seua col·locació ha de ser precisa i servir a un propòsit clar de seguretat ciutadana.'),
+        apoyos:'—', meta:'—', pct:0,
+        fecha:V('jun 2026','juny 2026'),
+        cta:V('Conoce nuestra posición','Coneix la nostra posició')
+      },
+      acciones:[
+        {title:V('Nit dels Ciris en Benipeixcar','Nit dels Ciris a Benipeixcar'), barrio:'Benipeixcar', fecha:V('Jun 2026','Juny 2026'), estado:V('Realizado','Realitzat'), estadoColor:'#2E9E5B', tintBg:'#E7F4EC', iconPath:'M20 6 9 17l-5-5'},
+        {title:V('Mesa informativa en el Jardinet','Taula informativa al Jardinet'), barrio:'Jardinet', fecha:V('Jun 2026','Juny 2026'), estado:V('Realizado','Realitzat'), estadoColor:'#2E9E5B', tintBg:'#E7F4EC', iconPath:'M20 6 9 17l-5-5'},
+        {title:V('Propuesta oficina antiokupación','Proposta oficina antiokupació'), barrio:'Gandia', fecha:V('Jun 2026','Juny 2026'), estado:V('Presentado','Presentat'), estadoColor:'#D98A0B', tintBg:'#FBF0DC', iconPath:'M7 3h7l4 4v14H7zM14 3v4h4'},
+        {title:V('Mesa informativa en Beniopa','Taula informativa a Beniopa'), barrio:'Beniopa', fecha:V('May 2026','Maig 2026'), estado:V('Realizado','Realitzat'), estadoColor:'#2E9E5B', tintBg:'#E7F4EC', iconPath:'M20 6 9 17l-5-5'}
+      ],
+      compromisos:[
+        {value:'5', label:V('Ejes','Eixos'), color:'#1563C4'},
+        {value:'11', label:V('Propuestas','Propostes'), color:'#2E9E5B'},
+        {value:'3', label:V('Años','Anys'), color:'#D98A0B'},
+        {value:'1', label:V('Candidatura','Candidatura'), color:'#0FA6B6'}
+      ],
+      compPct:25,
+      gente:[
+        {name:'Alejandro Alcázar', role:V('Presidente','President'), area:V('Presidencia','Presidència'), barrio:'Gandia'},
+        {name:'Miguel Reig', role:V('Vicepresidente ejecutivo','Vicepresident executiu'), area:V('Gestión','Gestió'), barrio:'Gandia'},
+        {name:'Sebastián Mesa', role:V('Tesorero','Tresorer'), area:V('Economía','Economia'), barrio:'Gandia'},
+        {name:'Antonio Sánchez', role:V('Secretario General','Secretari General'), area:V('Organización','Organització'), barrio:'Gandia'}
+      ],
+      newsFeat:{cat:V('Noticia','Notícia'), title:V('Acción Civil participa en la Nit dels Ciris de Benipeixcar','Acció Civil participa en la Nit dels Ciris de Benipeixcar'), date:V('20 jun 2026','20 juny 2026')},
+      noticias:[
+        {cat:V('Noticia','Notícia'), title:V('Acción Civil apoya la creación de una oficina antiokupación','Acció Civil dóna suport a la creació d\'una oficina antiokupació'), date:V('28 jun 2026','28 juny 2026')},
+        {cat:V('Comunicado','Comunicat'), title:V('Posición sobre las 38 cámaras de seguridad','Posició sobre les 38 càmeres de seguretat'), date:V('10 jun 2026','10 juny 2026')},
+        {cat:V('Entrevista','Entrevista'), title:V('Entrevista fundacional en Gente de la Safor','Entrevista fundacional a Gente de la Safor'), date:V('3 ene 2023','3 gen 2023')}
+      ],
+      eventos:[
+        {day:'—', month:V('—','—'), title:V('Mesa informativa por barrios','Taula informativa per barris'), place:V('Varios barrios','Diversos barris'), time:'—'},
+        {day:'—', month:V('—','—'), title:V('Actos vecinales de temporada','Actes veïnals de temporada'), place:V('Barrios de Gandia','Barris de Gandia'), time:'—'},
+        {day:'—', month:V('—','—'), title:V('Próximos eventos en redes','Pròxims esdeveniments a xarxes'), place:V('Facebook Acción Civil','Facebook Acció Civil'), time:'—'}
+      ],
+      transparencia:[
+        {label:V('Cuentas','Comptes'), iconPath:'M4 5h16v14H4zM4 9h16M8 13h5M8 16h8'},
+        {label:V('Presupuestos','Pressupostos'), iconPath:'M12 3v18M8 7h6a2.5 2.5 0 0 1 0 5H9a2.5 2.5 0 0 0 0 5h6'},
+        {label:V('Estatutos','Estatuts'), iconPath:'M7 3h7l4 4v14H7zM14 3v4h4M9 13h6M9 16h6'},
+        {label:V('Código ético','Codi ètic'), iconPath:'M12 3 5 6.5V11c0 4.2 3 7 7 8.3 4-1.3 7-4.1 7-8.3V6.5L12 3ZM9 11.5 11 13.5 15 9.5'},
+        {label:V('Donaciones','Donacions'), iconPath:'M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10Z'},
+        {label:V('Organigrama','Organigrama'), iconPath:'M9 4h6v4H9zM3 16h6v4H3zM15 16h6v4h-6zM12 8v4M6 16v-2h12v2'}
+      ],
+      searchGroups:[
+        {label:V('Propuestas','Propostes'), items:[
+          {label:V('Policía de proximidad por barrios','Policia de proximitat per barris'), meta:V('Seguridad','Seguretat'), href:'Propuestas.dc.html', iconPath:'M12 4 5 6.5V11c0 4.2 3 7 7 8.3 4-1.3 7-4.1 7-8.3V6.5L12 4Z'},
+          {label:V('Desestacionalización de la Playa','Desestacionalització de la Platja'), meta:V('Ciudad y Playa','Ciutat i Platja'), href:'Propuestas.dc.html', iconPath:'M12 4c3 3.6 5 6.4 5 9a5 5 0 0 1-10 0c0-2.6 2-5.4 5-9Z'},
+          {label:V('Reactivación del pequeño comercio','Reactivació del xicotet comerç'), meta:V('Empleo','Ocupació'), href:'Propuestas.dc.html', iconPath:'M12 3v18M8 7h6a2.5 2.5 0 0 1 0 5H9a2.5 2.5 0 0 0 0 5h6'}
+        ]},
+        {label:V('Actualidad','Actualitat'), items:[
+          {label:V('Nit dels Ciris en Benipeixcar','Nit dels Ciris a Benipeixcar'), meta:V('Noticia · jun 2026','Notícia · juny 2026'), href:'Actualidad.dc.html', iconPath:'M5 4h11v15H5zM8 8h6M8 12h6'},
+          {label:V('Oficina antiokupación','Oficina antiokupació'), meta:V('Noticia · jun 2026','Notícia · juny 2026'), href:'Actualidad.dc.html', iconPath:'M5 4h11v15H5zM8 8h6M8 12h6'}
+        ]},
+        {label:V('Campañas','Campanyes'), items:[
+          {label:V('38 cámaras de seguridad','38 càmeres de seguretat'), meta:V('Campaña · jun 2026','Campanya · juny 2026'), href:'Campanas.dc.html', iconPath:'M3 11l16-6-4 16-4-6-6-2'},
+          {label:V('Mesas informativas por barrios','Taules informatives per barris'), meta:V('Acción · 2026','Acció · 2026'), href:'Accion.dc.html', iconPath:'M12 21s7-5.6 7-11a7 7 0 0 0-14 0c0 5.4 7 11 7 11ZM12 10a1.6 1.6 0 1 0 0-.01'}
+        ]}
+      ],
+      recientes:[
+        V('seguridad','seguretat'), V('antiokupación','antiokupació'), V('cámaras','càmeres'), V('Benipeixcar','Benipeixcar')
+      ],
+      t:{
+        participa:'Participa',
+        area:V('Área ciudadana','Àrea ciutadana'),
+        buscar:V('Buscar','Cercar'),
+        searchPh:V('Buscar propuestas, noticias, barrios…','Cercar propostes, notícies, barris…'),
+        searchHint:V('Busca en toda la web de Acción Civil','Cerca a tota la web d\u2019Acció Civil'),
+        recientesTitle:V('Búsquedas recientes','Cerques recents'),
+        provisional:V('Imagen provisional','Imatge provisional'),
+        respuestaOficial:V('Respuesta oficial','Resposta oficial'),
+        seguidoresLabel:V('siguen','segueixen'),
+        comentar:V('Comentar','Comentar'),
+        heroEyebrow:V('Formación ciudadana, local e independiente','Formació ciutadana, local i independent'),
+        heroTitle:V('Gandia por encima de todo','Gandia per damunt de tot'),
+        heroText:V('Formación política local, ciudadana e independiente. Menos promesas y más Gandia.','Formació política local, ciutadana i independent. Menys promeses i més Gandia.'),
+        heroCta1:V('Haz una propuesta','Fes una proposta'),
+        heroCta2:V('Conoce Acción Civil','Coneix Acció Civil'),
+        heroImg:'FOTO · Platja i Grau de Gandia',
+        heroStatLabel:V('año de fundación','any de fundació'),
+        prioTag:V('Propuestas prioritarias','Propostes prioritàries'),
+        prioTitle:V('Las áreas que más preocupan a Gandia','Les àrees que més preocupen a Gandia'),
+        verProp:V('Ver propuestas','Veure propostes'),
+        verPrograma:V('Ver todo el programa','Veure tot el programa'),
+        partTag:V('Participación ciudadana','Participació ciutadana'),
+        partTitle:V('¿Qué cambiarías de Gandia?','Què canviaries de Gandia?'),
+        partText:V('Cada propuesta se escucha, se debate y recibe respuesta. De la idea de un vecino a una acción real en la ciudad.','Cada proposta s\u2019escolta, es debat i rep resposta. De la idea d\u2019un veí a una acció real a la ciutat.'),
+        partCtaTitle:V('De la propuesta a la acción','De la proposta a l\u2019acció'),
+        partCtaText:V('Así funciona la participación','Així funciona la participació'),
+        trendTag:V('En tendencia','En tendència'),
+        trendTitle:V('Las propuestas que mueven a Gandia','Les propostes que mouen Gandia'),
+        explorarTodas:V('Explorar todas','Explorar-les totes'),
+        apoyar:V('Apoyar','Donar suport'),
+        apoyosLabel:V('apoyos','suports'),
+        material:V('Material de campaña','Material de campanya'),
+        accTag:V('Acción en Gandia','Acció a Gandia'),
+        accTitle:V('De la palabra a los hechos, barrio a barrio','De la paraula als fets, barri a barri'),
+        accText:V('Documentamos cada actuación: qué problema había, qué hicimos y cómo terminó.','Documentem cada actuació: quin problema hi havia, què vam fer i com va acabar.'),
+        mapaLabel:V('Mapa · actuaciones en Gandia','Mapa · actuacions a Gandia'),
+        verMapaCompleto:V('Ver el mapa completo','Veure el mapa complet'),
+        compTag:V('Compromisos y resultados','Compromisos i resultats'),
+        compTitle:V('Rendimos cuentas de lo que prometemos','Retem comptes del que prometem'),
+        compText:V('Cada compromiso tiene estado, fecha y pruebas. Sin letra pequeña.','Cada compromís té estat, data i proves. Sense lletra menuda.'),
+        cumplimiento:V('Cumplimiento general','Compliment general'),
+        genteTag:V('Nuestra gente','La nostra gent'),
+        genteTitle:V('Vecinas y vecinos que dan la cara','Veïnes i veïns que donen la cara'),
+        verEquipo:V('Ver todo el equipo','Veure tot l\u2019equip'),
+        newsTag:V('Actualidad','Actualitat'),
+        newsTitle:V('Lo último de Acción Civil','L\u2019últim d\u2019Acció Civil'),
+        verTodo:V('Ver todo','Veure-ho tot'),
+        eventsTitle:V('Próximos actos','Pròxims actes'),
+        verAgenda:V('Ver agenda','Veure agenda'),
+        ultimoVideo:V('Último vídeo','Últim vídeo'),
+        transpTag:V('Transparencia','Transparència'),
+        transpTitle:V('Todo a la vista, siempre','Tot a la vista, sempre'),
+        transpText:V('Cuentas, estatutos, donaciones y organización. Consulta cualquier documento cuando quieras.','Comptes, estatuts, donacions i organització. Consulta qualsevol document quan vulgues.'),
+        ctaTitle:V('Participa en la Gandia que quieres','Participa en la Gandia que vols'),
+        ctaText:V('Afíliate, propón, colabora o simplemente cuéntanos qué mejorarías de tu barrio.','Afilia\u2019t, proposa, col·labora o simplement conta\u2019ns què milloraries del teu barri.'),
+        ctaBtn1:V('Únete','Uneix-te'),
+        ctaBtn2:V('Envía una propuesta','Envia una proposta'),
+        ctaBtn3:V('Colabora','Col·labora'),
+        footerDesc:V('Formación política local, ciudadana e independiente de Gandia. Personas de Gandia trabajando por Gandia.','Formació política local, ciutadana i independent de Gandia. Persones de Gandia treballant per Gandia.'),
+        footerNavTitle:V('Explorar','Explorar'),
+        footerLegalTitle:V('Legal','Legal'),
+        newsletter:V('Recibe novedades','Rep novetats'),
+        newsletterText:V('Propuestas, campañas y actos en tu correo.','Propostes, campanyes i actes al teu correu.'),
+        newsletterPh:V('Tu correo electrónico','El teu correu electrònic'),
+        suscribir:V('Suscribirme','Subscriure\u2019m'),
+        footerRights:V('Todos los derechos reservados','Tots els drets reservats'),
+        footerMade:V('Hecho en Gandia, con la gente de Gandia','Fet a Gandia, amb la gent de Gandia'),
+        seoText:V('Acción Civil Gandia es un partido político local y municipalista de Gandia, Valencia. Trabajamos por los vecinos de Gandia, el Grao de Gandia, la Playa de Gandia, Benipeixcar, Beniopa, Santa Anna, Corea y Marchuquera. Nuestras propuestas políticas abarcan seguridad ciudadana, policía de proximidad, pequeño comercio, empleo juvenil, cultura accesible, desestacionalización de la playa, cámaras de seguridad, antiokupación, transporte público, limpieza urbana y participación ciudadana. Partido político Gandia 2027. Elecciones municipales Gandia.','Acció Civil Gandia és un partit polític local i municipalista de Gandia, València. Treballem pels veïns de Gandia, el Grau de Gandia, la Platja de Gandia, Benipeixcar, Beniopa, Santa Anna, Corea i Marxuquera. Les nostres propostes polítiques abasten seguretat ciutadana, policia de proximitat, xicotet comerç, ocupació juvenil, cultura accessible, desestacionalització de la platja, càmeres de seguretat, antiokupació, transport públic, neteja urbana i participació ciutadana. Partit polític Gandia 2027. Eleccions municipals Gandia.'),
+        cookieText:V("Usamos cookies propias para el funcionamiento del sitio (idioma y preferencias). No utilizamos cookies de analítica ni de terceros.","Utilitzem cookies pròpies per al funcionament del lloc (idioma i preferències). No utilitzem cookies d’analítica ni de tercers."),
+        cookieAccept:V('Aceptar','Acceptar'),
+        cookieNecessary:V('Solo necesarias','Només necessàries'),
+        cookieMore:V('Más info','Més info')
+      }
+    };
+  }
+
+  renderVals(){
+    const s=this.state, c=this.content(s.lang), anim=s.anim, mounted=s.mounted;
+    const counters=[
+      {n:1240,label:s.lang==='es'?'Propuestas publicadas':'Propostes publicades'},
+      {n:38512,label:s.lang==='es'?'Apoyos ciudadanos':'Suports ciutadans'},
+      {n:9874,label:s.lang==='es'?'Comentarios':'Comentaris'},
+      {n:22,label:s.lang==='es'?'Barrios participantes':'Barris participants'},
+      {n:176,label:s.lang==='es'?'Respuestas oficiales':'Respostes oficials'}
+    ].map(x=>({value:this.fmt(x.n*anim), label:x.label}));
+
+    const tints={'#0FA6B6':'#E4F5F7','#1563C4':'#EAF3FC','#2E9E5B':'#E7F4EC','#D98A0B':'#FBF0DC'};
+    const tendencias=c.tendencias.map(t=>({...t, barW: mounted? t.pct+'%':'0%', estadoTint: tints[t.estadoColor]||'#EEF2F7'}));
+    const campana={...c.campana, barW: mounted? c.campana.pct+'%':'0%'};
+
+    const viewportW=s.viewportW||1280;
+    const forcedDevice=s.device;
+    const isMob=(forcedDevice||'')==='mobile' || (!forcedDevice && viewportW<=900);
+    const isDesk=!isMob;
+    const isES=s.lang==='es', isVA=s.lang==='va';
+    const tabBar=[
+      {label:isES?'Inicio':'Inici', href:'Acción Civil Gandia.dc.html', col:'#1563C4', iconPath:'M4 11.5 12 5l8 6.5M6 10.5V19h4v-5h4v5h4v-8.5'},
+      {label:isES?'Propuestas':'Propostes', href:'Propuestas.dc.html', col:'#94A3B2', iconPath:'M7 3h10a2 2 0 0 1 2 2v16l-7-3-7 3V5a2 2 0 0 1 2-2ZM9 8h6M9 12h4'},
+      {label:isES?'Actualidad':'Actualitat', href:'Actualidad.dc.html', col:'#94A3B2', iconPath:'M4 6h16M4 12h16M4 18h10'},
+      {label:isES?'Participa':'Participa', href:'Participa.dc.html', col:'#94A3B2', iconPath:'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4.5 20a7.5 7.5 0 0 1 15 0'}
+    ];
+
+    return {
+      ...c,
+      counters, tendencias, campana, tabBar,
+      crearLabel:c.partActions[0].label, tabCrear:isES?'Crear':'Crear',
+      lang:s.lang, isES, isVA, isDesktop:isDesk, isMobile:isMob, menuOpen:s.menuOpen,
+      compPct:this.fmt(c.compPct*anim), compBarW: mounted? c.compPct+'%':'0%',
+      esBg:isES?'#fff':'transparent', esCol:isES?'#0A2A5E':'#5C6B7A',
+      vaBg:isVA?'#fff':'transparent', vaCol:isVA?'#0A2A5E':'#5C6B7A',
+      deskBtnBg:isDesk?'#0A2A5E':'transparent', deskBtnCol:isDesk?'#fff':'#5C6B7A',
+      mobBtnBg:isMob?'#0A2A5E':'transparent', mobBtnCol:isMob?'#fff':'#5C6B7A',
+      setES:()=>{ try{localStorage.setItem('acg_lang','es');}catch(e){} this.setState({lang:'es'}); },
+      setVA:()=>{ try{localStorage.setItem('acg_lang','va');}catch(e){} this.setState({lang:'va'}); },
+      setDesktop:()=>this.setState({device:'desktop'}),
+      setMobile:()=>this.setState({device:'mobile'}),
+      toggleMenu:()=>this.setState(x=>({menuOpen:!x.menuOpen})),
+      closeMenu:()=>this.setState({menuOpen:false}),
+      searchOpen:s.searchOpen,
+      openSearch:()=>this.setState({searchOpen:true, menuOpen:false}),
+      closeSearch:()=>this.setState({searchOpen:false}),
+      stopEvt:(e)=>{ e.stopPropagation(); },
+      cookieClass:(()=>{try{return localStorage.getItem('acg_cookies')?'hidden':'';}catch(e){return '';}})(),
+      acceptCookies:()=>{try{localStorage.setItem('acg_cookies','accepted');}catch(e){}this.setState({});}
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+# Temporales y herramientas
+*.py
+__pycache__/
+*.zip
+.thumbnail
+screenshots/
+uploads/
+
+# Claude Code
+.claude/
+
+# OS
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Contenido scrapeado (doc de trabajo)
+CONTENIDO_REAL_SCRAPEADO.md
+
+# Print versions (generados)
+*-print-*.dc.html

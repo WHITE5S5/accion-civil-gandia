@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Mapa del sitio — Acción Civil Gandia</title>
+<meta name="description" content="Mapa del sitio de Acción Civil Gandia. Encuentra todas las secciones: propuestas, participación, campañas, transparencia y más.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://accioncivilgandia.org/mapa-del-sitio">
+<link rel="alternate" hreflang="es" href="https://accioncivilgandia.org/sitemap">
+<link rel="alternate" hreflang="ca" href="https://accioncivilgandia.org/sitemap?lang=va">
+<link rel="alternate" hreflang="x-default" href="https://accioncivilgandia.org/sitemap">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Mapa del sitio — Acción Civil Gandia">
+<meta property="og:description" content="Índice completo de la plataforma Acción Civil Gandia.">
+<meta property="og:url" content="https://accioncivilgandia.org/mapa-del-sitio">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Public+Sans:ital,wght@0,400..700;1,400&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0}
+  ::selection{background:#F6BE18;color:#0A2A5E}
+  .acg-lift{transition:transform .26s cubic-bezier(.2,.7,.3,1),box-shadow .26s,border-color .26s}
+  .acg-lift:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(10,42,94,.13);border-color:#CFDDEC}
+  .acg-btn{transition:transform .2s,filter .2s,background .2s,color .2s}
+  .acg-btn:hover{filter:brightness(1.05)}
+  .acg-btn:active{transform:translateY(1px)}
+  .acg-row{transition:background .16s,padding-left .16s}
+  .acg-row:hover{background:#F4F8FD;padding-left:14px}
+  .acg-skip{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:9999}
+  .acg-skip:focus{position:fixed;top:12px;left:12px;width:auto;height:auto;padding:12px 20px;background:#1563C4;color:#fff;font:700 14px 'Public Sans';border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.25);text-decoration:none;outline:none}
+  :focus-visible{outline:3px solid #1563C4;outline-offset:2px;border-radius:4px}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"PoliticalParty","name":"Acción Civil Gandia","alternateName":"Acció Civil Gandia","url":"https://accioncivilgandia.org","description":"Partido político local, ciudadano e independiente de Gandia, Valencia. Formación municipalista centrada en los problemas reales de los vecinos de Gandia, el Grao de Gandia y la Playa de Gandia.","foundingDate":"2022","address":{"@type":"PostalAddress","streetAddress":"Avda. República Argentina 42, entresuelo","addressLocality":"Gandia","addressRegion":"Valencia","postalCode":"46702","addressCountry":"ES"},"areaServed":{"@type":"City","name":"Gandia","containedInPlace":{"@type":"AdministrativeArea","name":"Valencia, Comunitat Valenciana, España"}},"knowsLanguage":["es","ca"],"keywords":"partido político Gandia, elecciones municipales Gandia, propuestas Gandia, participación ciudadana Gandia, Grao de Gandia, Playa de Gandia, seguridad Gandia, policía proximidad Gandia, pequeño comercio Gandia, municipalista Gandia"}
+</script>
+</helmet>
+
+<div style="font-family:'Public Sans',system-ui,-apple-system,sans-serif;color:#17232F;background:#F4F7FB;-webkit-font-smoothing:antialiased;line-height:1.55;min-height:100vh">
+  <a href="#main-content" class="acg-skip">Saltar al contenido</a>
+
+  <!-- preview control -->
+  <div data-om-raster style="position:fixed;right:18px;bottom:18px;z-index:9000;display:flex;gap:8px;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border:1px solid #E4EBF2;border-radius:14px;padding:8px;box-shadow:0 12px 30px rgba(10,42,94,.16)">
+    <div style="display:flex;background:#F0F4F9;border-radius:9px;padding:3px">
+      <button class="acg-btn" onClick="{{ setDesktop }}" style="border:none;cursor:pointer;font:600 12px 'Public Sans';padding:6px 12px;border-radius:7px;background:{{ deskBtnBg }};color:{{ deskBtnCol }}">Escritorio</button>
+      <button class="acg-btn" onClick="{{ setMobile }}" style="border:none;cursor:pointer;font:600 12px 'Public Sans';padding:6px 12px;border-radius:7px;background:{{ mobBtnBg }};color:{{ mobBtnCol }}">Móvil</button>
+    </div>
+  </div>
+
+  <div style="max-width:{{ frameMax }};margin:0 auto;{{ frameStyle }}">
+
+    <!-- HEADER -->
+    <header style="position:sticky;top:0;z-index:800;background:rgba(255,255,255,.9);backdrop-filter:blur(14px);border-bottom:1px solid #E9EEF4">
+      <div style="padding:{{ pagePad }};height:70px;display:flex;align-items:center;gap:24px">
+        <a href="Acción Civil Gandia.dc.html" style="display:flex;align-items:center;gap:11px;text-decoration:none;flex-shrink:0">
+          <img src="assets/logo-icon.png" alt="Acción Civil Gandia" style="height:42px;width:42px;object-fit:contain">
+        </a>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <div style="display:flex;background:#F0F4F9;border-radius:10px;padding:3px">
+            <button class="acg-btn" onClick="{{ setES }}" style="border:none;cursor:pointer;font:700 12.5px 'Public Sans';padding:6px 11px;border-radius:7px;background:{{ esBg }};color:{{ esCol }}">ES</button>
+            <button class="acg-btn" onClick="{{ setVA }}" style="border:none;cursor:pointer;font:700 12.5px 'Public Sans';padding:6px 11px;border-radius:7px;background:{{ vaBg }};color:{{ vaCol }}">VA</button>
+          </div>
+          <a href="Acción Civil Gandia.dc.html" class="acg-btn" style="text-decoration:none;background:#fff;border:1px solid #E4EBF2;color:#0A2A5E;font:700 14px 'Public Sans';padding:10px 16px;border-radius:11px;display:inline-flex;align-items:center;gap:8px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg>{{ t.volver }}
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- BREADCRUMB -->
+    <main id="main-content">
+    <div style="padding:{{ pagePad }};background:#fff;border-bottom:1px solid #EEF2F7">
+      <div style="display:flex;align-items:center;gap:8px;height:44px;font-size:13.5px;color:#5C6B7A">
+        <a href="Acción Civil Gandia.dc.html" style="text-decoration:none;color:#5C6B7A">{{ t.inicio }}</a>
+        <span style="color:#B8C4D2">/</span>
+        <span style="color:#0A2A5E;font-weight:600">{{ t.tituloBc }}</span>
+      </div>
+    </div>
+
+    <!-- HERO -->
+    <section style="background:linear-gradient(150deg,#0A2A5E,#0F3B7D);color:#fff;position:relative;overflow:hidden">
+      <div style="position:absolute;right:-70px;top:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(15,166,182,.32),transparent 70%)"></div>
+      <div style="padding:{{ heroPad }};position:relative">
+        <span style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#5FD4E2;font:700 12px 'Public Sans';padding:7px 14px;border-radius:999px">{{ t.heroTag }}</span>
+        <h1 style="font:800 {{ heroTitleSz }}/1.06 'Bricolage Grotesque';letter-spacing:-.02em;margin:18px 0 14px;max-width:760px;text-wrap:balance">{{ t.heroTitle }}</h1>
+        <p style="font-size:{{ heroTextSz }};color:#C4D6EC;max-width:600px;margin:0 0 28px;text-wrap:pretty">{{ t.heroText }}</p>
+        <div style="display:flex;gap:20px;flex-wrap:wrap">
+          <sc-for list="{{ heroStats }}" as="s" hint-placeholder-count="4">
+            <div>
+              <div style="font:800 30px 'Bricolage Grotesque';letter-spacing:-.01em">{{ s.value }}</div>
+              <div style="font-size:13.5px;color:#9FBBDD;margin-top:2px">{{ s.label }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEGEND + LANG NOTE -->
+    <section style="padding:{{ legendPad }}">
+      <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between">
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <span style="font:700 12px 'Public Sans';letter-spacing:.1em;text-transform:uppercase;color:#5C6B7A;margin-right:4px">{{ t.leyenda }}</span>
+          <span style="display:inline-flex;align-items:center;gap:7px;background:#E7F4EC;color:#1E7A45;font:700 12.5px 'Public Sans';padding:6px 12px;border-radius:999px"><span style="width:8px;height:8px;border-radius:50%;background:#2E9E5B"></span>{{ t.disponible }}</span>
+          <span style="display:inline-flex;align-items:center;gap:7px;background:#EEF2F7;color:#5C6B7A;font:700 12.5px 'Public Sans';padding:6px 12px;border-radius:999px"><span style="width:8px;height:8px;border-radius:50%;background:#94A3B2"></span>{{ t.planificada }}</span>
+          <span style="display:inline-flex;align-items:center;gap:7px;background:#FBF0DC;color:#9A6208;font:700 12.5px 'Public Sans';padding:6px 12px;border-radius:999px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>{{ t.interno }}</span>
+        </div>
+        <div style="display:inline-flex;align-items:center;gap:9px;background:#EAF3FC;border:1px solid #DBE7F4;color:#0A2A5E;font:600 13px 'Public Sans';padding:8px 14px;border-radius:12px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1563C4" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18"></path></svg>
+          {{ t.idiomasNota }}
+        </div>
+      </div>
+    </section>
+
+    <!-- SITE TREE -->
+    <section style="padding:{{ treePad }}">
+      <div style="columns:{{ treeCols }};column-gap:20px">
+        <sc-for list="{{ areas }}" as="a" hint-placeholder-count="10">
+          <div class="acg-lift" style="break-inside:avoid;display:inline-block;width:100%;margin-bottom:20px;background:#fff;border:1px solid #E9EEF4;border-radius:20px;padding:22px 22px 10px;border-top:4px solid {{ a.accent }}">
+            <div style="display:flex;align-items:center;gap:13px;margin-bottom:6px">
+              <div style="width:44px;height:44px;flex-shrink:0;border-radius:13px;background:{{ a.tint }};display:flex;align-items:center;justify-content:center;color:{{ a.accent }}">
+                <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{ a.iconPath }}"></path></svg>
+              </div>
+              <div style="min-width:0">
+                <h2 style="font:800 19px 'Bricolage Grotesque';color:#0A2A5E;margin:0;line-height:1.1">{{ a.title }}</h2>
+                <div style="font:600 12px 'Public Sans';color:#94A3B2;margin-top:2px">{{ a.slug }}</div>
+              </div>
+            </div>
+            <p style="font-size:13.5px;color:#5C6B7A;margin:8px 0 10px;text-wrap:pretty">{{ a.desc }}</p>
+            <div style="display:flex;flex-direction:column;border-top:1px solid #EEF2F7">
+              <sc-for list="{{ a.pages }}" as="pg" hint-placeholder-count="4">
+                <a href="{{ pg.href }}" class="acg-row" style="display:flex;align-items:center;gap:10px;text-decoration:none;padding:10px 8px 10px 6px;border-bottom:1px solid #F1F4F8;margin:0 -8px">
+                  <span style="width:6px;height:6px;border-radius:50%;flex-shrink:0;background:{{ pg.dot }}"></span>
+                  <span style="flex:1;min-width:0;font:600 14px 'Public Sans';color:{{ pg.labelCol }}">{{ pg.label }}</span>
+                  <sc-if value="{{ pg.count }}" hint-placeholder-val="{{ false }}"><span style="font:700 11px 'Public Sans';color:#94A3B2;background:#F4F7FB;padding:2px 8px;border-radius:999px;white-space:nowrap">{{ pg.count }}</span></sc-if>
+                  <span style="font:700 10.5px 'Public Sans';letter-spacing:.03em;text-transform:uppercase;color:{{ pg.badgeCol }};background:{{ pg.badgeBg }};padding:3px 8px;border-radius:6px;white-space:nowrap">{{ pg.badge }}</span>
+                </a>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- ADMIN STRIP -->
+    <section style="padding:{{ pagePad }};padding-bottom:14px">
+      <div style="background:linear-gradient(135deg,#101B2E,#1A2942);border-radius:22px;padding:{{ adminPad }};color:#fff;position:relative;overflow:hidden">
+        <div style="position:absolute;right:-40px;bottom:-50px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(246,190,24,.14),transparent 70%)"></div>
+        <div style="position:relative">
+          <div style="display:flex;align-items:center;gap:11px;margin-bottom:8px">
+            <span style="width:40px;height:40px;border-radius:12px;background:rgba(246,190,24,.16);display:flex;align-items:center;justify-content:center;color:#F6BE18"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg></span>
+            <div>
+              <h2 style="font:800 22px 'Bricolage Grotesque';margin:0">{{ t.adminTitle }}</h2>
+              <div style="font-size:13px;color:#9FB0C8">{{ t.adminSub }}</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:{{ adminGrid }};gap:9px;margin-top:18px">
+            <sc-for list="{{ adminPages }}" as="ap" hint-placeholder-count="8">
+              <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:9px">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#7FD4E0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{ ap.iconPath }}"></path></svg>
+                <span style="font:600 13.5px 'Public Sans';color:#E4ECF6">{{ ap.label }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATES + SEO NOTE -->
+    <section style="padding:{{ pagePad }};padding-top:20px;padding-bottom:44px">
+      <div style="display:grid;grid-template-columns:{{ noteGrid }};gap:16px">
+        <div style="background:#fff;border:1px solid #E9EEF4;border-radius:18px;padding:22px">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px"><span style="width:34px;height:34px;border-radius:10px;background:#EAF3FC;display:flex;align-items:center;justify-content:center;color:#1563C4"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v4l3 2"></path></svg></span><h3 style="font:800 16px 'Bricolage Grotesque';color:#0A2A5E;margin:0">{{ t.estadosTitle }}</h3></div>
+          <div style="display:flex;flex-wrap:wrap;gap:7px">
+            <sc-for list="{{ estados }}" as="e" hint-placeholder-count="10">
+              <span style="font:600 12px 'Public Sans';color:#42525F;background:#F4F7FB;border:1px solid #EAEFF5;padding:5px 11px;border-radius:999px">{{ e }}</span>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:#fff;border:1px solid #E9EEF4;border-radius:18px;padding:22px">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:12px"><span style="width:34px;height:34px;border-radius:10px;background:#E7F4EC;display:flex;align-items:center;justify-content:center;color:#2E9E5B"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.2-3.2"></path></svg></span><h3 style="font:800 16px 'Bricolage Grotesque';color:#0A2A5E;margin:0">{{ t.seoTitle }}</h3></div>
+          <div style="display:flex;flex-wrap:wrap;gap:7px">
+            <sc-for list="{{ seoItems }}" as="e" hint-placeholder-count="10">
+              <span style="font:600 12px 'Public Sans';color:#42525F;background:#F4F7FB;border:1px solid #EAEFF5;padding:5px 11px;border-radius:999px">{{ e }}</span>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    </main>
+
+  </div>
+
+    <!-- FOOTER -->
+    <footer id="footer" role="contentinfo" style="background:#071E45;color:#B7C7DD;padding:{{ footerPad }}">
+      <div style="max-width:1240px;margin:0 auto;padding:{{ pagePad }}">
+        <div style="display:grid;grid-template-columns:{{ footerGrid }};gap:{{ footerGap }};padding-bottom:{{ footerGap }};border-bottom:1px solid rgba(255,255,255,.1)">
+          <div>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+              <div style="background:#fff;border-radius:50%;padding:8px;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.12)"><img src="assets/logo-icon.png" alt="Acción Civil Gandia" style="height:44px;width:44px;object-fit:contain"></div>
+            </div>
+            <p style="font-size:14.5px;color:#8FA6C4;max-width:320px;margin:0 0 18px">{{ t.footerDesc }}</p>
+            <div style="display:flex;gap:10px">
+              <sc-for list="{{ social }}" as="so" hint-placeholder-count="4">
+                <a href="#" style="width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#B7C7DD;text-decoration:none">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{ so.iconPath }}"></path></svg>
+                </a>
+              </sc-for>
+            </div>
+          </div>
+          <div>
+            <div style="font:700 13px 'Public Sans';letter-spacing:.1em;text-transform:uppercase;color:#fff;margin-bottom:16px">{{ t.footerNavTitle }}</div>
+            <div style="display:flex;flex-direction:column;gap:11px">
+              <sc-for list="{{ footerNav1 }}" as="f" hint-placeholder-count="5">
+                <a href="{{ f.href }}" style="text-decoration:none;color:#8FA6C4;font-size:14.5px">{{ f.label }}</a>
+              </sc-for>
+            </div>
+          </div>
+          <div>
+            <div style="font:700 13px 'Public Sans';letter-spacing:.1em;text-transform:uppercase;color:#fff;margin-bottom:16px">{{ t.footerLegalTitle }}</div>
+            <div style="display:flex;flex-direction:column;gap:11px">
+              <sc-for list="{{ footerNav2 }}" as="f" hint-placeholder-count="5">
+                <a href="{{ f.href }}" style="text-decoration:none;color:#8FA6C4;font-size:14.5px">{{ f.label }}</a>
+              </sc-for>
+            </div>
+          </div>
+          <div>
+            <div style="font:700 13px 'Public Sans';letter-spacing:.1em;text-transform:uppercase;color:#fff;margin-bottom:16px">{{ t.newsletter }}</div>
+            <p style="font-size:14px;color:#8FA6C4;margin:0 0 14px">{{ t.newsletterText }}</p>
+            <div style="display:flex;gap:8px;margin-bottom:18px">
+              <input placeholder="{{ t.newsletterPh }}" style="flex:1;min-width:0;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:11px;padding:12px 14px;color:#fff;font:400 14px 'Public Sans';outline:none">
+              <button class="acg-btn" style="border:none;cursor:pointer;background:#F6BE18;color:#0A2A5E;font:700 14px 'Public Sans';padding:0 18px;border-radius:11px">{{ t.suscribir }}</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;color:#8FA6C4;font-size:13.5px">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18"></path></svg>
+              Castellano · Valencià
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding-top:24px;flex-wrap:wrap;gap:12px">
+          <span style="font-size:13px;color:#6E86A6">© 2026 Acción Civil Gandia · {{ t.footerRights }}</span>
+          <span style="font-size:13px;color:#6E86A6">{{ t.footerMade }}</span>
+        </div>
+      </div>
+    </footer>
+
+
+    <!-- SEO semantic content -->
+    <div class="acg-seo-keywords" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0" aria-hidden="true">
+      <p>Acción Civil Gandia - partido político local municipalista Gandia Valencia. Propuestas políticas Gandia 2027. Elecciones municipales Gandia. Vecinos de Gandia, Grao de Gandia, Playa de Gandia, Benipeixcar, Beniopa, Santa Anna, Corea, Marchuquera. Seguridad ciudadana Gandia, policía de proximidad, cámaras de seguridad, antiokupación. Pequeño comercio Gandia, empleo juvenil, cultura accesible, desestacionalización playa, transporte público Gandia, limpieza urbana, participación ciudadana. Partido político independiente Gandia. Formación política local Gandia.</p>
+    </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { lang:this.initLang(), device:'desktop' };
+  initLang(){ try{ return localStorage.getItem('acg_lang')||'es'; }catch(e){ return 'es'; } }
+
+  data(lang){
+    const es=lang==='es', V=(a,b)=>es?a:b;
+    const HOME='Acción Civil Gandia.dc.html', PART='Participacion.dc.html';
+    // badge helpers
+    const OK={badge:V('Lista','Llesta'), badgeBg:'#E7F4EC', badgeCol:'#1E7A45', dot:'#2E9E5B', labelCol:'#17232F'};
+    const PL={badge:V('Plan','Plan'), badgeBg:'#EEF2F7', badgeCol:'#7A8798', dot:'#C2CDD9', labelCol:'#42525F'};
+    const mk=(label,href,st,count)=>({label, href:href||'Sitemap.dc.html', count:count||false, ...st});
+    return {
+      heroStats:[
+        {value:'11', label:V('secciones principales','seccions principals')},
+        {value:'60+', label:V('páginas planificadas','pàgines planificades')},
+        {value:'2', label:V('idiomas · ES / VA','idiomes · ES / VA')},
+        {value:'16', label:V('vistas de administración','vistes d\u2019administració')}
+      ],
+      areas:[
+        {title:V('Inicio','Inici'), slug:'/es/', accent:'#1563C4', tint:'#EAF3FC', iconPath:'M4 11.5 12 5l8 6.5M6 10.5V19h4v-5h4v5h4v-8.5',
+          desc:V('Resumen y centro de navegación hacia todas las secciones.','Resum i centre de navegació cap a totes les seccions.'),
+          pages:[ mk(V('Home','Inici'), HOME, OK) ]},
+        {title:V('Conócenos','Coneix-nos'), slug:'/es/conocenos/', accent:'#0FA6B6', tint:'#E4F5F7', iconPath:'M12 11a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4ZM5.5 19.5a6.5 6.5 0 0 1 13 0',
+          desc:V('Quiénes somos, equipo, organización y valores.','Qui som, equip, organització i valors.'),
+          pages:[ mk(V('Página principal','Pàgina principal'),'Conocenos.dc.html',OK), mk(V('Historia','Història'),'Historia.dc.html',OK), mk(V('Equipo','Equip'),'Equipo.dc.html',OK), mk(V('Perfil individual','Perfil individual'),'PerfilMiembro.dc.html',OK), mk(V('Organización','Organització'),'Conocenos.dc.html',OK), mk(V('Valores','Valors'),'Valores.dc.html',OK), mk(V('Preguntas frecuentes','Preguntes freqüents'),'FAQ.dc.html',OK) ]},
+        {title:V('Propuestas','Propostes'), slug:'/es/propuestas/', accent:'#1563C4', tint:'#EAF3FC', iconPath:'M7 3h10a2 2 0 0 1 2 2v16l-7-3-7 3V5a2 2 0 0 1 2-2ZM9 8h6M9 12h4',
+          desc:V('Programa político oficial por áreas temáticas.','Programa polític oficial per àrees temàtiques.'),
+          pages:[ mk(V('Landing propuestas','Landing propostes'),'Propuestas.dc.html',OK), mk(V('Categorías','Categories'),'Categoria.dc.html',OK,'12'), mk(V('Detalle de propuesta','Detall de proposta'),'PropuestaDetalle.dc.html',OK), mk(V('Programa en PDF','Programa en PDF'),'ProgramaPDF.dc.html',OK) ]},
+        {title:V('Participación','Participació'), slug:'/es/participacion/', accent:'#F6BE18', tint:'#FBF0DC', iconPath:'M12 5v14M5 12h14',
+          desc:V('El corazón ciudadano: proponer, debatir y apoyar.','El cor ciutadà: proposar, debatre i donar suport.'),
+          pages:[ mk(V('Propuestas ciudadanas','Propostes ciutadanes'),PART,OK), mk(V('Crear propuesta','Crear proposta'),'CrearPropuesta.dc.html',OK), mk(V('Cómo funciona','Com funciona'),'ComoFunciona.dc.html',OK), mk(V('Detalle de propuesta','Detall de proposta'),'PropuestaCiudadana.dc.html',OK) ]},
+        {title:V('Acción en Gandia','Acció a Gandia'), slug:'/es/accion-en-gandia/', accent:'#2E9E5B', tint:'#E7F4EC', iconPath:'M12 21s7-5.6 7-11a7 7 0 0 0-14 0c0 5.4 7 11 7 11ZM12 10a1.6 1.6 0 1 0 0-.01',
+          desc:V('Seguimiento de actuaciones reales, barrio a barrio.','Seguiment d\u2019actuacions reals, barri a barri.'),
+          pages:[ mk(V('Mapa de actuaciones','Mapa d\u2019actuacions'),'MapaActuaciones_TEMP',OK), mk(V('Barrios','Barris'),'Barrio.dc.html',OK,'5'), mk(V('Detalle de actuación','Detall d\u2019actuació'),'DetalleActuacion.dc.html',OK) ]},
+        {title:V('Campañas','Campanyes'), slug:'/es/campanas/', accent:'#0FA6B6', tint:'#E4F5F7', iconPath:'M3 11l16-6-4 16-4-6-6-2M3 11l6 2',
+          desc:V('Campañas activas, finalizadas y resultados.','Campanyes actives, finalitzades i resultats.'),
+          pages:[ mk(V('Landing campañas','Landing campanyes'),'Campanas.dc.html',OK), mk(V('Detalle de campaña','Detall de campanya'),'DetalleCampana.dc.html',OK) ]},
+        {title:V('Actualidad','Actualitat'), slug:'/es/actualidad/', accent:'#1563C4', tint:'#EAF3FC', iconPath:'M5 4h11a2 2 0 0 1 2 2v13a2 2 0 0 0 2-2V8M5 4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h13M8 8h6M8 12h6M8 16h4',
+          desc:V('Noticias, comunicados, vídeos y entrevistas.','Notícies, comunicats, vídeos i entrevistes.'),
+          pages:[ mk(V('Noticias','Notícies'),'Actualidad.dc.html',OK), mk(V('Comunicados','Comunicats'),'Actualidad.dc.html',OK), mk(V('Vídeos','Vídeos'),'Actualidad.dc.html',OK), mk(V('Entrevistas','Entrevistes'),'Actualidad.dc.html',OK), mk(V('Detalle de publicación','Detall de publicació'),'DetallePublicacion.dc.html',OK) ]},
+        {title:V('Agenda','Agenda'), slug:'/es/agenda/', accent:'#6B4EE6', tint:'#EEEAFB', iconPath:'M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM4 9h16M8 3v4M16 3v4',
+          desc:V('Actos, calendario mensual y fichas de evento.','Actes, calendari mensual i fitxes d\u2019esdeveniment.'),
+          pages:[ mk(V('Vista general','Vista general'),'Agenda.dc.html',OK), mk(V('Ficha de evento','Fitxa d\u2019esdeveniment'),'FichaEvento.dc.html',OK) ]},
+        {title:V('Transparencia','Transparència'), slug:'/es/transparencia/', accent:'#2E9E5B', tint:'#E7F4EC', iconPath:'M12 3 5 6.5V11c0 4.2 3 7 7 8.3 4-1.3 7-4.1 7-8.3V6.5L12 3ZM9 11.5 11 13.5 15 9.5',
+          desc:V('Cuentas, documentos y seguimiento de compromisos.','Comptes, documents i seguiment de compromisos.'),
+          pages:[ mk(V('Cuentas y presupuestos','Comptes i pressupostos'),'Transparencia.dc.html',OK), mk(V('Donaciones','Donacions'),'Transparencia.dc.html',OK), mk(V('Estatutos y código ético','Estatuts i codi ètic'),'Transparencia.dc.html',OK), mk(V('Documentos','Documents'),'Transparencia.dc.html',OK), mk(V('Compromisos','Compromisos'),'Transparencia.dc.html',OK) ]},
+        {title:V('Participa','Participa'), slug:'/es/participa/', accent:'#F6BE18', tint:'#FBF0DC', iconPath:'M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10Z',
+          desc:V('Afíliate, haz voluntariado, colabora o dona.','Afilia\u2019t, fes voluntariat, col·labora o dona.'),
+          pages:[ mk(V('Afíliate','Afilia\u2019t'),'Participa.dc.html',OK), mk(V('Voluntariado','Voluntariat'),'Participa.dc.html',OK), mk(V('Colabora','Col·labora'),'Participa.dc.html',OK), mk(V('Dona','Dona'),'Participa.dc.html',OK) ]},
+        {title:V('Ciudadano y utilidades','Ciutadà i utilitats'), slug:'/es/area-ciudadana/', accent:'#0FA6B6', tint:'#E4F5F7', iconPath:'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4.5 20a7.5 7.5 0 0 1 15 0',
+          desc:V('Área ciudadana, contacto y buscador global.','Àrea ciutadana, contacte i cercador global.'),
+          pages:[ mk(V('Área ciudadana','Àrea ciutadana'),'Ciudadano.dc.html',OK), mk(V('Perfil y notificaciones','Perfil i notificacions'),'Ciudadano.dc.html',OK), mk(V('Contacto','Contacte'),'Contacto.dc.html',OK), mk(V('Buscador global','Cercador global'),'Buscador.dc.html',OK) ]}
+      ],
+      adminPages:[
+        {label:V('Dashboard','Panell'), iconPath:'M4 13h7V4H4zM13 20h7v-9h-7zM13 4v5h7V4zM4 20h7v-3H4z'},
+        {label:V('Usuarios','Usuaris'), iconPath:'M9 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM2.5 19a6.5 6.5 0 0 1 13 0M16 6a3 3 0 0 1 0 5.6M21 19a5.5 5.5 0 0 0-4-5.3'},
+        {label:V('Propuestas','Propostes'), iconPath:'M7 3h10a2 2 0 0 1 2 2v16l-7-3-7 3V5a2 2 0 0 1 2-2Z'},
+        {label:V('Moderación','Moderació'), iconPath:'M12 3 5 6.5V11c0 4.2 3 7 7 8.3 4-1.3 7-4.1 7-8.3V6.5L12 3Z'},
+        {label:V('Campañas','Campanyes'), iconPath:'M3 11l16-6-4 16-4-6-6-2'},
+        {label:V('Acciones','Accions'), iconPath:'M12 21s7-5.6 7-11a7 7 0 0 0-14 0c0 5.4 7 11 7 11Z'},
+        {label:V('Actualidad','Actualitat'), iconPath:'M5 4h11v15H5zM8 8h6M8 12h6'},
+        {label:V('Agenda','Agenda'), iconPath:'M4 6h16v14H4zM4 9h16M8 3v4M16 3v4'},
+        {label:V('Transparencia','Transparència'), iconPath:'M12 3 5 6.5V11c0 4.2 3 7 7 8.3 4-1.3 7-4.1 7-8.3V6.5L12 3Z'},
+        {label:V('Métricas','Mètriques'), iconPath:'M4 20V10M10 20V4M16 20v-7M22 20H2'},
+        {label:V('Traducciones','Traduccions'), iconPath:'M4 5h7M7 5v3c0 3-1.5 5-4 6M6 11c1.5 2 3.5 3 5 3M13 20l4-9 4 9M14.5 17h5'},
+        {label:V('SEO','SEO'), iconPath:'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14ZM20 20l-3.5-3.5'},
+        {label:V('Configuración','Configuració'), iconPath:'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM4 12h2M18 12h2M12 4v2M12 18v2M6.3 6.3l1.4 1.4M16.3 16.3l1.4 1.4M17.7 6.3l-1.4 1.4M7.7 16.3l-1.4 1.4'},
+        {label:V('Documentos','Documents'), iconPath:'M7 3h7l4 4v14H7zM14 3v4h4'}
+      ],
+      estados:[
+        V('Cargando','Carregant'), V('Error','Error'), V('Sin conexión','Sense connexió'), V('Sin resultados','Sense resultats'),
+        V('Estado vacío','Estat buit'), V('No autorizado','No autoritzat'), V('No verificado','No verificat'), V('404','404'),
+        V('Contenido eliminado','Contingut eliminat'), V('Voto registrado','Vot registrat'), V('Voto duplicado','Vot duplicat'),
+        V('Propuesta enviada','Proposta enviada'), V('Pendiente de revisión','Pendent de revisió'), V('Evento completo','Esdeveniment complet'),
+        V('Campaña finalizada','Campanya finalitzada'), V('Sesión caducada','Sessió caducada')
+      ],
+      seoItems:[
+        V('Metadatos únicos','Metadades úniques'), V('H1 único','H1 únic'), V('URLs descriptivas','URLs descriptives'),
+        V('Breadcrumbs','Breadcrumbs'), V('Canonical','Canonical'), V('Hreflang ES/VA','Hreflang ES/VA'),
+        V('Open Graph','Open Graph'), V('Datos estructurados','Dades estructurades'), V('Sitemap XML','Sitemap XML'),
+        V('Índice controlado','Índex controlat'), V('Redirecciones','Redireccions'), V('Página 404 / 410','Pàgina 404 / 410')
+      ],
+      t:{
+        inicio:V('Inicio','Inici'),
+        participacion:V('Participación','Participació'),
+        volver:V('Volver al inicio','Tornar a l\u2019inici'),
+        tituloBc:V('Mapa del sitio','Mapa del lloc'),
+        heroTag:V('Arquitectura del proyecto','Arquitectura del projecte'),
+        heroTitle:V('La web completa de Acción Civil, sección a sección','La web completa d\u2019Acció Civil, secció a secció'),
+        heroText:V('Cada bloque de la home enlaza a una página interior propia, con contenido único y preparada para SEO. Este mapa muestra toda la arquitectura y su estado.','Cada bloc de la home enllaça a una pàgina interior pròpia, amb contingut únic i preparada per a SEO. Este mapa mostra tota l\u2019arquitectura i el seu estat.'),
+        leyenda:V('Leyenda','Llegenda'),
+        disponible:V('Disponible','Disponible'),
+        planificada:V('Planificada','Planificada'),
+        interno:V('Acceso interno','Accés intern'),
+        idiomasNota:V('Estructura duplicada en /es/ y /va/','Estructura duplicada en /es/ i /va/'),
+        adminTitle:V('Panel de administración','Panell d\u2019administració'),
+        adminSub:V('Acceso interno · gestión de contenido, moderación y SEO','Accés intern · gestió de contingut, moderació i SEO'),
+        estadosTitle:V('Estados globales','Estats globals'),
+        seoTitle:V('SEO técnico','SEO tècnic'),
+        footerDesc:V('Formación política local, ciudadana e independiente de Gandia. Personas de Gandia trabajando por Gandia.','Formació política local, ciutadana i independent de Gandia. Persones de Gandia treballant per Gandia.'),
+        footerNavTitle:V('Explorar','Explorar'),
+        footerLegalTitle:V('Legal','Legal'),
+        newsletter:V('Recibe novedades','Rep novetats'),
+        newsletterText:V('Propuestas, campañas y actos en tu correo.','Propostes, campanyes i actes al teu correu.'),
+        newsletterPh:V('Tu correo electrónico','El teu correu electrònic'),
+        suscribir:V('Enviar','Enviar'),
+        footerRights:V('Todos los derechos reservados','Tots els drets reservats'),
+        footerMade:V('Hecho en Gandia, con la gente de Gandia','Fet a Gandia, amb la gent de Gandia'),
+        seoText:V('Acción Civil Gandia es un partido político local y municipalista de Gandia, Valencia. Trabajamos por los vecinos de Gandia, el Grao de Gandia, la Playa de Gandia, Benipeixcar, Beniopa, Santa Anna, Corea y Marchuquera. Nuestras propuestas políticas abarcan seguridad ciudadana, policía de proximidad, pequeño comercio, empleo juvenil, cultura accesible, desestacionalización de la playa, cámaras de seguridad, antiokupación, transporte público, limpieza urbana y participación ciudadana. Partido político Gandia 2027. Elecciones municipales Gandia.','Acció Civil Gandia és un partit polític local i municipalista de Gandia, València. Treballem pels veïns de Gandia, el Grau de Gandia, la Platja de Gandia, Benipeixcar, Beniopa, Santa Anna, Corea i Marxuquera. Les nostres propostes polítiques abasten seguretat ciutadana, policia de proximitat, xicotet comerç, ocupació juvenil, cultura accessible, desestacionalització de la platja, càmeres de seguretat, antiokupació, transport públic, neteja urbana i participació ciutadana. Partit polític Gandia 2027. Eleccions municipals Gandia.'),
+      },
+      footerNav1:[
+        {label:V('Propuestas','Propostes'),href:'Propuestas.dc.html'},
+        {label:V('Participación ciudadana','Participació ciutadana'),href:'Participacion.dc.html'},
+        {label:V('Acción en Gandia','Acció a Gandia'),href:'Accion.dc.html'},
+        {label:V('Campañas','Campanyes'),href:'Campanas.dc.html'},
+        {label:V('Transparencia','Transparència'),href:'Transparencia.dc.html'}
+      ],
+      footerNav2:[
+        {label:V('Aviso legal','Avís legal'),href:'AvisoLegal.dc.html'},
+        {label:V('Política de privacidad','Política de privacitat'),href:'Privacidad.dc.html'},
+        {label:V('Cookies','Galetes'),href:'Cookies.dc.html'},
+        {label:V('Accesibilidad','Accessibilitat'),href:'Accesibilidad.dc.html'},
+        {label:V('Canal de denuncias','Canal de denúncies'),href:'mailto:info@accioncivilgandia.org'}
+      ],
+      social:[
+        {iconPath:'M18 2h-3a4 4 0 0 0-4 4v3H8v4h3v9h4v-9h3l1-4h-4V6a1 1 0 0 1 1-1h3z'},
+        {iconPath:'M23 4.5a8 8 0 0 1-2.3.6A4 4 0 0 0 22.4 3a8 8 0 0 1-2.5 1A4 4 0 0 0 13 7.5a11 11 0 0 1-8-4 4 4 0 0 0 1.2 5.3A4 4 0 0 1 4.5 8v.1a4 4 0 0 0 3.2 4 4 4 0 0 1-1.8.1 4 4 0 0 0 3.7 2.8A8 8 0 0 1 3 16.6 11 11 0 0 0 20 7.2a8 8 0 0 0 3-2.7z'},
+        {iconPath:'M16 3H8a5 5 0 0 0-5 5v8a5 5 0 0 0 5 5h8a5 5 0 0 0 5-5V8a5 5 0 0 0-5-5zM12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8zM17.5 6.5h.01'},
+        {iconPath:'M21 6.5a3 3 0 0 0-2-2C17 4 12 4 12 4s-5 0-7 .5a3 3 0 0 0-2 2A31 31 0 0 0 2.5 12 31 31 0 0 0 3 17.5a3 3 0 0 0 2 2c2 .5 7 .5 7 .5s5 0 7-.5a3 3 0 0 0 2-2 31 31 0 0 0 .5-5.5 31 31 0 0 0-.5-5.5zM10 15V9l5 3z'}
+      ]
+    };
+  }
+
+  renderVals(){
+    const s=this.state, d=this.data(s.lang);
+    const isES=s.lang==='es', isMob=s.device==='mobile';
+    return {
+      ...d, lang:s.lang, isMob,
+      footerPad: isMob?'36px 0 24px':'64px 0 30px',
+      footerGrid: isMob?'1fr':'1.6fr 1fr 1fr 1.4fr',
+      footerGap: isMob?'28px':'44px',
+      frameMax: isMob?'430px':'1240px',
+      frameStyle: isMob?'box-shadow:0 30px 80px rgba(10,42,94,.28);border-radius:34px;overflow:hidden;margin-top:24px;margin-bottom:24px;border:10px solid #0B1F3F;background:#F4F7FB':'background:transparent',
+      pagePad: isMob?'0 16px':'0 40px',
+      heroPad: isMob?'30px 16px 32px':'52px 40px 48px',
+      legendPad: isMob?'22px 16px 4px':'30px 40px 6px',
+      treePad: isMob?'14px 16px':'20px 40px',
+      adminPad: isMob?'22px 18px':'30px 34px',
+      treeCols: isMob?'1':'3',
+      adminGrid: isMob?'1fr 1fr':'repeat(4,1fr)',
+      noteGrid: isMob?'1fr':'1fr 1fr',
+      brandTextDisp: isMob?'none':'flex',
+      heroTitleSz: isMob?'27px':'42px',
+      heroTextSz: isMob?'15px':'18px',
+      esBg:isES?'#fff':'transparent', esCol:isES?'#0A2A5E':'#5C6B7A',
+      vaBg:!isES?'#fff':'transparent', vaCol:!isES?'#0A2A5E':'#5C6B7A',
+      deskBtnBg:!isMob?'#0A2A5E':'transparent', deskBtnCol:!isMob?'#fff':'#5C6B7A',
+      mobBtnBg:isMob?'#0A2A5E':'transparent', mobBtnCol:isMob?'#fff':'#5C6B7A',
+      setES:()=>{ try{localStorage.setItem('acg_lang','es');}catch(e){} this.setState({lang:'es'}); },
+      setVA:()=>{ try{localStorage.setItem('acg_lang','va');}catch(e){} this.setState({lang:'va'}); },
+      setDesktop:()=>this.setState({device:'desktop'}),
+      setMobile:()=>this.setState({device:'mobile'})
+    };
+  }
+}
+</script>
+</body>
+</html>
