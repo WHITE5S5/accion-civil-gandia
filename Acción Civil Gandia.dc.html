@@ -84,7 +84,7 @@
   .acg-skip{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:9999}
   .acg-skip:focus{position:fixed;top:12px;left:12px;width:auto;height:auto;padding:12px 20px;background:#1563C4;color:#fff;font:700 14px 'Public Sans';border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.25);text-decoration:none;outline:none}
   :focus-visible{outline:3px solid #1563C4;outline-offset:2px;border-radius:4px}
-  [data-om-raster]{display:none!important}
+  html[data-acg-mobile='1'] [data-om-raster]{display:none!important}
   .acg-cookie-banner{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9000;background:#fff;border-radius:18px;box-shadow:0 12px 48px rgba(10,42,94,.18);padding:20px 24px;max-width:460px;width:calc(100% - 32px);font-family:'Public Sans',sans-serif}
   .acg-cookie-banner.hidden{display:none}
   .acg-nav-item{position:relative}
@@ -912,7 +912,7 @@ class Component extends DCLogic {
   }
 
   componentDidMount(){
-    this._onResize=()=>this.setState({viewportW:this.viewportWidth()});
+    this._onResize=()=>{const w=this.viewportWidth();try{document.documentElement.setAttribute('data-acg-mobile',w<=900?'1':'0');}catch(e){}this.setState({viewportW:w});};
     this._onResize();
     try{ window.addEventListener('resize', this._onResize, {passive:true}); }catch(e){ window.addEventListener('resize', this._onResize); }
     const dur=1500, t0=performance.now();
