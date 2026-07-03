@@ -567,7 +567,12 @@ class Component extends DCLogic {
   }
 
   renderVals(){
-    const s=this.state, d=this.data(s.lang), es=s.lang==='es', isMob=s.device==='mobile', mounted=s.mounted;
+    const s=this.state, d=this.data(s.lang), es=s.lang==='es';
+    const viewportW=s.viewportW||1280;
+    const forcedMob=s.device==='mobile';
+    const isMob=forcedMob||(!s.device&&viewportW<=900);
+    try{document.documentElement.setAttribute('data-acg-mobile',isMob?'1':'0');}catch(e){}
+    const mounted=s.mounted;
     const V=(a,b)=>es?a:b;
     const apoyos = d.p.base + (s.apoyado?1:0);
     const pct = Math.min(100, Math.round(apoyos/d.p.meta*100));

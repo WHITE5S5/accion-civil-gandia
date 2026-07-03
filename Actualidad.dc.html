@@ -450,6 +450,7 @@ class Component extends DCLogic {
     const viewportW=s.viewportW||1280;
     const forcedMob=s.device==='mobile';
     const isMob=forcedMob||(!s.device&&viewportW<=900);
+    try{document.documentElement.setAttribute('data-acg-mobile',isMob?'1':'0');}catch(e){}
     const articles = s.cat==='all' ? d.allArticles : d.allArticles.filter(a=>a.catKey===s.cat);
     const chipStyle=(active)=> active ? {bg:'#0A2A5E',col:'#fff',border:'#0A2A5E'} : {bg:'#fff',col:'#33414F',border:'#E4EBF2'};
     const catChips = d.cats.map(c=>{ const a=s.cat===c.key; const st=chipStyle(a); return {label:c.label,...st,onClick:()=>this.setState({cat:c.key})}; });

@@ -326,6 +326,7 @@ class Component extends DCLogic {
     const viewportW=s.viewportW||1280;
     const forcedMob=s.device==='mobile';
     const isMob=forcedMob||(!s.device&&viewportW<=900);
+    try{document.documentElement.setAttribute('data-acg-mobile',isMob?'1':'0');}catch(e){}
     return {
       heroTitleSz: isMob?'26px':'38px',
       heroInnerPad: isMob?'36px 22px':'52px 50px',

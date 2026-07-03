@@ -107,9 +107,7 @@
           <a href="Crear.dc.html" class="acg-btn" style="display:{{ ctaHeadDisp }};text-decoration:none;background:#1563C4;color:#fff;font:700 14px 'Public Sans';padding:11px 18px;border-radius:11px;box-shadow:0 8px 20px rgba(21,99,196,.26);align-items:center;gap:8px">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>{{ t.crear }}
           </a>
-          <button class="acg-btn" onClick="{{ toggleMenu }}" style="display:{{ hamDisp }};width:40px;height:40px;border-radius:11px;border:none;background:#0A2A5E;cursor:pointer;align-items:center;justify-content:center">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
-          </button>
+
         </div>
       </div>
     </header>
@@ -618,8 +616,8 @@ class Component extends DCLogic {
       heroPad: isMob?'28px 16px 30px':(isTablet?'38px 24px 40px':'44px max(32px, calc((100% - 1240px)/2)) 46px'),
       umbralPad: isMob?'30px 16px':(isTablet?'36px 24px':'44px max(32px, calc((100% - 1240px)/2))'),
       listPad: isMob?'26px 16px':(isTablet?'34px 24px':'40px max(32px, calc((100% - 1240px)/2))'),
-      navDisp: isTablet?'none':'flex',
-      hamDisp: isTablet?'flex':'none',
+      navDisp: (isMob||isTablet)?'none':'flex',
+      btNavDisp: (isMob||isTablet)?'flex':'none',
       ctaHeadDisp: isMob?'none':'flex',
       heroTitleSz: isMob?'30px':(isTablet?'38px':'44px'),
       heroTextSz: isMob?'15.5px':(isTablet?'16.5px':'18px'),

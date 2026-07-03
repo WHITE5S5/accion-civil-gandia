@@ -385,6 +385,7 @@ class Component extends DCLogic {
     const viewportW=s.viewportW||1280;
     const forcedMob=s.device==='mobile';
     const isMob=forcedMob||(!s.device&&viewportW<=900);
+    try{document.documentElement.setAttribute('data-acg-mobile',isMob?'1':'0');}catch(e){}
     const V=(a,b)=>es?a:b;
     const step=s.step, isLast=step===4;
     const catObj=d.cats.find(c=>c.key===s.cat)||d.cats[0];

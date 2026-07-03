@@ -407,7 +407,12 @@ class Component extends DCLogic {
   }
 
   renderVals(){
-    const s=this.state, d=this.data(s.lang), es=s.lang==='es', isMob=s.device==='mobile', mounted=s.mounted;
+    const s=this.state, d=this.data(s.lang), es=s.lang==='es';
+    const viewportW=s.viewportW||1280;
+    const forcedMob=s.device==='mobile';
+    const isMob=forcedMob||(!s.device&&viewportW<=900);
+    try{document.documentElement.setAttribute('data-acg-mobile',isMob?'1':'0');}catch(e){}
+    const mounted=s.mounted;
     const feat={...d.feat, barW: mounted? d.feat.pct+'%':'0%'};
     const activas=d.activas.map(c=>({...c, barW: mounted? c.pct+'%':'0%'}));
     return {

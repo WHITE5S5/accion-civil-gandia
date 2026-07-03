@@ -510,6 +510,7 @@ class Component extends DCLogic {
     const viewportW=s.viewportW||1280;
     const forcedMob=s.device==='mobile';
     const isMob=forcedMob||(!s.device&&viewportW<=900);
+    try{document.documentElement.setAttribute('data-acg-mobile',isMob?'1':'0');}catch(e){}
     const base = new Date(2026, 6, 1); // July 2026
     base.setMonth(base.getMonth() + s.monthOffset);
     const year = base.getFullYear(), month = base.getMonth();
