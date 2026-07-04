@@ -638,10 +638,10 @@
   </div>
   </sc-if>
 
-  <!-- ================= MOBILE (placeholder, replaced next) ================= -->
+  <!-- ================= MOBILE ================= -->
   <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
-  <div style="background:#fff;min-height:100vh">
-    <div style="width:100%;max-width:none;background:#fff;border:none;border-radius:0;box-shadow:none;overflow:hidden;position:relative;min-height:100vh">
+  <div class="acg-mob-outer">
+    <div class="acg-mob-inner">
 
       <!-- mobile header -->
       <div style="height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid #EEF2F7;position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);z-index:40">
@@ -922,9 +922,28 @@
     </div>
 </div>
 </x-dc>
+<script>
+(function(){
+  document.addEventListener('click',function(e){
+    var b=e.target.closest&&e.target.closest('button.acg-btn');
+    if(!b)return;
+    var txt=b.textContent.trim();
+    var top=document.getElementById('top');
+    if(!top)return;
+    if(txt==='Móvil'){
+      top.style.maxWidth='430px';top.style.margin='0 auto';
+      top.style.boxShadow='0 0 0 1px #D1D9E3,0 12px 40px rgba(10,42,94,.18)';
+      document.body.style.background='#E9EEF4';
+    }else if(txt==='Escritorio'){
+      top.style.maxWidth='';top.style.margin='';top.style.boxShadow='';
+      document.body.style.background='';
+    }
+  });
+})();
+</script>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { lang: this.initLang(), device:null, viewportW:this.viewportWidth(), menuOpen:false, searchOpen:false, anim:0, mounted:false };
+  state = { lang: this.initLang(), preview:null, viewportW:this.viewportWidth(), menuOpen:false, searchOpen:false, anim:0, mounted:false };
   initLang(){ try{ return localStorage.getItem('acg_lang')||'es'; }catch(e){ return 'es'; } }
 
   viewportWidth(){
@@ -936,7 +955,7 @@ class Component extends DCLogic {
   }
 
   componentDidMount(){
-    this._onResize=()=>{const w=this.viewportWidth();try{document.documentElement.setAttribute('data-acg-mobile',w<=900?'1':'0');}catch(e){}this.setState({viewportW:w});};
+    this._onResize=()=>{var w=this.viewportWidth();var mob=w<=900;try{document.documentElement.setAttribute('data-acg-mobile',mob?'1':'0');}catch(e){}this.setState({viewportW:w});};
     this._onResize();
     try{ window.addEventListener('resize', this._onResize, {passive:true}); }catch(e){ window.addEventListener('resize', this._onResize); }
     const dur=1500, t0=performance.now();
@@ -1203,9 +1222,10 @@ class Component extends DCLogic {
     const campana={...c.campana, barW: mounted? c.campana.pct+'%':'0%'};
 
     const viewportW=s.viewportW||1280;
-    const forcedDevice=s.device;
-    const isMob=(forcedDevice||'')==='mobile' || (!forcedDevice && viewportW<=900);
+    const isMob=viewportW<=900;
     const isDesk=!isMob;
+    const isPrev=s.preview==='mobile';
+    try{document.documentElement.setAttribute('data-acg-mobile',isMob?'1':'0');}catch(e){}
     const isES=s.lang==='es', isVA=s.lang==='va';
     const tabBar=[
       {label:isES?'Inicio':'Inici', href:'Acción Civil Gandia.dc.html', col:'#1563C4', iconPath:'M4 11.5 12 5l8 6.5M6 10.5V19h4v-5h4v5h4v-8.5'},
@@ -1219,16 +1239,16 @@ class Component extends DCLogic {
       counters, tendencias, campana, tabBar,
       crearLabel:c.partActions[0].label, tabCrear:isES?'Crear':'Crear',
       lang:s.lang, isES, isVA, isDesktop:isDesk, isMobile:isMob, menuOpen:s.menuOpen,
-      frameMax: (forcedDevice||'')==='mobile'?'430px':'100%',
+      frameMax:'100%',
       compPct:this.fmt(c.compPct*anim), compBarW: mounted? c.compPct+'%':'0%',
       esBg:isES?'#fff':'transparent', esCol:isES?'#0A2A5E':'#5C6B7A',
       vaBg:isVA?'#fff':'transparent', vaCol:isVA?'#0A2A5E':'#5C6B7A',
-      deskBtnBg:isDesk?'#0A2A5E':'transparent', deskBtnCol:isDesk?'#fff':'#5C6B7A',
-      mobBtnBg:isMob?'#0A2A5E':'transparent', mobBtnCol:isMob?'#fff':'#5C6B7A',
+      deskBtnBg:isPrev?'transparent':'#0A2A5E', deskBtnCol:isPrev?'#5C6B7A':'#fff',
+      mobBtnBg:isPrev?'#0A2A5E':'transparent', mobBtnCol:isPrev?'#fff':'#5C6B7A',
       setES:()=>{ try{localStorage.setItem('acg_lang','es');}catch(e){} this.setState({lang:'es'}); },
       setVA:()=>{ try{localStorage.setItem('acg_lang','va');}catch(e){} this.setState({lang:'va'}); },
-      setDesktop:()=>this.setState({device:'desktop'}),
-      setMobile:()=>this.setState({device:'mobile'}),
+      setDesktop:()=>{this.setState({preview:'desktop'});},
+      setMobile:()=>{this.setState({preview:'mobile'});},
       toggleMenu:()=>this.setState(x=>({menuOpen:!x.menuOpen})),
       closeMenu:()=>this.setState({menuOpen:false}),
       searchOpen:s.searchOpen,
