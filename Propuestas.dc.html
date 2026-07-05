@@ -138,9 +138,9 @@
         <h2 style="font:800 {{ h2Sz }}/1.12 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.015em;margin:8px 0 6px">{{ t.catTitle }}</h2>
         <p style="font-size:15.5px;color:#5C6B7A;max-width:540px;margin:0 auto">{{ t.catText }}</p>
       </div>
-      <div style="{{ catStyle }}">
+      <div style="display:grid;grid-template-columns:{{ catGrid }};gap:18px">
         <sc-for list="{{ categorias }}" as="cat" hint-placeholder-count="12">
-          <a href="{{ cat.href }}" style="text-decoration:none;background:#fff;border:1.5px solid #E9EEF4;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px;transition:border-color .2s,box-shadow .2s,transform .2s;width:{{ catItemW }}" onmouseenter="this.style.borderColor=this.querySelector('[data-accent]').dataset.accent;this.style.boxShadow='0 12px 28px rgba(0,0,0,.06)';this.style.transform='translateY(-2px)'" onmouseleave="this.style.borderColor='#E9EEF4';this.style.boxShadow='none';this.style.transform='none'">
+          <a href="{{ cat.href }}" style="text-decoration:none;background:#fff;border:1.5px solid #E9EEF4;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px;transition:border-color .2s,box-shadow .2s,transform .2s" onmouseenter="this.style.borderColor=this.querySelector('[data-accent]').dataset.accent;this.style.boxShadow='0 12px 28px rgba(0,0,0,.06)';this.style.transform='translateY(-2px)'" onmouseleave="this.style.borderColor='#E9EEF4';this.style.boxShadow='none';this.style.transform='none'">
             <div style="width:48px;height:48px;border-radius:14px;background:{{ cat.tint }};display:flex;align-items:center;justify-content:center">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{ cat.accent }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ cat.iconPath }}"></path></svg>
             </div>
@@ -438,8 +438,7 @@ class Component extends DCLogic {
       statGrid: isMob?'repeat(2,1fr)':'repeat(4,1fr)',
       statGap: isMob?'16px':'32px',
       statNumSz: isMob?'28px':'36px',
-      catStyle: isMob?'display:grid;grid-template-columns:1fr;gap:18px':'display:flex;flex-wrap:wrap;gap:18px;justify-content:center',
-      catItemW: isMob?'auto':'calc(33.333% - 12px)',
+      catGrid: isMob?'1fr':'repeat(3,1fr)',
       featGrid: isMob?'1fr':'repeat(3,1fr)',
       navDisp: isMob?'none':'flex',
       esBg:es?'#0A2A5E':'transparent', esCol:es?'#fff':'#5C6B7A',

@@ -111,10 +111,10 @@
 
     <!-- BARRIO HERO -->
     <section style="padding:{{ heroPad }}">
-      <div style="background:linear-gradient(135deg,#0A2A5E,#12408A);border-radius:26px;padding:{{ heroInnerPad }};color:#fff;text-align:center">
+      <div style="background:linear-gradient(135deg,#0A2A5E,#12408A);border-radius:26px;padding:{{ heroInnerPad }};color:#fff">
         <span style="font:700 12.5px 'Public Sans';letter-spacing:.14em;text-transform:uppercase;color:#5FD4E2">{{ t.barrioTag }}</span>
         <h1 style="font:800 {{ heroTitleSz }}/1.1 'Bricolage Grotesque';letter-spacing:-.02em;margin:10px 0 14px">{{ barrio.name }}</h1>
-        <div style="display:flex;gap:28px;flex-wrap:wrap;justify-content:center">
+        <div style="display:flex;gap:28px;flex-wrap:wrap">
           <div><span style="font:800 34px 'Bricolage Grotesque'">{{ barrio.total }}</span><span style="font-size:14px;color:#9FBBDD;margin-left:8px">{{ t.actuaciones }}</span></div>
           <div><span style="font:800 34px 'Bricolage Grotesque';color:#5FD4E2">{{ barrio.completadas }}</span><span style="font-size:14px;color:#9FBBDD;margin-left:8px">{{ t.completadas }}</span></div>
           <div><span style="font:800 34px 'Bricolage Grotesque';color:#F6BE18">{{ barrio.enCurso }}</span><span style="font-size:14px;color:#9FBBDD;margin-left:8px">{{ t.enCurso }}</span></div>
@@ -124,7 +124,7 @@
 
     <!-- LISTA ACTUACIONES -->
     <section style="padding:{{ secPad }}">
-      <h2 style="font:800 {{ h2Sz }} 'Bricolage Grotesque';color:#0A2A5E;margin:0 0 22px;text-align:center">{{ t.actuacionesTitle }}</h2>
+      <h2 style="font:800 {{ h2Sz }} 'Bricolage Grotesque';color:#0A2A5E;margin:0 0 22px">{{ t.actuacionesTitle }}</h2>
       <div style="display:flex;flex-direction:column;gap:14px">
         <sc-for list="{{ barrio.actuaciones }}" as="act" hint-placeholder-count="4">
           <a href="DetalleActuacion.dc.html" class="acg-lift" style="text-decoration:none;background:#fff;border:1px solid #E9EEF4;border-radius:16px;padding:20px 24px;display:flex;align-items:center;gap:18px">

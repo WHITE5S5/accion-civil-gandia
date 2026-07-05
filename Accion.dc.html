@@ -115,10 +115,10 @@
     </div>
 
     <!-- HERO + STATS -->
-    <section style="padding:{{ heroPad }};text-align:center">
+    <section style="padding:{{ heroPad }}">
       <span style="font:700 12.5px 'Public Sans';letter-spacing:.14em;text-transform:uppercase;color:#0FA6B6">{{ t.heroTag }}</span>
-      <h1 style="font:800 {{ heroTitleSz }}/1.06 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.02em;margin:12px auto 12px;max-width:720px;text-wrap:balance">{{ t.heroTitle }}</h1>
-      <p style="font-size:{{ heroTextSz }};color:#5C6B7A;max-width:600px;margin:0 auto 26px;text-wrap:pretty">{{ t.heroText }}</p>
+      <h1 style="font:800 {{ heroTitleSz }}/1.06 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.02em;margin:12px 0 12px;max-width:720px;text-wrap:balance">{{ t.heroTitle }}</h1>
+      <p style="font-size:{{ heroTextSz }};color:#5C6B7A;max-width:600px;margin:0 0 26px;text-wrap:pretty">{{ t.heroText }}</p>
       <div style="display:grid;grid-template-columns:{{ statsGrid }};gap:14px">
         <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
           <div style="background:#fff;border:1px solid #E9EEF4;border-radius:16px;padding:18px 20px;border-left:5px solid {{ s.color }}">
@@ -148,7 +148,7 @@
         <div style="display:flex;flex-direction:column;gap:11px">
           <div style="font:700 15px 'Public Sans';color:#0A2A5E;margin-bottom:2px">{{ t.recientes }}</div>
           <sc-for list="{{ actuaciones }}" as="a" hint-placeholder-count="5">
-            <a href="DetalleActuacion.dc.html" class="acg-tile" style="text-decoration:none;background:#fff;border:1px solid #E9EEF4;border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px">
+            <a href="Sitemap.dc.html" class="acg-tile" style="text-decoration:none;background:#fff;border:1px solid #E9EEF4;border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px">
               <div style="width:44px;height:44px;flex-shrink:0;border-radius:12px;background:{{ a.tint }};display:flex;align-items:center;justify-content:center;color:{{ a.color }}"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{ a.iconPath }}"></path></svg></div>
               <div style="flex:1;min-width:0">
                 <div style="font:700 15px 'Public Sans';color:#17232F;margin-bottom:3px">{{ a.title }}</div>
@@ -163,13 +163,13 @@
 
     <!-- BARRIOS -->
     <section style="padding:{{ secPad }};background:#EEF4FB">
-      <div style="margin-bottom:22px;text-align:center">
+      <div style="margin-bottom:22px">
         <span style="font:700 12.5px 'Public Sans';letter-spacing:.14em;text-transform:uppercase;color:#0FA6B6">{{ t.barriosTag }}</span>
         <h2 style="font:800 {{ h2Sz }} 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.015em;margin:10px 0 0">{{ t.barriosTitle }}</h2>
       </div>
-      <div style="{{ barrioStyle }}">
+      <div style="display:grid;grid-template-columns:{{ barrioGrid }};gap:14px">
         <sc-for list="{{ barrios }}" as="b" hint-placeholder-count="6">
-          <a href="Barrio.dc.html" class="acg-lift" style="text-decoration:none;background:#fff;border:1px solid #E9EEF4;border-radius:18px;padding:20px;display:block;width:{{ barrioItemW }}">
+          <a href="Barrio.dc.html" class="acg-lift" style="text-decoration:none;background:#fff;border:1px solid #E9EEF4;border-radius:18px;padding:20px;display:block">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
               <span style="width:42px;height:42px;border-radius:12px;background:#EAF3FC;color:#1563C4;display:flex;align-items:center;justify-content:center"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-5.6 7-11a7 7 0 0 0-14 0c0 5.4 7 11 7 11Z"></path><circle cx="12" cy="10" r="2.4"></circle></svg></span>
               <span style="font:800 20px 'Bricolage Grotesque';color:#0A2A5E">{{ b.count }}</span>
@@ -481,8 +481,7 @@ class Component extends DCLogic {
       statsGrid: isMob?'1fr 1fr':'repeat(4,1fr)',
       mapGrid: isMob?'1fr':'1.15fr 1fr',
       mapH: isMob?'280px':'480px',
-      barrioStyle: isMob?'display:grid;grid-template-columns:1fr 1fr;gap:14px':'display:flex;flex-wrap:wrap;gap:14px;justify-content:center',
-      barrioItemW: isMob?'auto':'calc(33.333% - 10px)',
+      barrioGrid: isMob?'1fr 1fr':'repeat(3,1fr)',
       ctaTop: isMob?'30px':'44px',
       ctaPad: isMob?'30px 24px':'40px 44px',
       ctaSz: isMob?'24px':'30px',

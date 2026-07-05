@@ -111,10 +111,10 @@
 
     <!-- HERO -->
     <section style="padding:{{ heroPad }}">
-      <div style="background:linear-gradient(135deg,#0A2A5E,#12408A);border-radius:26px;padding:{{ heroInnerPad }};color:#fff;text-align:center">
+      <div style="background:linear-gradient(135deg,#0A2A5E,#12408A);border-radius:26px;padding:{{ heroInnerPad }};color:#fff">
         <span style="font:700 12.5px 'Public Sans';letter-spacing:.14em;text-transform:uppercase;color:#5FD4E2">{{ t.tag }}</span>
         <h1 style="font:800 {{ heroTitleSz }}/1.1 'Bricolage Grotesque';letter-spacing:-.02em;margin:10px 0 14px;text-wrap:balance">{{ t.heroTitle }}</h1>
-        <p style="font-size:{{ heroTextSz }};color:#C4D6EC;margin:0;max-width:680px;margin:0 auto;text-wrap:pretty">{{ t.heroText }}</p>
+        <p style="font-size:{{ heroTextSz }};color:#C4D6EC;margin:0;max-width:680px;text-wrap:pretty">{{ t.heroText }}</p>
       </div>
     </section>
 
@@ -132,7 +132,7 @@
 
     <!-- BARRIOS -->
     <section style="padding:{{ secPad }};background:#EEF4FB">
-      <h2 style="font:800 {{ h2Sz }} 'Bricolage Grotesque';color:#0A2A5E;margin:0 0 22px;text-align:center">{{ t.barriosTitle }}</h2>
+      <h2 style="font:800 {{ h2Sz }} 'Bricolage Grotesque';color:#0A2A5E;margin:0 0 22px">{{ t.barriosTitle }}</h2>
       <div style="display:grid;grid-template-columns:{{ cardGrid }};gap:16px">
         <sc-for list="{{ barrios }}" as="b" hint-placeholder-count="5">
           <a href="Barrio.dc.html" class="acg-lift" style="text-decoration:none;background:#fff;border:1px solid #E9EEF4;border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:12px">
