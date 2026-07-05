@@ -120,9 +120,9 @@
 
     <!-- PROPUESTAS DE ESTA CATEGORÍA -->
     <section style="padding:{{ secPad }}">
-      <div style="display:grid;grid-template-columns:{{ twoColGrid }};gap:18px">
+      <div style="{{ twoColStyle }}">
         <sc-for list="{{ cat.propuestas }}" as="p" hint-placeholder-count="4">
-          <a href="PropuestaDetalle.dc.html" class="acg-lift" style="text-decoration:none;background:#fff;border:1px solid #E9EEF4;border-radius:18px;padding:24px;display:flex;gap:16px;align-items:flex-start">
+          <a href="PropuestaDetalle.dc.html" class="acg-lift" style="text-decoration:none;background:#fff;border:1px solid #E9EEF4;border-radius:18px;padding:24px;display:flex;gap:16px;align-items:flex-start;width:{{ twoColItemW }}">
             <span style="width:40px;height:40px;border-radius:12px;background:{{ cat.tint }};color:{{ cat.accent }};display:flex;align-items:center;justify-content:center;flex-shrink:0;font:800 16px 'Public Sans'">{{ p.num }}</span>
             <div>
               <h3 style="font:700 17px/1.28 'Bricolage Grotesque';color:#17232F;margin:0 0 6px">{{ p.title }}</h3>
@@ -345,7 +345,8 @@ class Component extends DCLogic {
       secPad: isMob?'34px 16px':'52px 40px',
       h2Sz: isMob?'23px':'32px',
       cardGrid: isMob?'1fr':'repeat(3,1fr)',
-      twoColGrid: isMob?'1fr':'1fr 1fr',
+      twoColStyle: isMob?'display:grid;grid-template-columns:1fr;gap:18px':'display:flex;flex-wrap:wrap;gap:18px;justify-content:center',
+      twoColItemW: isMob?'auto':'calc(50% - 9px)',
       brandTextDisp: isMob?'none':'flex',
       navDisp: isMob?'none':'flex',
       ctaHeadDisp: isMob?'none':'block',

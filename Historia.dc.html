@@ -116,16 +116,16 @@
     <!-- HERO -->
     <section style="background:linear-gradient(150deg,#0A2A5E,#0F3B7D);color:#fff;position:relative;overflow:hidden">
       <div style="position:absolute;right:-80px;top:-70px;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(15,166,182,.3),transparent 70%)"></div>
-      <div style="padding:{{ heroPad }};position:relative">
+      <div style="padding:{{ heroPad }};position:relative;text-align:center">
         <span style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#5FD4E2;font:700 12px 'Public Sans';padding:7px 14px;border-radius:999px">{{ t.heroTag }}</span>
-        <h1 style="font:800 {{ heroTitleSz }}/1.06 'Bricolage Grotesque';letter-spacing:-.02em;margin:18px 0 14px;max-width:720px;text-wrap:balance">{{ t.heroTitle }}</h1>
-        <p style="font-size:{{ heroTextSz }};color:#C4D6EC;max-width:580px;margin:0;text-wrap:pretty">{{ t.heroText }}</p>
+        <h1 style="font:800 {{ heroTitleSz }}/1.06 'Bricolage Grotesque';letter-spacing:-.02em;margin:18px auto 14px;max-width:720px;text-wrap:balance">{{ t.heroTitle }}</h1>
+        <p style="font-size:{{ heroTextSz }};color:#C4D6EC;max-width:580px;margin:0 auto;text-wrap:pretty">{{ t.heroText }}</p>
       </div>
     </section>
 
     <!-- INTRO -->
     <section style="padding:{{ secPad }};background:#fff">
-      <div style="max-width:780px">
+      <div style="max-width:780px;margin:0 auto;text-align:center">
         <p style="font-size:17px;color:#42525F;margin:0 0 16px;text-wrap:pretty">{{ t.introP1 }}</p>
         <p style="font-size:17px;color:#42525F;margin:0;text-wrap:pretty">{{ t.introP2 }}</p>
       </div>
@@ -133,7 +133,7 @@
 
     <!-- TIMELINE -->
     <section style="padding:{{ secPad }}">
-      <div style="margin-bottom:28px">
+      <div style="margin-bottom:28px;text-align:center">
         <span style="font:700 12.5px 'Public Sans';letter-spacing:.14em;text-transform:uppercase;color:#0FA6B6">{{ t.timelineTag }}</span>
         <h2 style="font:800 {{ h2Sz }} 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.015em;margin:10px 0 0">{{ t.timelineTitle }}</h2>
       </div>

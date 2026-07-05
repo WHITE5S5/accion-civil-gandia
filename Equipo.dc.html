@@ -125,14 +125,14 @@
 
     <!-- JUNTA DIRECTIVA -->
     <section style="padding:{{ secPad }};background:#fff">
-      <div style="margin-bottom:26px">
+      <div style="margin-bottom:26px;text-align:center">
         <span style="font:700 12.5px 'Public Sans';letter-spacing:.14em;text-transform:uppercase;color:#0FA6B6">{{ t.juntaTag }}</span>
         <h2 style="font:800 {{ h2Sz }} 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.015em;margin:10px 0 0">{{ t.juntaTitle }}</h2>
-        <p style="font-size:16px;color:#5C6B7A;margin:12px 0 0;max-width:640px">{{ t.juntaDesc }}</p>
+        <p style="font-size:16px;color:#5C6B7A;margin:12px 0 0;max-width:640px;margin:12px auto 0">{{ t.juntaDesc }}</p>
       </div>
-      <div style="display:grid;grid-template-columns:{{ equipoGrid }};gap:16px">
+      <div style="{{ equipoStyle }}">
         <sc-for list="{{ junta }}" as="e" hint-placeholder-count="6">
-          <a href="PerfilMiembro.dc.html" class="acg-lift" style="text-decoration:none;color:inherit;background:#fff;border:1px solid #E9EEF4;border-radius:18px;padding:26px;text-align:center;display:block">
+          <a href="PerfilMiembro.dc.html" class="acg-lift" style="text-decoration:none;color:inherit;background:#fff;border:1px solid #E9EEF4;border-radius:18px;padding:26px;text-align:center;display:block;width:{{ equipoItemW }}">
             <div style="width:80px;height:80px;margin:0 auto 16px;border-radius:50%;background:{{ e.avBg }};color:#fff;font:800 26px 'Public Sans';display:flex;align-items:center;justify-content:center">{{ e.ini }}</div>
             <h3 style="font:700 18px 'Bricolage Grotesque';color:#17232F;margin:0 0 2px">{{ e.name }}</h3>
             <div style="font-size:13.5px;color:#0FA6B6;font-weight:600;margin-bottom:4px">{{ e.role }}</div>
@@ -145,14 +145,14 @@
 
     <!-- COMISIONES -->
     <section style="padding:{{ secPad }};background:#EEF4FB">
-      <div style="margin-bottom:26px">
+      <div style="margin-bottom:26px;text-align:center">
         <span style="font:700 12.5px 'Public Sans';letter-spacing:.14em;text-transform:uppercase;color:#0FA6B6">{{ t.comTag }}</span>
         <h2 style="font:800 {{ h2Sz }} 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.015em;margin:10px 0 0">{{ t.comTitle }}</h2>
-        <p style="font-size:16px;color:#5C6B7A;margin:12px 0 0;max-width:640px">{{ t.comDesc }}</p>
+        <p style="font-size:16px;color:#5C6B7A;margin:12px 0 0;max-width:640px;margin:12px auto 0">{{ t.comDesc }}</p>
       </div>
-      <div style="display:grid;grid-template-columns:{{ comGrid }};gap:14px">
+      <div style="{{ comStyle }}">
         <sc-for list="{{ comisiones }}" as="c" hint-placeholder-count="5">
-          <div style="background:#fff;border:1px solid #E9EEF4;border-radius:18px;padding:22px">
+          <div style="background:#fff;border:1px solid #E9EEF4;border-radius:18px;padding:22px;width:{{ comItemW }}">
             <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
               <span style="width:44px;height:44px;flex-shrink:0;border-radius:13px;background:{{ c.tint }};color:{{ c.accent }};display:flex;align-items:center;justify-content:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{ c.iconPath }}"></path></svg></span>
               <div>
@@ -168,10 +168,10 @@
 
     <!-- RED DE BARRIOS -->
     <section style="padding:{{ secPad }};background:#fff">
-      <div style="margin-bottom:26px">
+      <div style="margin-bottom:26px;text-align:center">
         <span style="font:700 12.5px 'Public Sans';letter-spacing:.14em;text-transform:uppercase;color:#0FA6B6">{{ t.redTag }}</span>
         <h2 style="font:800 {{ h2Sz }} 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.015em;margin:10px 0 0">{{ t.redTitle }}</h2>
-        <p style="font-size:16px;color:#5C6B7A;margin:12px 0 0;max-width:640px">{{ t.redDesc }}</p>
+        <p style="font-size:16px;color:#5C6B7A;margin:12px 0 0;max-width:640px;margin:12px auto 0">{{ t.redDesc }}</p>
       </div>
       <div style="display:grid;grid-template-columns:{{ barriosGrid }};gap:10px">
         <sc-for list="{{ barrios }}" as="b" hint-placeholder-count="12">
@@ -441,8 +441,10 @@ class Component extends DCLogic {
       heroTitleSz: isMob?'28px':'42px',
       heroTextSz: isMob?'15.5px':'18px',
       h2Sz: isMob?'23px':'32px',
-      equipoGrid: isMob?'1fr':'repeat(3,1fr)',
-      comGrid: isMob?'1fr':'repeat(2,1fr)',
+      equipoStyle: isMob?'display:grid;grid-template-columns:1fr;gap:16px':'display:flex;flex-wrap:wrap;gap:16px;justify-content:center',
+      equipoItemW: isMob?'auto':'calc(33.333% - 11px)',
+      comStyle: isMob?'display:grid;grid-template-columns:1fr;gap:14px':'display:flex;flex-wrap:wrap;gap:14px;justify-content:center',
+      comItemW: isMob?'auto':'calc(50% - 7px)',
       barriosGrid: isMob?'1fr':'repeat(3,1fr)',
       ctaPad: isMob?'30px 24px':'40px 44px',
       ctaSz: isMob?'24px':'30px',

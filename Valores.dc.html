@@ -144,11 +144,11 @@
 
     <!-- CÓDIGO ÉTICO -->
     <section style="padding:{{ secPad }};background:#EEF4FB">
-      <div style="margin-bottom:24px">
+      <div style="margin-bottom:24px;text-align:center">
         <span style="font:700 12.5px 'Public Sans';letter-spacing:.14em;text-transform:uppercase;color:#0FA6B6">{{ t.codigoTag }}</span>
         <h2 style="font:800 {{ h2Sz }} 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.015em;margin:10px 0 0">{{ t.codigoTitle }}</h2>
       </div>
-      <div style="display:flex;flex-direction:column;gap:12px;max-width:820px">
+      <div style="display:flex;flex-direction:column;gap:12px;max-width:820px;margin:0 auto">
         <sc-for list="{{ codigo }}" as="r" hint-placeholder-count="6">
           <div style="background:#fff;border:1px solid #E9EEF4;border-radius:16px;padding:20px 22px;display:flex;gap:16px;align-items:flex-start">
             <span style="width:32px;height:32px;flex-shrink:0;border-radius:50%;background:#EAF3FC;color:#1563C4;font:800 14px 'Public Sans';display:flex;align-items:center;justify-content:center">{{ r.num }}</span>

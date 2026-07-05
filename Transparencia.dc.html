@@ -134,7 +134,7 @@
 
     <!-- CUENTAS -->
     <section style="padding:{{ secPad }};background:#fff">
-      <div style="margin-bottom:24px">
+      <div style="margin-bottom:24px;text-align:center">
         <span style="font:700 12.5px 'Public Sans';letter-spacing:.14em;text-transform:uppercase;color:#2E9E5B">{{ t.cuentasTag }}</span>
         <h2 style="font:800 {{ h2Sz }} 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.015em;margin:10px 0 0">{{ t.cuentasTitle }}</h2>
       </div>
@@ -177,10 +177,10 @@
 
     <!-- DONACIONES -->
     <section style="padding:{{ secPad }}">
-      <div style="margin-bottom:22px">
+      <div style="margin-bottom:22px;text-align:center">
         <span style="font:700 12.5px 'Public Sans';letter-spacing:.14em;text-transform:uppercase;color:#0FA6B6">{{ t.donacionesTag }}</span>
         <h2 style="font:800 {{ h2Sz }} 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.015em;margin:10px 0 6px">{{ t.donacionesTitle }}</h2>
-        <p style="font-size:15.5px;color:#5C6B7A;max-width:640px;margin:0">{{ t.donacionesText }}</p>
+        <p style="font-size:15.5px;color:#5C6B7A;max-width:640px;margin:0 auto">{{ t.donacionesText }}</p>
       </div>
       <div style="display:grid;grid-template-columns:{{ donGrid }};gap:14px">
         <sc-for list="{{ donaciones }}" as="d" hint-placeholder-count="3">
@@ -196,7 +196,7 @@
 
     <!-- DOCUMENTOS -->
     <section style="padding:{{ secPad }};background:#EEF4FB">
-      <div style="margin-bottom:22px">
+      <div style="margin-bottom:22px;text-align:center">
         <span style="font:700 12.5px 'Public Sans';letter-spacing:.14em;text-transform:uppercase;color:#0FA6B6">{{ t.docsTag }}</span>
         <h2 style="font:800 {{ h2Sz }} 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.015em;margin:10px 0 0">{{ t.docsTitle }}</h2>
       </div>
@@ -213,10 +213,10 @@
 
     <!-- COMPROMISOS -->
     <section style="padding:{{ secPad }}">
-      <div style="margin-bottom:24px">
+      <div style="margin-bottom:24px;text-align:center">
         <span style="font:700 12.5px 'Public Sans';letter-spacing:.14em;text-transform:uppercase;color:#0FA6B6">{{ t.compTag }}</span>
         <h2 style="font:800 {{ h2Sz }} 'Bricolage Grotesque';color:#0A2A5E;letter-spacing:-.015em;margin:10px 0 6px">{{ t.compTitle }}</h2>
-        <p style="font-size:15.5px;color:#5C6B7A;max-width:640px;margin:0">{{ t.compText }}</p>
+        <p style="font-size:15.5px;color:#5C6B7A;max-width:640px;margin:0 auto">{{ t.compText }}</p>
       </div>
       <div style="display:grid;grid-template-columns:{{ compGrid }};gap:14px;margin-bottom:24px">
         <sc-for list="{{ compStats }}" as="cs" hint-placeholder-count="4">
