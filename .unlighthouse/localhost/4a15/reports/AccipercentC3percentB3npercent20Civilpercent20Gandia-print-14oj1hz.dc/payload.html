@@ -1,0 +1,1544 @@
+<html><head><style>
+    .sc-placeholder{background:color-mix(in srgb,currentColor 8%,transparent);
+      border:1px solid color-mix(in srgb,currentColor 50%,transparent);
+      border-radius:2px;box-sizing:border-box;overflow:hidden}
+    @keyframes sc-shine{0%{background-position:100% 50%}100%{background-position:0% 50%}}
+    html.sc-dc-streaming .sc-placeholder,
+    html.sc-dc-streaming .sc-interp.sc-missing{position:relative;
+      background:color-mix(in srgb,currentColor 5%,transparent);
+      border-color:transparent}
+    html.sc-dc-streaming .sc-placeholder::before,
+    html.sc-dc-streaming .sc-interp.sc-missing::before{content:'';
+      position:absolute;inset:0;pointer-events:none;
+      background:linear-gradient(90deg,rgba(217,119,87,0) 25%,rgba(247,225,211,.95) 37%,rgba(217,119,87,0) 63%);
+      background-size:400% 100%;animation:sc-shine 1.4s ease infinite}
+    html.sc-dc-streaming .sc-placeholder:nth-child(n+9 of .sc-placeholder)::before,
+    html.sc-dc-streaming .sc-interp.sc-missing:nth-child(n+9 of .sc-interp.sc-missing)::before{animation:none;
+      background:color-mix(in srgb,currentColor 8%,transparent)}
+    .sc-placeholder-error{padding:4px 8px;font:11px/1.4 ui-monospace,monospace;
+      color:color-mix(in srgb,currentColor 70%,transparent);word-break:break-word}
+    .sc-interp.sc-missing{display:inline-block;width:2em;height:1em;overflow:hidden;
+      vertical-align:text-bottom;background:rgba(255,255,255,.3);border:1px solid rgba(0,0,0,.5);
+      border-radius:2px;box-sizing:border-box;color:transparent;
+      user-select:none}
+    .sc-interp.sc-unresolved{font-family:ui-monospace,monospace;font-size:.85em;
+      color:color-mix(in srgb,currentColor 50%,transparent);
+      background:color-mix(in srgb,currentColor 10%,transparent);border-radius:3px;
+      padding:0 3px}
+    .sc-host.sc-has-error{position:relative}
+    .sc-logic-error{position:absolute;top:8px;left:8px;z-index:2147483647;max-width:60ch;
+      padding:6px 10px;background:#b00020;color:#fff;font:12px/1.4 ui-monospace,monospace;
+      border-radius:4px;white-space:pre-wrap;pointer-events:none}
+    /* Mirrors PRINT_BASELINE_CSS in apps/web deck-stage-export.ts — keep both
+       in sync until dc-runtime regains a build step. */
+    @media print {
+      @page { margin: 0.5cm; }
+      figure, table { break-inside: avoid; }
+      #dc-root, #dc-root > .sc-host { height: auto; }
+      *, *::before, *::after {
+        print-color-adjust: exact; -webkit-print-color-adjust: exact;
+        backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+        animation-delay: -99s !important; animation-duration: .001s !important;
+        animation-iteration-count: 1 !important; animation-fill-mode: both !important;
+        animation-play-state: running !important; transition-duration: 0s !important;
+      }
+    }
+  </style><style>@media print {
+  figure, table { break-inside: avoid; }
+  *, *::before, *::after {
+    print-color-adjust: exact; -webkit-print-color-adjust: exact;
+    backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+    animation-delay: -99s !important; animation-duration: .001s !important;
+    animation-iteration-count: 1 !important; animation-fill-mode: both !important;
+    animation-play-state: running !important; transition-duration: 0s !important;
+  }
+}</style>
+<style data-omelette-print-defaults="">
+@media print {
+  @page { margin: 0.5in; }
+  h1, h2, h3, h4, h5, h6 { break-after: avoid; }
+  figure, table, pre, blockquote, img, svg, tr, [class~="card" i] { break-inside: avoid; }
+  img, svg { max-width: 100%; }
+  p { orphans: 3; widows: 3; }
+}
+</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script><style>x-dc{display:none!important}</style><script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous"></script><script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
+<title>Acción Civil Gandia</title><style>html,body{height:100%;margin:0}#dc-root,#dc-root>.sc-host{height:100%}</style><link rel="preconnect" href="https://fonts.googleapis.com" data-dc-tpl="1"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" data-dc-tpl="2"><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Public+Sans:ital,wght@0,400..700;1,400&amp;display=swap" rel="stylesheet" data-dc-tpl="3"><style data-dc-tpl="4">
+  *{box-sizing:border-box}
+  body{margin:0}
+  ::selection{background:#F6BE18;color:#0A2A5E}
+  @keyframes acgFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+  @keyframes acgSun{0%,100%{transform:rotate(0)}50%{transform:rotate(18deg)}}
+  .acg-lift{transition:transform .28s cubic-bezier(.2,.7,.3,1),box-shadow .28s}
+  .acg-lift:hover{transform:translateY(-6px);box-shadow:0 22px 44px rgba(10,42,94,.16)}
+  .acg-nav a{transition:color .18s}
+  .acg-btn{transition:transform .2s,box-shadow .2s,background .2s,filter .2s}
+  .acg-btn:hover{filter:brightness(1.05)}
+  .acg-btn:active{transform:translateY(1px)}
+  .acg-tile{transition:transform .24s,box-shadow .24s,border-color .24s}
+  .acg-tile:hover{transform:translateY(-4px);border-color:#1563C4;box-shadow:0 16px 32px rgba(10,42,94,.12)}
+</style></head>
+<body>
+<div id="dc-root"><div class="sc-host" data-sc-name="Acción Civil Gandia-print-14oj1hz"><div data-dc-tpl="5" id="top" style="font-family: &quot;Public Sans&quot;, system-ui, -apple-system, sans-serif; color: rgb(23, 35, 47); background: rgb(255, 255, 255); -webkit-font-smoothing: antialiased; line-height: 1.55; position: relative;">
+
+  
+  <div data-dc-tpl="6" data-om-raster="" style="position: fixed; right: 18px; bottom: 18px; z-index: 9000; display: flex; gap: 8px; align-items: center; background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(10px); border: 1px solid rgb(228, 235, 242); border-radius: 14px; padding: 8px; box-shadow: rgba(10, 42, 94, 0.16) 0px 12px 30px;">
+    <div data-dc-tpl="7" style="display: flex; background: rgb(240, 244, 249); border-radius: 9px; padding: 3px;">
+      <button data-dc-tpl="8" class="acg-btn" style="border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; cursor: pointer; font: 600 12px &quot;Public Sans&quot;; padding: 6px 12px; border-radius: 7px; background: rgb(10, 42, 94); color: rgb(255, 255, 255);">Escritorio</button>
+      <button data-dc-tpl="9" class="acg-btn" style="border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; cursor: pointer; font: 600 12px &quot;Public Sans&quot;; padding: 6px 12px; border-radius: 7px; background: transparent; color: rgb(92, 107, 122);">Móvil</button>
+    </div>
+  </div>
+
+  
+  
+  <div data-dc-tpl="11">
+    
+    <header data-dc-tpl="12" style="position: sticky; top: 0px; z-index: 800; background: rgba(255, 255, 255, 0.86); backdrop-filter: blur(14px); border-bottom: 1px solid rgb(233, 238, 244);">
+      <div data-dc-tpl="13" style="max-width: 1240px; margin: 0px auto; padding: 0px 40px; height: 74px; display: flex; align-items: center; gap: 28px;">
+        <a data-dc-tpl="14" href="#top" style="display: flex; align-items: center; gap: 12px; text-decoration: none; flex-shrink: 0;">
+          <img data-dc-tpl="15" src="assets/logo-icon.webp" alt="Acción Civil Gandia" width="512" height="467" style="height: 46px; width: 46px; object-fit: contain;">
+          <span data-dc-tpl="16" style="display: flex; flex-direction: column; line-height: 1;">
+            <span data-dc-tpl="17" style="font: 800 20px &quot;Bricolage Grotesque&quot;; color: rgb(10, 42, 94); letter-spacing: -0.01em;">Acción Civil</span>
+            <span data-dc-tpl="18" style="font: 700 11px &quot;Public Sans&quot;; letter-spacing: 0.34em; color: rgb(15, 166, 182); margin-top: 2px;">GANDIA</span>
+          </span>
+        </a>
+        <nav data-dc-tpl="19" class="acg-nav" style="display: flex; align-items: center; gap: 22px; margin-left: 8px; flex-wrap: nowrap; overflow: hidden;">
+          
+            <a data-dc-tpl="21" href="#top" style="text-decoration: none; color: rgb(51, 65, 79); font: 600 14.5px &quot;Public Sans&quot;; white-space: nowrap;"><span class="sc-interp">Inicio</span></a>
+          
+            <a data-dc-tpl="21" href="#" style="text-decoration: none; color: rgb(51, 65, 79); font: 600 14.5px &quot;Public Sans&quot;; white-space: nowrap;"><span class="sc-interp">Conócenos</span></a>
+          
+            <a data-dc-tpl="21" href="#" style="text-decoration: none; color: rgb(51, 65, 79); font: 600 14.5px &quot;Public Sans&quot;; white-space: nowrap;"><span class="sc-interp">Propuestas</span></a>
+          
+            <a data-dc-tpl="21" href="#participacion" style="text-decoration: none; color: rgb(51, 65, 79); font: 600 14.5px &quot;Public Sans&quot;; white-space: nowrap;"><span class="sc-interp">Participación</span></a>
+          
+            <a data-dc-tpl="21" href="#accion" style="text-decoration: none; color: rgb(51, 65, 79); font: 600 14.5px &quot;Public Sans&quot;; white-space: nowrap;"><span class="sc-interp">Acción</span></a>
+          
+            <a data-dc-tpl="21" href="#campana" style="text-decoration: none; color: rgb(51, 65, 79); font: 600 14.5px &quot;Public Sans&quot;; white-space: nowrap;"><span class="sc-interp">Campañas</span></a>
+          
+            <a data-dc-tpl="21" href="#actualidad" style="text-decoration: none; color: rgb(51, 65, 79); font: 600 14.5px &quot;Public Sans&quot;; white-space: nowrap;"><span class="sc-interp">Actualidad</span></a>
+          
+            <a data-dc-tpl="21" href="#transparencia" style="text-decoration: none; color: rgb(51, 65, 79); font: 600 14.5px &quot;Public Sans&quot;; white-space: nowrap;"><span class="sc-interp">Transparencia</span></a>
+          
+            <a data-dc-tpl="21" href="#footer" style="text-decoration: none; color: rgb(51, 65, 79); font: 600 14.5px &quot;Public Sans&quot;; white-space: nowrap;"><span class="sc-interp">Contacto</span></a>
+          
+        </nav>
+        <div data-dc-tpl="22" style="margin-left: auto; display: flex; align-items: center; gap: 12px; flex-shrink: 0;">
+          <button data-dc-tpl="23" class="acg-btn" title="Buscar" style="width: 40px; height: 40px; border-radius: 11px; border: 1px solid rgb(228, 235, 242); background: rgb(255, 255, 255); cursor: pointer; display: flex; align-items: center; justify-content: center; color: rgb(51, 65, 79);">
+            <svg data-dc-tpl="24" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle data-dc-tpl="25" cx="11" cy="11" r="7"></circle><path data-dc-tpl="26" d="m20 20-3.2-3.2"></path></svg>
+          </button>
+          <div data-dc-tpl="27" style="display: flex; background: rgb(240, 244, 249); border-radius: 10px; padding: 3px;">
+            <button data-dc-tpl="28" class="acg-btn" style="border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; cursor: pointer; font: 700 12.5px &quot;Public Sans&quot;; padding: 6px 11px; border-radius: 7px; background: rgb(255, 255, 255); color: rgb(10, 42, 94);">ES</button>
+            <button data-dc-tpl="29" class="acg-btn" style="border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; cursor: pointer; font: 700 12.5px &quot;Public Sans&quot;; padding: 6px 11px; border-radius: 7px; background: transparent; color: rgb(92, 107, 122);">VA</button>
+          </div>
+          <a data-dc-tpl="30" href="#" style="text-decoration: none; font: 600 14px &quot;Public Sans&quot;; color: rgb(10, 42, 94); display: flex; align-items: center; gap: 7px; padding: 0px 6px;">
+            <svg data-dc-tpl="31" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle data-dc-tpl="32" cx="12" cy="8" r="3.4"></circle><path data-dc-tpl="33" d="M5.5 20a6.5 6.5 0 0 1 13 0"></path></svg>
+            <span class="sc-interp">Área ciudadana</span>
+          </a>
+          <a data-dc-tpl="34" href="#participacion" class="acg-btn" style="text-decoration: none; background: rgb(21, 99, 196); color: rgb(255, 255, 255); font: 700 14.5px &quot;Public Sans&quot;; padding: 11px 20px; border-radius: 11px; box-shadow: rgba(21, 99, 196, 0.28) 0px 8px 20px;"><span class="sc-interp">Participa</span></a>
+        </div>
+      </div>
+    </header>
+
+    
+    <section data-dc-tpl="35" style="background: linear-gradient(rgb(234, 243, 252) 0%, rgb(246, 250, 254) 46%, rgb(255, 255, 255) 100%); position: relative; overflow: hidden;">
+      <div data-dc-tpl="36" style="max-width: 1240px; margin: 0px auto; padding: 76px 40px 92px; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 56px; align-items: center;">
+        <div data-dc-tpl="37">
+          <span data-dc-tpl="38" style="display: inline-flex; align-items: center; gap: 9px; background: rgb(255, 255, 255); border: 1px solid rgb(219, 231, 244); color: rgb(15, 166, 182); font: 700 12.5px &quot;Public Sans&quot;; letter-spacing: 0.02em; padding: 8px 15px; border-radius: 999px; box-shadow: rgba(10, 42, 94, 0.05) 0px 4px 14px;">
+            <span data-dc-tpl="39" style="width: 8px; height: 8px; border-radius: 50%; background: rgb(15, 166, 182); display: inline-block;"></span><span class="sc-interp">Formación ciudadana, local e independiente</span>
+          </span>
+          <h1 data-dc-tpl="40" style="font: 800 60px / 1.04 &quot;Bricolage Grotesque&quot;; color: rgb(10, 42, 94); letter-spacing: -0.02em; margin: 22px 0px 0px; text-wrap: balance;"><span class="sc-interp">Gandia se construye escuchando a su gente</span></h1>
+          <p data-dc-tpl="41" style="font-size: 20px; color: rgb(66, 82, 95); max-width: 520px; margin: 22px 0px 34px; text-wrap: pretty;"><span class="sc-interp">Somos vecinos comprometidos con una política municipal independiente, cercana y centrada en soluciones reales.</span></p>
+          <div data-dc-tpl="42" style="display: flex; gap: 14px; flex-wrap: wrap;">
+            <a data-dc-tpl="43" href="#participacion" class="acg-btn" style="text-decoration: none; background: rgb(21, 99, 196); color: rgb(255, 255, 255); font: 700 16px &quot;Public Sans&quot;; padding: 16px 28px; border-radius: 13px; box-shadow: rgba(21, 99, 196, 0.3) 0px 12px 26px; display: inline-flex; align-items: center; gap: 10px;">
+              <span class="sc-interp">Haz una propuesta</span>
+              <svg data-dc-tpl="44" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="45" d="M5 12h14M13 6l6 6-6 6"></path></svg>
+            </a>
+            <a data-dc-tpl="46" href="#" class="acg-btn" style="text-decoration: none; background: rgb(255, 255, 255); color: rgb(10, 42, 94); font: 700 16px &quot;Public Sans&quot;; padding: 16px 28px; border-radius: 13px; border: 1.5px solid rgb(207, 221, 236);"><span class="sc-interp">Conoce Acción Civil</span></a>
+          </div>
+          <div data-dc-tpl="47" style="display: flex; gap: 30px; margin-top: 44px;">
+            
+              <div data-dc-tpl="49">
+                <div data-dc-tpl="50" style="font: 800 30px &quot;Bricolage Grotesque&quot;; color: rgb(10, 42, 94); letter-spacing: -0.01em;"><span class="sc-interp">1.240</span></div>
+                <div data-dc-tpl="51" style="font-size: 13.5px; color: rgb(92, 107, 122); margin-top: 2px;"><span class="sc-interp">propuestas ciudadanas</span></div>
+              </div>
+            
+              <div data-dc-tpl="49">
+                <div data-dc-tpl="50" style="font: 800 30px &quot;Bricolage Grotesque&quot;; color: rgb(10, 42, 94); letter-spacing: -0.01em;"><span class="sc-interp">22</span></div>
+                <div data-dc-tpl="51" style="font-size: 13.5px; color: rgb(92, 107, 122); margin-top: 2px;"><span class="sc-interp">barrios participando</span></div>
+              </div>
+            
+              <div data-dc-tpl="49">
+                <div data-dc-tpl="50" style="font: 800 30px &quot;Bricolage Grotesque&quot;; color: rgb(10, 42, 94); letter-spacing: -0.01em;"><span class="sc-interp">176</span></div>
+                <div data-dc-tpl="51" style="font-size: 13.5px; color: rgb(92, 107, 122); margin-top: 2px;"><span class="sc-interp">respuestas oficiales</span></div>
+              </div>
+            
+          </div>
+        </div>
+        <div data-dc-tpl="52" style="position: relative;">
+          <div data-dc-tpl="53" style="position: relative; border-radius: 26px; overflow: hidden; aspect-ratio: 4 / 4.4; background-image: repeating-linear-gradient(135deg, rgb(211, 226, 242) 0px, rgb(211, 226, 242) 15px, rgb(228, 239, 250) 15px, rgb(228, 239, 250) 30px); box-shadow: rgba(10, 42, 94, 0.18) 0px 30px 60px; display: flex; align-items: flex-end; justify-content: center; padding: 22px;">
+            <span data-dc-tpl="54" style="font-family: ui-monospace, Menlo, monospace; font-size: 12px; letter-spacing: 0.06em; color: rgb(63, 81, 101); background: rgba(255, 255, 255, 0.82); padding: 7px 12px; border-radius: 8px; text-transform: uppercase;"><span class="sc-interp">FOTO · Platja i Grau de Gandia</span></span>
+          </div>
+          <div data-dc-tpl="55" style="position: absolute; left: -28px; bottom: 44px; background: rgb(255, 255, 255); border-radius: 18px; padding: 16px 20px; box-shadow: rgba(10, 42, 94, 0.16) 0px 18px 40px; display: flex; align-items: center; gap: 14px; animation: 5s ease-in-out 0s infinite normal none running acgFloat;">
+            <div data-dc-tpl="56" style="width: 46px; height: 46px; border-radius: 12px; background: rgb(234, 243, 252); display: flex; align-items: center; justify-content: center; color: rgb(21, 99, 196);">
+              <svg data-dc-tpl="57" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle data-dc-tpl="58" cx="9" cy="8" r="3"></circle><path data-dc-tpl="59" d="M2.5 19a6.5 6.5 0 0 1 13 0M16 6a3 3 0 0 1 0 5.6M21 19a5.5 5.5 0 0 0-4-5.3"></path></svg>
+            </div>
+            <div data-dc-tpl="60">
+              <div data-dc-tpl="61" style="font: 800 22px &quot;Bricolage Grotesque&quot;; color: rgb(10, 42, 94);"><span class="sc-interp">12.480</span></div>
+              <div data-dc-tpl="62" style="font-size: 12.5px; color: rgb(92, 107, 122);"><span class="sc-interp">vecinas y vecinos participando</span></div>
+            </div>
+          </div>
+          <div data-dc-tpl="63" style="position: absolute; right: -14px; top: 26px; width: 70px; height: 70px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, rgb(255, 214, 92), rgb(246, 190, 24)); box-shadow: rgba(246, 190, 24, 0.4) 0px 12px 26px; animation: 9s ease-in-out 0s infinite normal none running acgSun;"></div>
+        </div>
+      </div>
+    </section>
+
+    
+    <section data-dc-tpl="64" style="scroll-margin-top: 88px; padding: 92px 0px;">
+      <div data-dc-tpl="65" style="max-width: 1240px; margin: 0px auto; padding: 0px 40px;">
+        <div data-dc-tpl="66" style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 44px;">
+          <div data-dc-tpl="67">
+            <span data-dc-tpl="68" style="font: 700 12.5px &quot;Public Sans&quot;; letter-spacing: 0.16em; text-transform: uppercase; color: rgb(15, 166, 182);"><span class="sc-interp">Propuestas prioritarias</span></span>
+            <h2 data-dc-tpl="69" style="font: 800 40px / 1.08 &quot;Bricolage Grotesque&quot;; color: rgb(10, 42, 94); letter-spacing: -0.015em; margin: 12px 0px 0px; max-width: 640px;"><span class="sc-interp">Las áreas que más preocupan a Gandia</span></h2>
+          </div>
+          <a data-dc-tpl="70" href="#" style="text-decoration: none; color: rgb(21, 99, 196); font: 700 15px &quot;Public Sans&quot;; display: flex; align-items: center; gap: 8px; white-space: nowrap;"><span class="sc-interp">Ver todo el programa</span>
+            <svg data-dc-tpl="71" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="72" d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </a>
+        </div>
+        <div data-dc-tpl="73" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px;">
+          
+            <a data-dc-tpl="75" href="#" class="acg-lift" style="text-decoration: none; background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); border-radius: 20px; padding: 28px; display: block;">
+              <div data-dc-tpl="76" style="width: 54px; height: 54px; border-radius: 15px; background: rgb(234, 243, 252); display: flex; align-items: center; justify-content: center; color: rgb(21, 99, 196); margin-bottom: 20px;">
+                <svg data-dc-tpl="77" width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="78" d="M4 11.5 12 5l8 6.5M6 10.5V19h4v-5h4v5h4v-8.5"></path></svg>
+              </div>
+              <h3 data-dc-tpl="79" style="font: 700 21px &quot;Bricolage Grotesque&quot;; color: rgb(23, 35, 47); margin: 0px 0px 8px;"><span class="sc-interp">Vivienda</span></h3>
+              <p data-dc-tpl="80" style="font-size: 15px; color: rgb(92, 107, 122); margin: 0px 0px 16px; text-wrap: pretty;"><span class="sc-interp">Acceso justo y vivienda asequible para jóvenes y familias de Gandia.</span></p>
+              <span data-dc-tpl="81" style="display: inline-flex; align-items: center; gap: 7px; color: rgb(21, 99, 196); font: 700 14px &quot;Public Sans&quot;;"><span class="sc-interp">Ver propuestas</span>
+                <svg data-dc-tpl="82" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="83" d="M5 12h14M13 6l6 6-6 6"></path></svg>
+              </span>
+            </a>
+          
+            <a data-dc-tpl="75" href="#" class="acg-lift" style="text-decoration: none; background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); border-radius: 20px; padding: 28px; display: block;">
+              <div data-dc-tpl="76" style="width: 54px; height: 54px; border-radius: 15px; background: rgb(234, 243, 252); display: flex; align-items: center; justify-content: center; color: rgb(21, 99, 196); margin-bottom: 20px;">
+                <svg data-dc-tpl="77" width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="78" d="M12 4c3 3.6 5 6.4 5 9a5 5 0 0 1-10 0c0-2.6 2-5.4 5-9Z"></path></svg>
+              </div>
+              <h3 data-dc-tpl="79" style="font: 700 21px &quot;Bricolage Grotesque&quot;; color: rgb(23, 35, 47); margin: 0px 0px 8px;"><span class="sc-interp">Limpieza</span></h3>
+              <p data-dc-tpl="80" style="font-size: 15px; color: rgb(92, 107, 122); margin: 0px 0px 16px; text-wrap: pretty;"><span class="sc-interp">Calles y solares limpios en todos los barrios, no solo en el centro.</span></p>
+              <span data-dc-tpl="81" style="display: inline-flex; align-items: center; gap: 7px; color: rgb(21, 99, 196); font: 700 14px &quot;Public Sans&quot;;"><span class="sc-interp">Ver propuestas</span>
+                <svg data-dc-tpl="82" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="83" d="M5 12h14M13 6l6 6-6 6"></path></svg>
+              </span>
+            </a>
+          
+            <a data-dc-tpl="75" href="#" class="acg-lift" style="text-decoration: none; background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); border-radius: 20px; padding: 28px; display: block;">
+              <div data-dc-tpl="76" style="width: 54px; height: 54px; border-radius: 15px; background: rgb(234, 243, 252); display: flex; align-items: center; justify-content: center; color: rgb(21, 99, 196); margin-bottom: 20px;">
+                <svg data-dc-tpl="77" width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="78" d="M12 4 5 6.5V11c0 4.2 3 7 7 8.3 4-1.3 7-4.1 7-8.3V6.5L12 4Z"></path></svg>
+              </div>
+              <h3 data-dc-tpl="79" style="font: 700 21px &quot;Bricolage Grotesque&quot;; color: rgb(23, 35, 47); margin: 0px 0px 8px;"><span class="sc-interp">Seguridad</span></h3>
+              <p data-dc-tpl="80" style="font-size: 15px; color: rgb(92, 107, 122); margin: 0px 0px 16px; text-wrap: pretty;"><span class="sc-interp">Convivencia, iluminación y presencia real en las zonas que lo necesitan.</span></p>
+              <span data-dc-tpl="81" style="display: inline-flex; align-items: center; gap: 7px; color: rgb(21, 99, 196); font: 700 14px &quot;Public Sans&quot;;"><span class="sc-interp">Ver propuestas</span>
+                <svg data-dc-tpl="82" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="83" d="M5 12h14M13 6l6 6-6 6"></path></svg>
+              </span>
+            </a>
+          
+            <a data-dc-tpl="75" href="#" class="acg-lift" style="text-decoration: none; background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); border-radius: 20px; padding: 28px; display: block;">
+              <div data-dc-tpl="76" style="width: 54px; height: 54px; border-radius: 15px; background: rgb(234, 243, 252); display: flex; align-items: center; justify-content: center; color: rgb(21, 99, 196); margin-bottom: 20px;">
+                <svg data-dc-tpl="77" width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="78" d="M6.5 8h11l-1 11h-9l-1-11ZM9.5 8V6.5a2.5 2.5 0 0 1 5 0V8"></path></svg>
+              </div>
+              <h3 data-dc-tpl="79" style="font: 700 21px &quot;Bricolage Grotesque&quot;; color: rgb(23, 35, 47); margin: 0px 0px 8px;"><span class="sc-interp">Comercio y empleo</span></h3>
+              <p data-dc-tpl="80" style="font-size: 15px; color: rgb(92, 107, 122); margin: 0px 0px 16px; text-wrap: pretty;"><span class="sc-interp">Apoyo al comercio local y al empleo de proximidad en la ciudad.</span></p>
+              <span data-dc-tpl="81" style="display: inline-flex; align-items: center; gap: 7px; color: rgb(21, 99, 196); font: 700 14px &quot;Public Sans&quot;;"><span class="sc-interp">Ver propuestas</span>
+                <svg data-dc-tpl="82" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="83" d="M5 12h14M13 6l6 6-6 6"></path></svg>
+              </span>
+            </a>
+          
+            <a data-dc-tpl="75" href="#" class="acg-lift" style="text-decoration: none; background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); border-radius: 20px; padding: 28px; display: block;">
+              <div data-dc-tpl="76" style="width: 54px; height: 54px; border-radius: 15px; background: rgb(234, 243, 252); display: flex; align-items: center; justify-content: center; color: rgb(21, 99, 196); margin-bottom: 20px;">
+                <svg data-dc-tpl="77" width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="78" d="M6.5 17.5a2.5 2.5 0 1 0 0-.01M17.5 17.5a2.5 2.5 0 1 0 0-.01M6.5 17.5 10 9h4.5l2.5 8.5M9.5 9h3.5"></path></svg>
+              </div>
+              <h3 data-dc-tpl="79" style="font: 700 21px &quot;Bricolage Grotesque&quot;; color: rgb(23, 35, 47); margin: 0px 0px 8px;"><span class="sc-interp">Movilidad</span></h3>
+              <p data-dc-tpl="80" style="font-size: 15px; color: rgb(92, 107, 122); margin: 0px 0px 16px; text-wrap: pretty;"><span class="sc-interp">Moverse por Gandia y hasta la playa de forma segura y sostenible.</span></p>
+              <span data-dc-tpl="81" style="display: inline-flex; align-items: center; gap: 7px; color: rgb(21, 99, 196); font: 700 14px &quot;Public Sans&quot;;"><span class="sc-interp">Ver propuestas</span>
+                <svg data-dc-tpl="82" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="83" d="M5 12h14M13 6l6 6-6 6"></path></svg>
+              </span>
+            </a>
+          
+            <a data-dc-tpl="75" href="#" class="acg-lift" style="text-decoration: none; background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); border-radius: 20px; padding: 28px; display: block;">
+              <div data-dc-tpl="76" style="width: 54px; height: 54px; border-radius: 15px; background: rgb(234, 243, 252); display: flex; align-items: center; justify-content: center; color: rgb(21, 99, 196); margin-bottom: 20px;">
+                <svg data-dc-tpl="77" width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="78" d="M12 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM6.5 19a5.5 5.5 0 0 1 11 0"></path></svg>
+              </div>
+              <h3 data-dc-tpl="79" style="font: 700 21px &quot;Bricolage Grotesque&quot;; color: rgb(23, 35, 47); margin: 0px 0px 8px;"><span class="sc-interp">Juventud</span></h3>
+              <p data-dc-tpl="80" style="font-size: 15px; color: rgb(92, 107, 122); margin: 0px 0px 16px; text-wrap: pretty;"><span class="sc-interp">Espacios, ocio y oportunidades reales para la gente joven.</span></p>
+              <span data-dc-tpl="81" style="display: inline-flex; align-items: center; gap: 7px; color: rgb(21, 99, 196); font: 700 14px &quot;Public Sans&quot;;"><span class="sc-interp">Ver propuestas</span>
+                <svg data-dc-tpl="82" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="83" d="M5 12h14M13 6l6 6-6 6"></path></svg>
+              </span>
+            </a>
+          
+        </div>
+      </div>
+    </section>
+
+    
+    <section data-dc-tpl="84" id="participacion" style="scroll-margin-top: 88px; background: linear-gradient(160deg, rgb(10, 42, 94), rgb(14, 53, 111)); color: rgb(255, 255, 255); position: relative; overflow: hidden;">
+      <div data-dc-tpl="85" style="position: absolute; right: -80px; top: -80px; width: 340px; height: 340px; border-radius: 50%; background: radial-gradient(circle, rgba(15, 166, 182, 0.35), transparent 70%);"></div>
+      <div data-dc-tpl="86" style="max-width: 1240px; margin: 0px auto; padding: 88px 40px; position: relative;">
+        <div data-dc-tpl="87" style="display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center;">
+          <div data-dc-tpl="88">
+            <span data-dc-tpl="89" style="font: 700 12.5px &quot;Public Sans&quot;; letter-spacing: 0.16em; text-transform: uppercase; color: rgb(95, 212, 226);"><span class="sc-interp">Participación ciudadana</span></span>
+            <h2 data-dc-tpl="90" style="font: 800 46px / 1.06 &quot;Bricolage Grotesque&quot;; letter-spacing: -0.02em; margin: 14px 0px 16px; text-wrap: balance;"><span class="sc-interp">¿Qué cambiarías de Gandia?</span></h2>
+            <p data-dc-tpl="91" style="font-size: 18px; color: rgb(196, 214, 236); max-width: 480px; margin: 0px 0px 30px;"><span class="sc-interp">Cada propuesta se escucha, se debate y recibe respuesta. De la idea de un vecino a una acción real en la ciudad.</span></p>
+            <div data-dc-tpl="92" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 460px;">
+              
+                <a data-dc-tpl="94" href="#" class="acg-btn" style="text-decoration: none; display: flex; align-items: center; gap: 12px; background: rgb(246, 190, 24); color: rgb(10, 42, 94); border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; padding: 14px 16px; border-radius: 13px; font: 700 15px &quot;Public Sans&quot;;">
+                  <svg data-dc-tpl="95" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="96" d="M12 5v14M5 12h14"></path></svg>
+                  <span class="sc-interp">Crear propuesta</span>
+                </a>
+              
+                <a data-dc-tpl="94" href="#" class="acg-btn" style="text-decoration: none; display: flex; align-items: center; gap: 12px; background: rgba(255, 255, 255, 0.08); color: rgb(255, 255, 255); border: 1px solid rgba(255, 255, 255, 0.2); padding: 14px 16px; border-radius: 13px; font: 700 15px &quot;Public Sans&quot;;">
+                  <svg data-dc-tpl="95" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="96" d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14ZM20 20l-3.5-3.5"></path></svg>
+                  <span class="sc-interp">Explorar</span>
+                </a>
+              
+                <a data-dc-tpl="94" href="#" class="acg-btn" style="text-decoration: none; display: flex; align-items: center; gap: 12px; background: rgba(255, 255, 255, 0.08); color: rgb(255, 255, 255); border: 1px solid rgba(255, 255, 255, 0.2); padding: 14px 16px; border-radius: 13px; font: 700 15px &quot;Public Sans&quot;;">
+                  <svg data-dc-tpl="95" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="96" d="M12 21s7-5.6 7-11a7 7 0 0 0-14 0c0 5.4 7 11 7 11ZM12 10a1.5 1.5 0 1 0 0-.01"></path></svg>
+                  <span class="sc-interp">Cercanas</span>
+                </a>
+              
+                <a data-dc-tpl="94" href="#" class="acg-btn" style="text-decoration: none; display: flex; align-items: center; gap: 12px; background: rgba(255, 255, 255, 0.08); color: rgb(255, 255, 255); border: 1px solid rgba(255, 255, 255, 0.2); padding: 14px 16px; border-radius: 13px; font: 700 15px &quot;Public Sans&quot;;">
+                  <svg data-dc-tpl="95" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="96" d="M3 17l6-6 4 4 8-8M21 7v5M21 7h-5"></path></svg>
+                  <span class="sc-interp">Tendencia</span>
+                </a>
+              
+            </div>
+          </div>
+          <div data-dc-tpl="97" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            
+              <div data-dc-tpl="99" style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 18px; padding: 22px 24px;">
+                <div data-dc-tpl="100" style="font: 800 36px &quot;Bricolage Grotesque&quot;; letter-spacing: -0.01em; color: rgb(255, 255, 255);"><span class="sc-interp">1.181</span></div>
+                <div data-dc-tpl="101" style="font-size: 14px; color: rgb(159, 187, 221); margin-top: 4px;"><span class="sc-interp">Propuestas publicadas</span></div>
+              </div>
+            
+              <div data-dc-tpl="99" style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 18px; padding: 22px 24px;">
+                <div data-dc-tpl="100" style="font: 800 36px &quot;Bricolage Grotesque&quot;; letter-spacing: -0.01em; color: rgb(255, 255, 255);"><span class="sc-interp">36.681</span></div>
+                <div data-dc-tpl="101" style="font-size: 14px; color: rgb(159, 187, 221); margin-top: 4px;"><span class="sc-interp">Apoyos ciudadanos</span></div>
+              </div>
+            
+              <div data-dc-tpl="99" style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 18px; padding: 22px 24px;">
+                <div data-dc-tpl="100" style="font: 800 36px &quot;Bricolage Grotesque&quot;; letter-spacing: -0.01em; color: rgb(255, 255, 255);"><span class="sc-interp">9.405</span></div>
+                <div data-dc-tpl="101" style="font-size: 14px; color: rgb(159, 187, 221); margin-top: 4px;"><span class="sc-interp">Comentarios</span></div>
+              </div>
+            
+              <div data-dc-tpl="99" style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 18px; padding: 22px 24px;">
+                <div data-dc-tpl="100" style="font: 800 36px &quot;Bricolage Grotesque&quot;; letter-spacing: -0.01em; color: rgb(255, 255, 255);"><span class="sc-interp">21</span></div>
+                <div data-dc-tpl="101" style="font-size: 14px; color: rgb(159, 187, 221); margin-top: 4px;"><span class="sc-interp">Barrios participantes</span></div>
+              </div>
+            
+              <div data-dc-tpl="99" style="background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 18px; padding: 22px 24px;">
+                <div data-dc-tpl="100" style="font: 800 36px &quot;Bricolage Grotesque&quot;; letter-spacing: -0.01em; color: rgb(255, 255, 255);"><span class="sc-interp">168</span></div>
+                <div data-dc-tpl="101" style="font-size: 14px; color: rgb(159, 187, 221); margin-top: 4px;"><span class="sc-interp">Respuestas oficiales</span></div>
+              </div>
+            
+            <div data-dc-tpl="102" style="background: linear-gradient(135deg, rgb(246, 190, 24), rgb(255, 207, 67)); border-radius: 18px; padding: 22px 24px; color: rgb(10, 42, 94);">
+              <div data-dc-tpl="103" style="font: 800 17px &quot;Bricolage Grotesque&quot;;"><span class="sc-interp">De la propuesta a la acción</span></div>
+              <div data-dc-tpl="104" style="font-size: 13.5px; margin-top: 4px; opacity: 0.85;"><span class="sc-interp">Así funciona la participación</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+    <section data-dc-tpl="105" style="scroll-margin-top: 88px; background: rgb(244, 247, 251); padding: 92px 0px;">
+      <div data-dc-tpl="106" style="max-width: 1240px; margin: 0px auto; padding: 0px 40px;">
+        <div data-dc-tpl="107" style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 40px;">
+          <div data-dc-tpl="108">
+            <span data-dc-tpl="109" style="font: 700 12.5px &quot;Public Sans&quot;; letter-spacing: 0.16em; text-transform: uppercase; color: rgb(15, 166, 182);"><span class="sc-interp">En tendencia</span></span>
+            <h2 data-dc-tpl="110" style="font: 800 40px / 1.08 &quot;Bricolage Grotesque&quot;; color: rgb(10, 42, 94); letter-spacing: -0.015em; margin: 12px 0px 0px;"><span class="sc-interp">Las propuestas que mueven a Gandia</span></h2>
+          </div>
+          <a data-dc-tpl="111" href="#" style="text-decoration: none; color: rgb(21, 99, 196); font: 700 15px &quot;Public Sans&quot;; display: flex; align-items: center; gap: 8px; white-space: nowrap;"><span class="sc-interp">Explorar todas</span>
+            <svg data-dc-tpl="112" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="113" d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </a>
+        </div>
+        <div data-dc-tpl="114" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px;">
+          
+            <div data-dc-tpl="116" class="acg-lift" style="background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); border-radius: 20px; padding: 24px; display: flex; flex-direction: column;">
+              <div data-dc-tpl="117" style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+                <span data-dc-tpl="118" style="background: rgb(234, 243, 252); color: rgb(21, 99, 196); font: 700 12px &quot;Public Sans&quot;; padding: 5px 11px; border-radius: 999px;"><span class="sc-interp">Limpieza</span></span>
+                <span data-dc-tpl="119" style="display: inline-flex; align-items: center; gap: 5px; color: rgb(92, 107, 122); font-size: 12.5px;">
+                  <svg data-dc-tpl="120" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path data-dc-tpl="121" d="M12 21s7-5.6 7-11a7 7 0 0 0-14 0c0 5.4 7 11 7 11Z"></path><circle data-dc-tpl="122" cx="12" cy="10" r="2.4"></circle></svg>
+                  <span class="sc-interp">Grau de Gandia</span>
+                </span>
+              </div>
+              <h3 data-dc-tpl="123" style="font: 700 20px / 1.2 &quot;Bricolage Grotesque&quot;; color: rgb(23, 35, 47); margin: 0px 0px 14px; min-height: 48px;"><span class="sc-interp">Más limpieza y contenedores en el Grau</span></h3>
+              <div data-dc-tpl="124" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <span data-dc-tpl="125" style="font-size: 13.5px; color: rgb(92, 107, 122);"><span class="sc-interp">842 / 1.000 · revisión local</span></span>
+                <span data-dc-tpl="126" style="font: 700 13px &quot;Public Sans&quot;; color: rgb(15, 166, 182);"><span class="sc-interp">Recogiendo apoyos</span></span>
+              </div>
+              <div data-dc-tpl="127" style="height: 8px; background: rgb(237, 241, 246); border-radius: 999px; overflow: hidden; margin-bottom: 18px;">
+                <div data-dc-tpl="128" style="height: 100%; border-radius: 999px; background: rgb(15, 166, 182); width: 84%; transition: width 1.1s cubic-bezier(0.2, 0.7, 0.3, 1);"></div>
+              </div>
+              <div data-dc-tpl="129" style="display: flex; align-items: center; gap: 16px; color: rgb(92, 107, 122); font-size: 13.5px; margin-bottom: 18px;">
+                <span data-dc-tpl="130" style="display: inline-flex; align-items: center; gap: 6px;"><svg data-dc-tpl="131" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path data-dc-tpl="132" d="M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 2.6 2.6L12 9h6a2 2 0 0 1 2 2.4l-1.5 6a2 2 0 0 1-2 1.6H7"></path></svg><span class="sc-interp">842</span></span>
+                <span data-dc-tpl="133" style="display: inline-flex; align-items: center; gap: 6px;"><svg data-dc-tpl="134" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path data-dc-tpl="135" d="M20 15a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"></path></svg><span class="sc-interp">63</span></span>
+                <span data-dc-tpl="136" style="margin-left: auto; color: rgb(148, 163, 178); font-size: 12.5px;"><span class="sc-interp">Marta S.</span></span>
+              </div>
+              <div data-dc-tpl="137" style="display: flex; gap: 10px; margin-top: auto;">
+                <button data-dc-tpl="138" class="acg-btn" style="flex: 1 1 0%; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; cursor: pointer; background: rgb(21, 99, 196); color: rgb(255, 255, 255); font: 700 14px &quot;Public Sans&quot;; padding: 11px; border-radius: 11px; display: flex; align-items: center; justify-content: center; gap: 7px;">
+                  <svg data-dc-tpl="139" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path data-dc-tpl="140" d="M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 2.6 2.6L12 9h6a2 2 0 0 1 2 2.4l-1.5 6a2 2 0 0 1-2 1.6H7"></path></svg><span class="sc-interp">Apoyar</span></button>
+                <button data-dc-tpl="141" class="acg-btn" title="Compartir" style="width: 44px; border: 1px solid rgb(228, 235, 242); cursor: pointer; background: rgb(255, 255, 255); color: rgb(51, 65, 79); border-radius: 11px; display: flex; align-items: center; justify-content: center;">
+                  <svg data-dc-tpl="142" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle data-dc-tpl="143" cx="6" cy="12" r="2.5"></circle><circle data-dc-tpl="144" cx="17" cy="6" r="2.5"></circle><circle data-dc-tpl="145" cx="17" cy="18" r="2.5"></circle><path data-dc-tpl="146" d="M8.2 10.8 14.8 7.2M8.2 13.2l6.6 3.6"></path></svg>
+                </button>
+              </div>
+            </div>
+          
+            <div data-dc-tpl="116" class="acg-lift" style="background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); border-radius: 20px; padding: 24px; display: flex; flex-direction: column;">
+              <div data-dc-tpl="117" style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+                <span data-dc-tpl="118" style="background: rgb(234, 243, 252); color: rgb(21, 99, 196); font: 700 12px &quot;Public Sans&quot;; padding: 5px 11px; border-radius: 999px;"><span class="sc-interp">Movilidad</span></span>
+                <span data-dc-tpl="119" style="display: inline-flex; align-items: center; gap: 5px; color: rgb(92, 107, 122); font-size: 12.5px;">
+                  <svg data-dc-tpl="120" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path data-dc-tpl="121" d="M12 21s7-5.6 7-11a7 7 0 0 0-14 0c0 5.4 7 11 7 11Z"></path><circle data-dc-tpl="122" cx="12" cy="10" r="2.4"></circle></svg>
+                  <span class="sc-interp">Platja de Gandia</span>
+                </span>
+              </div>
+              <h3 data-dc-tpl="123" style="font: 700 20px / 1.2 &quot;Bricolage Grotesque&quot;; color: rgb(23, 35, 47); margin: 0px 0px 14px; min-height: 48px;"><span class="sc-interp">Carril bici seguro del centro a la playa</span></h3>
+              <div data-dc-tpl="124" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <span data-dc-tpl="125" style="font-size: 13.5px; color: rgb(92, 107, 122);"><span class="sc-interp">1.204 apoyos · en estudio</span></span>
+                <span data-dc-tpl="126" style="font: 700 13px &quot;Public Sans&quot;; color: rgb(21, 99, 196);"><span class="sc-interp">Estudio técnico</span></span>
+              </div>
+              <div data-dc-tpl="127" style="height: 8px; background: rgb(237, 241, 246); border-radius: 999px; overflow: hidden; margin-bottom: 18px;">
+                <div data-dc-tpl="128" style="height: 100%; border-radius: 999px; background: rgb(21, 99, 196); width: 62%; transition: width 1.1s cubic-bezier(0.2, 0.7, 0.3, 1);"></div>
+              </div>
+              <div data-dc-tpl="129" style="display: flex; align-items: center; gap: 16px; color: rgb(92, 107, 122); font-size: 13.5px; margin-bottom: 18px;">
+                <span data-dc-tpl="130" style="display: inline-flex; align-items: center; gap: 6px;"><svg data-dc-tpl="131" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path data-dc-tpl="132" d="M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 2.6 2.6L12 9h6a2 2 0 0 1 2 2.4l-1.5 6a2 2 0 0 1-2 1.6H7"></path></svg><span class="sc-interp">1.204</span></span>
+                <span data-dc-tpl="133" style="display: inline-flex; align-items: center; gap: 6px;"><svg data-dc-tpl="134" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path data-dc-tpl="135" d="M20 15a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"></path></svg><span class="sc-interp">128</span></span>
+                <span data-dc-tpl="136" style="margin-left: auto; color: rgb(148, 163, 178); font-size: 12.5px;"><span class="sc-interp">Vicent R.</span></span>
+              </div>
+              <div data-dc-tpl="137" style="display: flex; gap: 10px; margin-top: auto;">
+                <button data-dc-tpl="138" class="acg-btn" style="flex: 1 1 0%; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; cursor: pointer; background: rgb(21, 99, 196); color: rgb(255, 255, 255); font: 700 14px &quot;Public Sans&quot;; padding: 11px; border-radius: 11px; display: flex; align-items: center; justify-content: center; gap: 7px;">
+                  <svg data-dc-tpl="139" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path data-dc-tpl="140" d="M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 2.6 2.6L12 9h6a2 2 0 0 1 2 2.4l-1.5 6a2 2 0 0 1-2 1.6H7"></path></svg><span class="sc-interp">Apoyar</span></button>
+                <button data-dc-tpl="141" class="acg-btn" title="Compartir" style="width: 44px; border: 1px solid rgb(228, 235, 242); cursor: pointer; background: rgb(255, 255, 255); color: rgb(51, 65, 79); border-radius: 11px; display: flex; align-items: center; justify-content: center;">
+                  <svg data-dc-tpl="142" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle data-dc-tpl="143" cx="6" cy="12" r="2.5"></circle><circle data-dc-tpl="144" cx="17" cy="6" r="2.5"></circle><circle data-dc-tpl="145" cx="17" cy="18" r="2.5"></circle><path data-dc-tpl="146" d="M8.2 10.8 14.8 7.2M8.2 13.2l6.6 3.6"></path></svg>
+                </button>
+              </div>
+            </div>
+          
+            <div data-dc-tpl="116" class="acg-lift" style="background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); border-radius: 20px; padding: 24px; display: flex; flex-direction: column;">
+              <div data-dc-tpl="117" style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+                <span data-dc-tpl="118" style="background: rgb(234, 243, 252); color: rgb(21, 99, 196); font: 700 12px &quot;Public Sans&quot;; padding: 5px 11px; border-radius: 999px;"><span class="sc-interp">Vivienda</span></span>
+                <span data-dc-tpl="119" style="display: inline-flex; align-items: center; gap: 5px; color: rgb(92, 107, 122); font-size: 12.5px;">
+                  <svg data-dc-tpl="120" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path data-dc-tpl="121" d="M12 21s7-5.6 7-11a7 7 0 0 0-14 0c0 5.4 7 11 7 11Z"></path><circle data-dc-tpl="122" cx="12" cy="10" r="2.4"></circle></svg>
+                  <span class="sc-interp">Centre històric</span>
+                </span>
+              </div>
+              <h3 data-dc-tpl="123" style="font: 700 20px / 1.2 &quot;Bricolage Grotesque&quot;; color: rgb(23, 35, 47); margin: 0px 0px 14px; min-height: 48px;"><span class="sc-interp">Vivienda asequible para jóvenes</span></h3>
+              <div data-dc-tpl="124" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <span data-dc-tpl="125" style="font-size: 13.5px; color: rgb(92, 107, 122);"><span class="sc-interp">Aceptada · en programa</span></span>
+                <span data-dc-tpl="126" style="font: 700 13px &quot;Public Sans&quot;; color: rgb(46, 158, 91);"><span class="sc-interp">Incluida en programa</span></span>
+              </div>
+              <div data-dc-tpl="127" style="height: 8px; background: rgb(237, 241, 246); border-radius: 999px; overflow: hidden; margin-bottom: 18px;">
+                <div data-dc-tpl="128" style="height: 100%; border-radius: 999px; background: rgb(46, 158, 91); width: 100%; transition: width 1.1s cubic-bezier(0.2, 0.7, 0.3, 1);"></div>
+              </div>
+              <div data-dc-tpl="129" style="display: flex; align-items: center; gap: 16px; color: rgb(92, 107, 122); font-size: 13.5px; margin-bottom: 18px;">
+                <span data-dc-tpl="130" style="display: inline-flex; align-items: center; gap: 6px;"><svg data-dc-tpl="131" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path data-dc-tpl="132" d="M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 2.6 2.6L12 9h6a2 2 0 0 1 2 2.4l-1.5 6a2 2 0 0 1-2 1.6H7"></path></svg><span class="sc-interp">2.310</span></span>
+                <span data-dc-tpl="133" style="display: inline-flex; align-items: center; gap: 6px;"><svg data-dc-tpl="134" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path data-dc-tpl="135" d="M20 15a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"></path></svg><span class="sc-interp">214</span></span>
+                <span data-dc-tpl="136" style="margin-left: auto; color: rgb(148, 163, 178); font-size: 12.5px;"><span class="sc-interp">Lucía M.</span></span>
+              </div>
+              <div data-dc-tpl="137" style="display: flex; gap: 10px; margin-top: auto;">
+                <button data-dc-tpl="138" class="acg-btn" style="flex: 1 1 0%; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; cursor: pointer; background: rgb(21, 99, 196); color: rgb(255, 255, 255); font: 700 14px &quot;Public Sans&quot;; padding: 11px; border-radius: 11px; display: flex; align-items: center; justify-content: center; gap: 7px;">
+                  <svg data-dc-tpl="139" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path data-dc-tpl="140" d="M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 2.6 2.6L12 9h6a2 2 0 0 1 2 2.4l-1.5 6a2 2 0 0 1-2 1.6H7"></path></svg><span class="sc-interp">Apoyar</span></button>
+                <button data-dc-tpl="141" class="acg-btn" title="Compartir" style="width: 44px; border: 1px solid rgb(228, 235, 242); cursor: pointer; background: rgb(255, 255, 255); color: rgb(51, 65, 79); border-radius: 11px; display: flex; align-items: center; justify-content: center;">
+                  <svg data-dc-tpl="142" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle data-dc-tpl="143" cx="6" cy="12" r="2.5"></circle><circle data-dc-tpl="144" cx="17" cy="6" r="2.5"></circle><circle data-dc-tpl="145" cx="17" cy="18" r="2.5"></circle><path data-dc-tpl="146" d="M8.2 10.8 14.8 7.2M8.2 13.2l6.6 3.6"></path></svg>
+                </button>
+              </div>
+            </div>
+          
+        </div>
+      </div>
+    </section>
+
+    
+    <section data-dc-tpl="147" id="campana" style="scroll-margin-top: 88px; padding: 92px 0px;">
+      <div data-dc-tpl="148" style="max-width: 1240px; margin: 0px auto; padding: 0px 40px;">
+        <div data-dc-tpl="149" style="border-radius: 28px; overflow: hidden; background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); box-shadow: rgba(10, 42, 94, 0.1) 0px 22px 50px; display: grid; grid-template-columns: 1.05fr 1fr;">
+          <div data-dc-tpl="150" style="position: relative; background-image: repeating-linear-gradient(135deg, rgb(14, 53, 111) 0px, rgb(14, 53, 111) 16px, rgb(18, 64, 138) 16px, rgb(18, 64, 138) 32px); min-height: 420px; display: flex; flex-direction: column; justify-content: space-between; padding: 34px; color: rgb(255, 255, 255);">
+            <span data-dc-tpl="151" style="align-self: flex-start; background: rgb(246, 190, 24); color: rgb(10, 42, 94); font: 800 12px &quot;Public Sans&quot;; letter-spacing: 0.1em; text-transform: uppercase; padding: 8px 14px; border-radius: 999px;"><span class="sc-interp">Campaña destacada</span></span>
+            <span data-dc-tpl="152" style="font-family: ui-monospace, Menlo, monospace; font-size: 12px; letter-spacing: 0.06em; color: rgba(255, 255, 255, 0.72); text-transform: uppercase;"><span class="sc-interp">FOTO · Litoral de Gandia</span></span>
+          </div>
+          <div data-dc-tpl="153" style="padding: 44px 46px; display: flex; flex-direction: column; justify-content: center;">
+            <h2 data-dc-tpl="154" style="font: 800 36px / 1.1 &quot;Bricolage Grotesque&quot;; color: rgb(10, 42, 94); letter-spacing: -0.015em; margin: 0px 0px 14px;"><span class="sc-interp">Salvem el litoral de Gandia</span></h2>
+            <p data-dc-tpl="155" style="font-size: 16.5px; color: rgb(92, 107, 122); margin: 0px 0px 26px; text-wrap: pretty;"><span class="sc-interp">Una costa cuidada, accesible y sostenible para vecinos y visitantes. Únete para exigir un plan real de protección del litoral.</span></p>
+            <div data-dc-tpl="156" style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 8px;">
+              <div data-dc-tpl="157"><span data-dc-tpl="158" style="font: 800 30px &quot;Bricolage Grotesque&quot;; color: rgb(10, 42, 94);"><span class="sc-interp">7.240</span></span><span data-dc-tpl="159" style="font-size: 15px; color: rgb(92, 107, 122);"> / <span class="sc-interp">10.000</span> <span class="sc-interp">apoyos</span></span></div>
+              <span data-dc-tpl="160" style="font: 700 14px &quot;Public Sans&quot;; color: rgb(15, 166, 182);"><span class="sc-interp">72</span>%</span>
+            </div>
+            <div data-dc-tpl="161" style="height: 12px; background: rgb(237, 241, 246); border-radius: 999px; overflow: hidden; margin-bottom: 14px;">
+              <div data-dc-tpl="162" style="height: 100%; border-radius: 999px; background: linear-gradient(90deg, rgb(15, 166, 182), rgb(21, 99, 196)); width: 72%; transition: width 1.2s cubic-bezier(0.2, 0.7, 0.3, 1);"></div>
+            </div>
+            <div data-dc-tpl="163" style="display: flex; align-items: center; gap: 8px; color: rgb(92, 107, 122); font-size: 14px; margin-bottom: 26px;">
+              <svg data-dc-tpl="164" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect data-dc-tpl="165" x="3" y="5" width="18" height="16" rx="2"></rect><path data-dc-tpl="166" d="M3 9h18M8 3v4M16 3v4"></path></svg>
+              <span class="sc-interp">Hasta el 30 de septiembre de 2026</span>
+            </div>
+            <div data-dc-tpl="167" style="display: flex; gap: 12px; flex-wrap: wrap;">
+              <a data-dc-tpl="168" href="#" class="acg-btn" style="text-decoration: none; background: rgb(21, 99, 196); color: rgb(255, 255, 255); font: 700 15px &quot;Public Sans&quot;; padding: 14px 26px; border-radius: 12px; box-shadow: rgba(21, 99, 196, 0.28) 0px 10px 22px;"><span class="sc-interp">Súmate a la campaña</span></a>
+              <a data-dc-tpl="169" href="#" class="acg-btn" style="text-decoration: none; background: rgb(255, 255, 255); color: rgb(10, 42, 94); font: 700 15px &quot;Public Sans&quot;; padding: 14px 22px; border-radius: 12px; border: 1.5px solid rgb(207, 221, 236);"><span class="sc-interp">Material de campaña</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+    <section data-dc-tpl="170" id="accion" style="scroll-margin-top: 88px; background: rgb(244, 247, 251); padding: 92px 0px;">
+      <div data-dc-tpl="171" style="max-width: 1240px; margin: 0px auto; padding: 0px 40px;">
+        <div data-dc-tpl="172" style="text-align: center; margin-bottom: 46px;">
+          <span data-dc-tpl="173" style="font: 700 12.5px &quot;Public Sans&quot;; letter-spacing: 0.16em; text-transform: uppercase; color: rgb(15, 166, 182);"><span class="sc-interp">Acción en Gandia</span></span>
+          <h2 data-dc-tpl="174" style="font: 800 40px / 1.08 &quot;Bricolage Grotesque&quot;; color: rgb(10, 42, 94); letter-spacing: -0.015em; margin: 12px auto; max-width: 640px;"><span class="sc-interp">De la palabra a los hechos, barrio a barrio</span></h2>
+          <p data-dc-tpl="175" style="font-size: 17px; color: rgb(92, 107, 122); max-width: 560px; margin: 0px auto;"><span class="sc-interp">Documentamos cada actuación: qué problema había, qué hicimos y cómo terminó.</span></p>
+        </div>
+        <div data-dc-tpl="176" style="display: grid; grid-template-columns: 1.15fr 1fr; gap: 24px; align-items: stretch;">
+          <div data-dc-tpl="177" style="position: relative; border-radius: 22px; overflow: hidden; background-image: repeating-linear-gradient(135deg, rgb(211, 226, 242) 0px, rgb(211, 226, 242) 16px, rgb(228, 239, 250) 16px, rgb(228, 239, 250) 32px); min-height: 460px; border: 1px solid rgb(233, 238, 244);">
+            <span data-dc-tpl="178" style="position: absolute; top: 18px; left: 18px; font-family: ui-monospace, Menlo, monospace; font-size: 11.5px; letter-spacing: 0.05em; color: rgb(63, 81, 101); background: rgba(255, 255, 255, 0.85); padding: 6px 11px; border-radius: 8px; text-transform: uppercase;"><span class="sc-interp">Mapa · actuaciones en Gandia</span></span>
+            <div data-dc-tpl="179" style="position: absolute; left: 34%; top: 40%; width: 16px; height: 16px; border-radius: 50%; background: rgb(46, 158, 91); box-shadow: rgba(46, 158, 91, 0.2) 0px 0px 0px 6px;"></div>
+            <div data-dc-tpl="180" style="position: absolute; left: 58%; top: 30%; width: 16px; height: 16px; border-radius: 50%; background: rgb(21, 99, 196); box-shadow: rgba(21, 99, 196, 0.2) 0px 0px 0px 6px;"></div>
+            <div data-dc-tpl="181" style="position: absolute; left: 46%; top: 62%; width: 16px; height: 16px; border-radius: 50%; background: rgb(246, 190, 24); box-shadow: rgba(246, 190, 24, 0.25) 0px 0px 0px 6px;"></div>
+            <div data-dc-tpl="182" style="position: absolute; left: 70%; top: 56%; width: 16px; height: 16px; border-radius: 50%; background: rgb(15, 166, 182); box-shadow: rgba(15, 166, 182, 0.2) 0px 0px 0px 6px;"></div>
+          </div>
+          <div data-dc-tpl="183" style="display: flex; flex-direction: column; gap: 12px;">
+            
+              <div data-dc-tpl="185" class="acg-tile" style="background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); border-radius: 16px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; cursor: pointer;">
+                <div data-dc-tpl="186" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px; background: rgb(231, 244, 236); display: flex; align-items: center; justify-content: center; color: rgb(46, 158, 91);">
+                  <svg data-dc-tpl="187" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="188" d="M20 6 9 17l-5-5"></path></svg>
+                </div>
+                <div data-dc-tpl="189" style="flex: 1 1 0%; min-width: 0px;">
+                  <h3 data-dc-tpl="190" style="font: 700 16px &quot;Public Sans&quot;; color: rgb(23, 35, 47); margin: 0px 0px 4px;"><span class="sc-interp">Alumbrado reparado en la Plaça del Prado</span></h3>
+                  <div data-dc-tpl="191" style="font-size: 13px; color: rgb(92, 107, 122);"><span class="sc-interp">Centre</span> · <span class="sc-interp">Mar 2026</span></div>
+                </div>
+                <span data-dc-tpl="192" style="flex-shrink: 0; background: rgb(231, 244, 236); color: rgb(46, 158, 91); font: 700 12.5px &quot;Public Sans&quot;; padding: 6px 12px; border-radius: 999px;"><span class="sc-interp">Solucionado</span></span>
+              </div>
+            
+              <div data-dc-tpl="185" class="acg-tile" style="background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); border-radius: 16px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; cursor: pointer;">
+                <div data-dc-tpl="186" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px; background: rgb(233, 241, 252); display: flex; align-items: center; justify-content: center; color: rgb(21, 99, 196);">
+                  <svg data-dc-tpl="187" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="188" d="M12 20v-8M12 12l6-6M6 6l6 6"></path></svg>
+                </div>
+                <div data-dc-tpl="189" style="flex: 1 1 0%; min-width: 0px;">
+                  <h3 data-dc-tpl="190" style="font: 700 16px &quot;Public Sans&quot;; color: rgb(23, 35, 47); margin: 0px 0px 4px;"><span class="sc-interp">Poda y limpieza de solares en Beniopa</span></h3>
+                  <div data-dc-tpl="191" style="font-size: 13px; color: rgb(92, 107, 122);"><span class="sc-interp">Beniopa</span> · <span class="sc-interp">Feb 2026</span></div>
+                </div>
+                <span data-dc-tpl="192" style="flex-shrink: 0; background: rgb(233, 241, 252); color: rgb(21, 99, 196); font: 700 12.5px &quot;Public Sans&quot;; padding: 6px 12px; border-radius: 999px;"><span class="sc-interp">En ejecución</span></span>
+              </div>
+            
+              <div data-dc-tpl="185" class="acg-tile" style="background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); border-radius: 16px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; cursor: pointer;">
+                <div data-dc-tpl="186" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px; background: rgb(251, 240, 220); display: flex; align-items: center; justify-content: center; color: rgb(217, 138, 11);">
+                  <svg data-dc-tpl="187" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="188" d="M7 3h7l4 4v14H7zM14 3v4h4"></path></svg>
+                </div>
+                <div data-dc-tpl="189" style="flex: 1 1 0%; min-width: 0px;">
+                  <h3 data-dc-tpl="190" style="font: 700 16px &quot;Public Sans&quot;; color: rgb(23, 35, 47); margin: 0px 0px 4px;"><span class="sc-interp">Paso de peatones accesible en Roís de Corella</span></h3>
+                  <div data-dc-tpl="191" style="font-size: 13px; color: rgb(92, 107, 122);"><span class="sc-interp">Corea</span> · <span class="sc-interp">Ene 2026</span></div>
+                </div>
+                <span data-dc-tpl="192" style="flex-shrink: 0; background: rgb(251, 240, 220); color: rgb(217, 138, 11); font: 700 12.5px &quot;Public Sans&quot;; padding: 6px 12px; border-radius: 999px;"><span class="sc-interp">Presentado</span></span>
+              </div>
+            
+              <div data-dc-tpl="185" class="acg-tile" style="background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); border-radius: 16px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; cursor: pointer;">
+                <div data-dc-tpl="186" style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px; background: rgb(228, 245, 247); display: flex; align-items: center; justify-content: center; color: rgb(15, 166, 182);">
+                  <svg data-dc-tpl="187" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="188" d="M8 12a4 4 0 1 1 8 0M4 20a8 8 0 0 1 16 0"></path></svg>
+                </div>
+                <div data-dc-tpl="189" style="flex: 1 1 0%; min-width: 0px;">
+                  <h3 data-dc-tpl="190" style="font: 700 16px &quot;Public Sans&quot;; color: rgb(23, 35, 47); margin: 0px 0px 4px;"><span class="sc-interp">Nuevo parque infantil en Marxuquera</span></h3>
+                  <div data-dc-tpl="191" style="font-size: 13px; color: rgb(92, 107, 122);"><span class="sc-interp">Marxuquera</span> · <span class="sc-interp">Dic 2025</span></div>
+                </div>
+                <span data-dc-tpl="192" style="flex-shrink: 0; background: rgb(228, 245, 247); color: rgb(15, 166, 182); font: 700 12.5px &quot;Public Sans&quot;; padding: 6px 12px; border-radius: 999px;"><span class="sc-interp">En negociación</span></span>
+              </div>
+            
+            <a data-dc-tpl="193" href="#" style="text-decoration: none; color: rgb(21, 99, 196); font: 700 15px &quot;Public Sans&quot;; display: flex; align-items: center; gap: 8px; margin-top: 6px; padding: 0px 4px;"><span class="sc-interp">Ver el mapa completo</span>
+              <svg data-dc-tpl="194" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="195" d="M5 12h14M13 6l6 6-6 6"></path></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+    <section data-dc-tpl="196" style="scroll-margin-top: 88px; padding: 92px 0px;">
+      <div data-dc-tpl="197" style="max-width: 1240px; margin: 0px auto; padding: 0px 40px;">
+        <div data-dc-tpl="198" style="display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 56px; align-items: center;">
+          <div data-dc-tpl="199">
+            <span data-dc-tpl="200" style="font: 700 12.5px &quot;Public Sans&quot;; letter-spacing: 0.16em; text-transform: uppercase; color: rgb(15, 166, 182);"><span class="sc-interp">Compromisos y resultados</span></span>
+            <h2 data-dc-tpl="201" style="font: 800 40px / 1.08 &quot;Bricolage Grotesque&quot;; color: rgb(10, 42, 94); letter-spacing: -0.015em; margin: 12px 0px 16px;"><span class="sc-interp">Rendimos cuentas de lo que prometemos</span></h2>
+            <p data-dc-tpl="202" style="font-size: 16.5px; color: rgb(92, 107, 122); margin: 0px 0px 28px; text-wrap: pretty;"><span class="sc-interp">Cada compromiso tiene estado, fecha y pruebas. Sin letra pequeña.</span></p>
+            <div data-dc-tpl="203" style="background: rgb(244, 247, 251); border: 1px solid rgb(233, 238, 244); border-radius: 18px; padding: 22px 24px;">
+              <div data-dc-tpl="204" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                <span data-dc-tpl="205" style="font: 700 15px &quot;Public Sans&quot;; color: rgb(10, 42, 94);"><span class="sc-interp">Cumplimiento general</span></span>
+                <span data-dc-tpl="206" style="font: 800 22px &quot;Bricolage Grotesque&quot;; color: rgb(46, 158, 91);"><span class="sc-interp">59</span>%</span>
+              </div>
+              <div data-dc-tpl="207" style="height: 14px; background: rgb(231, 236, 242); border-radius: 999px; overflow: hidden;">
+                <div data-dc-tpl="208" style="height: 100%; border-radius: 999px; background: linear-gradient(90deg, rgb(46, 158, 91), rgb(87, 192, 126)); width: 62%; transition: width 1.2s cubic-bezier(0.2, 0.7, 0.3, 1);"></div>
+              </div>
+            </div>
+          </div>
+          <div data-dc-tpl="209" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            
+              <div data-dc-tpl="211" style="background: rgb(255, 255, 255); border-width: 1px 1px 1px 5px; border-style: solid; border-color: rgb(233, 238, 244) rgb(233, 238, 244) rgb(233, 238, 244) rgb(46, 158, 91); border-image: initial; border-radius: 18px; padding: 24px;">
+                <div data-dc-tpl="212" style="font: 800 40px &quot;Bricolage Grotesque&quot;; color: rgb(46, 158, 91); letter-spacing: -0.02em;"><span class="sc-interp">48</span></div>
+                <div data-dc-tpl="213" style="font-size: 15px; color: rgb(66, 82, 95); margin-top: 4px; font-weight: 600;"><span class="sc-interp">Cumplidos</span></div>
+              </div>
+            
+              <div data-dc-tpl="211" style="background: rgb(255, 255, 255); border-width: 1px 1px 1px 5px; border-style: solid; border-color: rgb(233, 238, 244) rgb(233, 238, 244) rgb(233, 238, 244) rgb(21, 99, 196); border-image: initial; border-radius: 18px; padding: 24px;">
+                <div data-dc-tpl="212" style="font: 800 40px &quot;Bricolage Grotesque&quot;; color: rgb(21, 99, 196); letter-spacing: -0.02em;"><span class="sc-interp">31</span></div>
+                <div data-dc-tpl="213" style="font-size: 15px; color: rgb(66, 82, 95); margin-top: 4px; font-weight: 600;"><span class="sc-interp">En marcha</span></div>
+              </div>
+            
+              <div data-dc-tpl="211" style="background: rgb(255, 255, 255); border-width: 1px 1px 1px 5px; border-style: solid; border-color: rgb(233, 238, 244) rgb(233, 238, 244) rgb(233, 238, 244) rgb(217, 138, 11); border-image: initial; border-radius: 18px; padding: 24px;">
+                <div data-dc-tpl="212" style="font: 800 40px &quot;Bricolage Grotesque&quot;; color: rgb(217, 138, 11); letter-spacing: -0.02em;"><span class="sc-interp">19</span></div>
+                <div data-dc-tpl="213" style="font-size: 15px; color: rgb(66, 82, 95); margin-top: 4px; font-weight: 600;"><span class="sc-interp">Pendientes</span></div>
+              </div>
+            
+              <div data-dc-tpl="211" style="background: rgb(255, 255, 255); border-width: 1px 1px 1px 5px; border-style: solid; border-color: rgb(233, 238, 244) rgb(233, 238, 244) rgb(233, 238, 244) rgb(210, 75, 75); border-image: initial; border-radius: 18px; padding: 24px;">
+                <div data-dc-tpl="212" style="font: 800 40px &quot;Bricolage Grotesque&quot;; color: rgb(210, 75, 75); letter-spacing: -0.02em;"><span class="sc-interp">6</span></div>
+                <div data-dc-tpl="213" style="font-size: 15px; color: rgb(66, 82, 95); margin-top: 4px; font-weight: 600;"><span class="sc-interp">Bloqueados</span></div>
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+    <section data-dc-tpl="214" style="scroll-margin-top: 88px; background: rgb(244, 247, 251); padding: 92px 0px;">
+      <div data-dc-tpl="215" style="max-width: 1240px; margin: 0px auto; padding: 0px 40px;">
+        <div data-dc-tpl="216" style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 40px;">
+          <div data-dc-tpl="217">
+            <span data-dc-tpl="218" style="font: 700 12.5px &quot;Public Sans&quot;; letter-spacing: 0.16em; text-transform: uppercase; color: rgb(15, 166, 182);"><span class="sc-interp">Nuestra gente</span></span>
+            <h2 data-dc-tpl="219" style="font: 800 40px / 1.08 &quot;Bricolage Grotesque&quot;; color: rgb(10, 42, 94); letter-spacing: -0.015em; margin: 12px 0px 0px;"><span class="sc-interp">Vecinas y vecinos que dan la cara</span></h2>
+          </div>
+          <a data-dc-tpl="220" href="#" style="text-decoration: none; color: rgb(21, 99, 196); font: 700 15px &quot;Public Sans&quot;; display: flex; align-items: center; gap: 8px; white-space: nowrap;"><span class="sc-interp">Ver todo el equipo</span>
+            <svg data-dc-tpl="221" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="222" d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </a>
+        </div>
+        <div data-dc-tpl="223" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+          
+            <div data-dc-tpl="225" class="acg-lift" style="background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); border-radius: 20px; overflow: hidden;">
+              <div data-dc-tpl="226" style="aspect-ratio: 1 / 1; background-image: repeating-linear-gradient(135deg, rgb(211, 226, 242) 0px, rgb(211, 226, 242) 14px, rgb(228, 239, 250) 14px, rgb(228, 239, 250) 28px); display: flex; align-items: flex-end; justify-content: center; padding: 12px;">
+                <span data-dc-tpl="227" style="font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; color: rgb(63, 81, 101); background: rgba(255, 255, 255, 0.85); padding: 5px 9px; border-radius: 7px; text-transform: uppercase;">FOTO</span>
+              </div>
+              <div data-dc-tpl="228" style="padding: 20px;">
+                <h3 data-dc-tpl="229" style="font: 700 18px &quot;Bricolage Grotesque&quot;; color: rgb(23, 35, 47); margin: 0px 0px 2px;"><span class="sc-interp">Joan Server</span></h3>
+                <div data-dc-tpl="230" style="font: 700 13px &quot;Public Sans&quot;; color: rgb(21, 99, 196); margin-bottom: 10px;"><span class="sc-interp">Portavoz</span></div>
+                <div data-dc-tpl="231" style="display: flex; flex-wrap: wrap; gap: 6px;">
+                  <span data-dc-tpl="232" style="background: rgb(234, 243, 252); color: rgb(51, 65, 79); font-size: 12px; padding: 4px 10px; border-radius: 999px;"><span class="sc-interp">Urbanismo</span></span>
+                  <span data-dc-tpl="233" style="background: rgb(234, 243, 252); color: rgb(51, 65, 79); font-size: 12px; padding: 4px 10px; border-radius: 999px;"><span class="sc-interp">Grau</span></span>
+                </div>
+              </div>
+            </div>
+          
+            <div data-dc-tpl="225" class="acg-lift" style="background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); border-radius: 20px; overflow: hidden;">
+              <div data-dc-tpl="226" style="aspect-ratio: 1 / 1; background-image: repeating-linear-gradient(135deg, rgb(211, 226, 242) 0px, rgb(211, 226, 242) 14px, rgb(228, 239, 250) 14px, rgb(228, 239, 250) 28px); display: flex; align-items: flex-end; justify-content: center; padding: 12px;">
+                <span data-dc-tpl="227" style="font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; color: rgb(63, 81, 101); background: rgba(255, 255, 255, 0.85); padding: 5px 9px; border-radius: 7px; text-transform: uppercase;">FOTO</span>
+              </div>
+              <div data-dc-tpl="228" style="padding: 20px;">
+                <h3 data-dc-tpl="229" style="font: 700 18px &quot;Bricolage Grotesque&quot;; color: rgb(23, 35, 47); margin: 0px 0px 2px;"><span class="sc-interp">Amparo Císcar</span></h3>
+                <div data-dc-tpl="230" style="font: 700 13px &quot;Public Sans&quot;; color: rgb(21, 99, 196); margin-bottom: 10px;"><span class="sc-interp">Coordinadora</span></div>
+                <div data-dc-tpl="231" style="display: flex; flex-wrap: wrap; gap: 6px;">
+                  <span data-dc-tpl="232" style="background: rgb(234, 243, 252); color: rgb(51, 65, 79); font-size: 12px; padding: 4px 10px; border-radius: 999px;"><span class="sc-interp">Participación</span></span>
+                  <span data-dc-tpl="233" style="background: rgb(234, 243, 252); color: rgb(51, 65, 79); font-size: 12px; padding: 4px 10px; border-radius: 999px;"><span class="sc-interp">Beniopa</span></span>
+                </div>
+              </div>
+            </div>
+          
+            <div data-dc-tpl="225" class="acg-lift" style="background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); border-radius: 20px; overflow: hidden;">
+              <div data-dc-tpl="226" style="aspect-ratio: 1 / 1; background-image: repeating-linear-gradient(135deg, rgb(211, 226, 242) 0px, rgb(211, 226, 242) 14px, rgb(228, 239, 250) 14px, rgb(228, 239, 250) 28px); display: flex; align-items: flex-end; justify-content: center; padding: 12px;">
+                <span data-dc-tpl="227" style="font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; color: rgb(63, 81, 101); background: rgba(255, 255, 255, 0.85); padding: 5px 9px; border-radius: 7px; text-transform: uppercase;">FOTO</span>
+              </div>
+              <div data-dc-tpl="228" style="padding: 20px;">
+                <h3 data-dc-tpl="229" style="font: 700 18px &quot;Bricolage Grotesque&quot;; color: rgb(23, 35, 47); margin: 0px 0px 2px;"><span class="sc-interp">Rubén Escrivà</span></h3>
+                <div data-dc-tpl="230" style="font: 700 13px &quot;Public Sans&quot;; color: rgb(21, 99, 196); margin-bottom: 10px;"><span class="sc-interp">Tesorero</span></div>
+                <div data-dc-tpl="231" style="display: flex; flex-wrap: wrap; gap: 6px;">
+                  <span data-dc-tpl="232" style="background: rgb(234, 243, 252); color: rgb(51, 65, 79); font-size: 12px; padding: 4px 10px; border-radius: 999px;"><span class="sc-interp">Transparencia</span></span>
+                  <span data-dc-tpl="233" style="background: rgb(234, 243, 252); color: rgb(51, 65, 79); font-size: 12px; padding: 4px 10px; border-radius: 999px;"><span class="sc-interp">Centre</span></span>
+                </div>
+              </div>
+            </div>
+          
+            <div data-dc-tpl="225" class="acg-lift" style="background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); border-radius: 20px; overflow: hidden;">
+              <div data-dc-tpl="226" style="aspect-ratio: 1 / 1; background-image: repeating-linear-gradient(135deg, rgb(211, 226, 242) 0px, rgb(211, 226, 242) 14px, rgb(228, 239, 250) 14px, rgb(228, 239, 250) 28px); display: flex; align-items: flex-end; justify-content: center; padding: 12px;">
+                <span data-dc-tpl="227" style="font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; color: rgb(63, 81, 101); background: rgba(255, 255, 255, 0.85); padding: 5px 9px; border-radius: 7px; text-transform: uppercase;">FOTO</span>
+              </div>
+              <div data-dc-tpl="228" style="padding: 20px;">
+                <h3 data-dc-tpl="229" style="font: 700 18px &quot;Bricolage Grotesque&quot;; color: rgb(23, 35, 47); margin: 0px 0px 2px;"><span class="sc-interp">Neus Fuster</span></h3>
+                <div data-dc-tpl="230" style="font: 700 13px &quot;Public Sans&quot;; color: rgb(21, 99, 196); margin-bottom: 10px;"><span class="sc-interp">Vocal</span></div>
+                <div data-dc-tpl="231" style="display: flex; flex-wrap: wrap; gap: 6px;">
+                  <span data-dc-tpl="232" style="background: rgb(234, 243, 252); color: rgb(51, 65, 79); font-size: 12px; padding: 4px 10px; border-radius: 999px;"><span class="sc-interp">Juventud</span></span>
+                  <span data-dc-tpl="233" style="background: rgb(234, 243, 252); color: rgb(51, 65, 79); font-size: 12px; padding: 4px 10px; border-radius: 999px;"><span class="sc-interp">Corea</span></span>
+                </div>
+              </div>
+            </div>
+          
+        </div>
+      </div>
+    </section>
+
+    
+    <section data-dc-tpl="234" id="actualidad" style="scroll-margin-top: 88px; padding: 92px 0px;">
+      <div data-dc-tpl="235" style="max-width: 1240px; margin: 0px auto; padding: 0px 40px; display: grid; grid-template-columns: 1.5fr 1fr; gap: 44px;">
+        <div data-dc-tpl="236">
+          <div data-dc-tpl="237" style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 28px;">
+            <div data-dc-tpl="238">
+              <span data-dc-tpl="239" style="font: 700 12.5px &quot;Public Sans&quot;; letter-spacing: 0.16em; text-transform: uppercase; color: rgb(15, 166, 182);"><span class="sc-interp">Actualidad</span></span>
+              <h2 data-dc-tpl="240" style="font: 800 34px &quot;Bricolage Grotesque&quot;; color: rgb(10, 42, 94); letter-spacing: -0.015em; margin: 10px 0px 0px;"><span class="sc-interp">Lo último de Acción Civil</span></h2>
+            </div>
+            <a data-dc-tpl="241" href="#" style="text-decoration: none; color: rgb(21, 99, 196); font: 700 14px &quot;Public Sans&quot;;"><span class="sc-interp">Ver todo</span></a>
+          </div>
+          <a data-dc-tpl="242" href="#" class="acg-lift" style="text-decoration: none; display: block; border-radius: 20px; overflow: hidden; border: 1px solid rgb(233, 238, 244); background: rgb(255, 255, 255); margin-bottom: 16px;">
+            <div data-dc-tpl="243" style="aspect-ratio: 16 / 7; background-image: repeating-linear-gradient(135deg, rgb(211, 226, 242) 0px, rgb(211, 226, 242) 15px, rgb(228, 239, 250) 15px, rgb(228, 239, 250) 30px); display: flex; align-items: flex-end; padding: 16px;">
+              <span data-dc-tpl="244" style="background: rgb(246, 190, 24); color: rgb(10, 42, 94); font: 800 11.5px &quot;Public Sans&quot;; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 12px; border-radius: 999px;"><span class="sc-interp">Comunicado</span></span>
+            </div>
+            <div data-dc-tpl="245" style="padding: 22px 24px;">
+              <h3 data-dc-tpl="246" style="font: 700 23px / 1.2 &quot;Bricolage Grotesque&quot;; color: rgb(23, 35, 47); margin: 0px 0px 8px;"><span class="sc-interp">Presentamos 12 medidas para una Gandia más limpia y segura</span></h3>
+              <div data-dc-tpl="247" style="font-size: 13.5px; color: rgb(148, 163, 178);"><span class="sc-interp">28 jun 2026</span></div>
+            </div>
+          </a>
+          <div data-dc-tpl="248" style="display: flex; flex-direction: column; gap: 12px;">
+            
+              <a data-dc-tpl="250" href="#" class="acg-tile" style="text-decoration: none; display: flex; align-items: center; gap: 16px; background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); border-radius: 14px; padding: 14px 16px;">
+                <div data-dc-tpl="251" style="width: 82px; height: 60px; flex-shrink: 0; border-radius: 10px; background-image: repeating-linear-gradient(135deg, rgb(211, 226, 242) 0px, rgb(211, 226, 242) 12px, rgb(228, 239, 250) 12px, rgb(228, 239, 250) 24px);"></div>
+                <div data-dc-tpl="252" style="flex: 1 1 0%; min-width: 0px;">
+                  <span data-dc-tpl="253" style="font: 700 11px &quot;Public Sans&quot;; letter-spacing: 0.08em; text-transform: uppercase; color: rgb(15, 166, 182);"><span class="sc-interp">Noticia</span></span>
+                  <h3 data-dc-tpl="254" style="font: 700 16px / 1.25 &quot;Public Sans&quot;; color: rgb(23, 35, 47); margin: 4px 0px;"><span class="sc-interp">Impulsamos una consulta vecinal sobre el tráfico del centro</span></h3>
+                  <div data-dc-tpl="255" style="font-size: 12.5px; color: rgb(148, 163, 178);"><span class="sc-interp">24 jun 2026</span></div>
+                </div>
+              </a>
+            
+              <a data-dc-tpl="250" href="#" class="acg-tile" style="text-decoration: none; display: flex; align-items: center; gap: 16px; background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); border-radius: 14px; padding: 14px 16px;">
+                <div data-dc-tpl="251" style="width: 82px; height: 60px; flex-shrink: 0; border-radius: 10px; background-image: repeating-linear-gradient(135deg, rgb(211, 226, 242) 0px, rgb(211, 226, 242) 12px, rgb(228, 239, 250) 12px, rgb(228, 239, 250) 24px);"></div>
+                <div data-dc-tpl="252" style="flex: 1 1 0%; min-width: 0px;">
+                  <span data-dc-tpl="253" style="font: 700 11px &quot;Public Sans&quot;; letter-spacing: 0.08em; text-transform: uppercase; color: rgb(15, 166, 182);"><span class="sc-interp">Vídeo</span></span>
+                  <h3 data-dc-tpl="254" style="font: 700 16px / 1.25 &quot;Public Sans&quot;; color: rgb(23, 35, 47); margin: 4px 0px;"><span class="sc-interp">Recorrido por los solares abandonados de Beniopa</span></h3>
+                  <div data-dc-tpl="255" style="font-size: 12.5px; color: rgb(148, 163, 178);"><span class="sc-interp">19 jun 2026</span></div>
+                </div>
+              </a>
+            
+              <a data-dc-tpl="250" href="#" class="acg-tile" style="text-decoration: none; display: flex; align-items: center; gap: 16px; background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); border-radius: 14px; padding: 14px 16px;">
+                <div data-dc-tpl="251" style="width: 82px; height: 60px; flex-shrink: 0; border-radius: 10px; background-image: repeating-linear-gradient(135deg, rgb(211, 226, 242) 0px, rgb(211, 226, 242) 12px, rgb(228, 239, 250) 12px, rgb(228, 239, 250) 24px);"></div>
+                <div data-dc-tpl="252" style="flex: 1 1 0%; min-width: 0px;">
+                  <span data-dc-tpl="253" style="font: 700 11px &quot;Public Sans&quot;; letter-spacing: 0.08em; text-transform: uppercase; color: rgb(15, 166, 182);"><span class="sc-interp">Entrevista</span></span>
+                  <h3 data-dc-tpl="254" style="font: 700 16px / 1.25 &quot;Public Sans&quot;; color: rgb(23, 35, 47); margin: 4px 0px;"><span class="sc-interp">“La política local se hace en la calle, no en los despachos”</span></h3>
+                  <div data-dc-tpl="255" style="font-size: 12.5px; color: rgb(148, 163, 178);"><span class="sc-interp">12 jun 2026</span></div>
+                </div>
+              </a>
+            
+          </div>
+        </div>
+        <div data-dc-tpl="256">
+          <div data-dc-tpl="257" style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 28px;">
+            <h2 data-dc-tpl="258" style="font: 800 26px &quot;Bricolage Grotesque&quot;; color: rgb(10, 42, 94); margin: 0px;"><span class="sc-interp">Próximos actos</span></h2>
+            <a data-dc-tpl="259" href="#" style="text-decoration: none; color: rgb(21, 99, 196); font: 700 14px &quot;Public Sans&quot;;"><span class="sc-interp">Ver agenda</span></a>
+          </div>
+          <div data-dc-tpl="260" style="display: flex; flex-direction: column; gap: 12px;">
+            
+              <div data-dc-tpl="262" class="acg-tile" style="background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); border-radius: 16px; padding: 16px; display: flex; gap: 16px; align-items: center; cursor: pointer;">
+                <div data-dc-tpl="263" style="width: 60px; height: 60px; flex-shrink: 0; border-radius: 13px; background: rgb(234, 243, 252); display: flex; flex-direction: column; align-items: center; justify-content: center; color: rgb(10, 42, 94);">
+                  <span data-dc-tpl="264" style="font: 800 22px / 1 &quot;Bricolage Grotesque&quot;;"><span class="sc-interp">05</span></span>
+                  <span data-dc-tpl="265" style="font: 700 11px &quot;Public Sans&quot;; letter-spacing: 0.08em; text-transform: uppercase; color: rgb(21, 99, 196);"><span class="sc-interp">JUL</span></span>
+                </div>
+                <div data-dc-tpl="266" style="flex: 1 1 0%; min-width: 0px;">
+                  <h3 data-dc-tpl="267" style="font: 700 16px &quot;Public Sans&quot;; color: rgb(23, 35, 47); margin: 0px 0px 5px;"><span class="sc-interp">Asamblea abierta de barrio</span></h3>
+                  <div data-dc-tpl="268" style="display: flex; gap: 14px; color: rgb(92, 107, 122); font-size: 12.5px;">
+                    <span data-dc-tpl="269" style="display: inline-flex; align-items: center; gap: 5px;"><svg data-dc-tpl="270" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path data-dc-tpl="271" d="M12 21s7-5.6 7-11a7 7 0 0 0-14 0c0 5.4 7 11 7 11Z"></path><circle data-dc-tpl="272" cx="12" cy="10" r="2.4"></circle></svg><span class="sc-interp">Casa de Cultura</span></span>
+                    <span data-dc-tpl="273" style="display: inline-flex; align-items: center; gap: 5px;"><svg data-dc-tpl="274" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle data-dc-tpl="275" cx="12" cy="12" r="8"></circle><path data-dc-tpl="276" d="M12 8v4l3 2"></path></svg><span class="sc-interp">19:00</span></span>
+                  </div>
+                </div>
+              </div>
+            
+              <div data-dc-tpl="262" class="acg-tile" style="background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); border-radius: 16px; padding: 16px; display: flex; gap: 16px; align-items: center; cursor: pointer;">
+                <div data-dc-tpl="263" style="width: 60px; height: 60px; flex-shrink: 0; border-radius: 13px; background: rgb(234, 243, 252); display: flex; flex-direction: column; align-items: center; justify-content: center; color: rgb(10, 42, 94);">
+                  <span data-dc-tpl="264" style="font: 800 22px / 1 &quot;Bricolage Grotesque&quot;;"><span class="sc-interp">12</span></span>
+                  <span data-dc-tpl="265" style="font: 700 11px &quot;Public Sans&quot;; letter-spacing: 0.08em; text-transform: uppercase; color: rgb(21, 99, 196);"><span class="sc-interp">JUL</span></span>
+                </div>
+                <div data-dc-tpl="266" style="flex: 1 1 0%; min-width: 0px;">
+                  <h3 data-dc-tpl="267" style="font: 700 16px &quot;Public Sans&quot;; color: rgb(23, 35, 47); margin: 0px 0px 5px;"><span class="sc-interp">Ruta vecinal por el Grau</span></h3>
+                  <div data-dc-tpl="268" style="display: flex; gap: 14px; color: rgb(92, 107, 122); font-size: 12.5px;">
+                    <span data-dc-tpl="269" style="display: inline-flex; align-items: center; gap: 5px;"><svg data-dc-tpl="270" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path data-dc-tpl="271" d="M12 21s7-5.6 7-11a7 7 0 0 0-14 0c0 5.4 7 11 7 11Z"></path><circle data-dc-tpl="272" cx="12" cy="10" r="2.4"></circle></svg><span class="sc-interp">Platja de Gandia</span></span>
+                    <span data-dc-tpl="273" style="display: inline-flex; align-items: center; gap: 5px;"><svg data-dc-tpl="274" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle data-dc-tpl="275" cx="12" cy="12" r="8"></circle><path data-dc-tpl="276" d="M12 8v4l3 2"></path></svg><span class="sc-interp">10:30</span></span>
+                  </div>
+                </div>
+              </div>
+            
+              <div data-dc-tpl="262" class="acg-tile" style="background: rgb(255, 255, 255); border: 1px solid rgb(233, 238, 244); border-radius: 16px; padding: 16px; display: flex; gap: 16px; align-items: center; cursor: pointer;">
+                <div data-dc-tpl="263" style="width: 60px; height: 60px; flex-shrink: 0; border-radius: 13px; background: rgb(234, 243, 252); display: flex; flex-direction: column; align-items: center; justify-content: center; color: rgb(10, 42, 94);">
+                  <span data-dc-tpl="264" style="font: 800 22px / 1 &quot;Bricolage Grotesque&quot;;"><span class="sc-interp">20</span></span>
+                  <span data-dc-tpl="265" style="font: 700 11px &quot;Public Sans&quot;; letter-spacing: 0.08em; text-transform: uppercase; color: rgb(21, 99, 196);"><span class="sc-interp">JUL</span></span>
+                </div>
+                <div data-dc-tpl="266" style="flex: 1 1 0%; min-width: 0px;">
+                  <h3 data-dc-tpl="267" style="font: 700 16px &quot;Public Sans&quot;; color: rgb(23, 35, 47); margin: 0px 0px 5px;"><span class="sc-interp">Taller: cómo presentar una propuesta</span></h3>
+                  <div data-dc-tpl="268" style="display: flex; gap: 14px; color: rgb(92, 107, 122); font-size: 12.5px;">
+                    <span data-dc-tpl="269" style="display: inline-flex; align-items: center; gap: 5px;"><svg data-dc-tpl="270" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path data-dc-tpl="271" d="M12 21s7-5.6 7-11a7 7 0 0 0-14 0c0 5.4 7 11 7 11Z"></path><circle data-dc-tpl="272" cx="12" cy="10" r="2.4"></circle></svg><span class="sc-interp">Sede Acción Civil</span></span>
+                    <span data-dc-tpl="273" style="display: inline-flex; align-items: center; gap: 5px;"><svg data-dc-tpl="274" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle data-dc-tpl="275" cx="12" cy="12" r="8"></circle><path data-dc-tpl="276" d="M12 8v4l3 2"></path></svg><span class="sc-interp">18:30</span></span>
+                  </div>
+                </div>
+              </div>
+            
+          </div>
+          <div data-dc-tpl="277" style="margin-top: 16px; border-radius: 18px; overflow: hidden; position: relative; background-image: repeating-linear-gradient(135deg, rgb(14, 53, 111) 0px, rgb(14, 53, 111) 15px, rgb(18, 64, 138) 15px, rgb(18, 64, 138) 30px); aspect-ratio: 16 / 9; display: flex; align-items: center; justify-content: center;">
+            <div data-dc-tpl="278" style="width: 60px; height: 60px; border-radius: 50%; background: rgba(255, 255, 255, 0.94); display: flex; align-items: center; justify-content: center; box-shadow: rgba(0, 0, 0, 0.25) 0px 8px 20px;">
+              <svg data-dc-tpl="279" width="26" height="26" viewBox="0 0 24 24" fill="#0A2A5E"><path data-dc-tpl="280" d="M8 5v14l11-7z"></path></svg>
+            </div>
+            <span data-dc-tpl="281" style="position: absolute; bottom: 12px; left: 14px; font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: rgba(255, 255, 255, 0.75); text-transform: uppercase;"><span class="sc-interp">Último vídeo</span></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+    <section data-dc-tpl="282" id="transparencia" style="scroll-margin-top: 88px; background: rgb(234, 243, 252); padding: 88px 0px;">
+      <div data-dc-tpl="283" style="max-width: 1240px; margin: 0px auto; padding: 0px 40px;">
+        <div data-dc-tpl="284" style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 38px;">
+          <div data-dc-tpl="285">
+            <span data-dc-tpl="286" style="font: 700 12.5px &quot;Public Sans&quot;; letter-spacing: 0.16em; text-transform: uppercase; color: rgb(15, 166, 182);"><span class="sc-interp">Transparencia</span></span>
+            <h2 data-dc-tpl="287" style="font: 800 40px / 1.08 &quot;Bricolage Grotesque&quot;; color: rgb(10, 42, 94); letter-spacing: -0.015em; margin: 12px 0px 6px;"><span class="sc-interp">Todo a la vista, siempre</span></h2>
+            <p data-dc-tpl="288" style="font-size: 16px; color: rgb(66, 82, 95); max-width: 520px; margin: 0px;"><span class="sc-interp">Cuentas, estatutos, donaciones y organización. Consulta cualquier documento cuando quieras.</span></p>
+          </div>
+        </div>
+        <div data-dc-tpl="289" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px;">
+          
+            <a data-dc-tpl="291" href="#" class="acg-tile" style="text-decoration: none; background: rgb(255, 255, 255); border: 1px solid rgb(219, 231, 244); border-radius: 16px; padding: 22px 18px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px;">
+              <div data-dc-tpl="292" style="width: 48px; height: 48px; border-radius: 13px; background: rgb(234, 243, 252); display: flex; align-items: center; justify-content: center; color: rgb(21, 99, 196);">
+                <svg data-dc-tpl="293" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="294" d="M4 5h16v14H4zM4 9h16M8 13h5M8 16h8"></path></svg>
+              </div>
+              <span data-dc-tpl="295" style="font: 700 14px &quot;Public Sans&quot;; color: rgb(23, 35, 47);"><span class="sc-interp">Cuentas</span></span>
+            </a>
+          
+            <a data-dc-tpl="291" href="#" class="acg-tile" style="text-decoration: none; background: rgb(255, 255, 255); border: 1px solid rgb(219, 231, 244); border-radius: 16px; padding: 22px 18px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px;">
+              <div data-dc-tpl="292" style="width: 48px; height: 48px; border-radius: 13px; background: rgb(234, 243, 252); display: flex; align-items: center; justify-content: center; color: rgb(21, 99, 196);">
+                <svg data-dc-tpl="293" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="294" d="M12 3v18M8 7h6a2.5 2.5 0 0 1 0 5H9a2.5 2.5 0 0 0 0 5h6"></path></svg>
+              </div>
+              <span data-dc-tpl="295" style="font: 700 14px &quot;Public Sans&quot;; color: rgb(23, 35, 47);"><span class="sc-interp">Presupuestos</span></span>
+            </a>
+          
+            <a data-dc-tpl="291" href="#" class="acg-tile" style="text-decoration: none; background: rgb(255, 255, 255); border: 1px solid rgb(219, 231, 244); border-radius: 16px; padding: 22px 18px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px;">
+              <div data-dc-tpl="292" style="width: 48px; height: 48px; border-radius: 13px; background: rgb(234, 243, 252); display: flex; align-items: center; justify-content: center; color: rgb(21, 99, 196);">
+                <svg data-dc-tpl="293" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="294" d="M7 3h7l4 4v14H7zM14 3v4h4M9 13h6M9 16h6"></path></svg>
+              </div>
+              <span data-dc-tpl="295" style="font: 700 14px &quot;Public Sans&quot;; color: rgb(23, 35, 47);"><span class="sc-interp">Estatutos</span></span>
+            </a>
+          
+            <a data-dc-tpl="291" href="#" class="acg-tile" style="text-decoration: none; background: rgb(255, 255, 255); border: 1px solid rgb(219, 231, 244); border-radius: 16px; padding: 22px 18px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px;">
+              <div data-dc-tpl="292" style="width: 48px; height: 48px; border-radius: 13px; background: rgb(234, 243, 252); display: flex; align-items: center; justify-content: center; color: rgb(21, 99, 196);">
+                <svg data-dc-tpl="293" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="294" d="M12 3 5 6.5V11c0 4.2 3 7 7 8.3 4-1.3 7-4.1 7-8.3V6.5L12 3ZM9 11.5 11 13.5 15 9.5"></path></svg>
+              </div>
+              <span data-dc-tpl="295" style="font: 700 14px &quot;Public Sans&quot;; color: rgb(23, 35, 47);"><span class="sc-interp">Código ético</span></span>
+            </a>
+          
+            <a data-dc-tpl="291" href="#" class="acg-tile" style="text-decoration: none; background: rgb(255, 255, 255); border: 1px solid rgb(219, 231, 244); border-radius: 16px; padding: 22px 18px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px;">
+              <div data-dc-tpl="292" style="width: 48px; height: 48px; border-radius: 13px; background: rgb(234, 243, 252); display: flex; align-items: center; justify-content: center; color: rgb(21, 99, 196);">
+                <svg data-dc-tpl="293" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="294" d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10Z"></path></svg>
+              </div>
+              <span data-dc-tpl="295" style="font: 700 14px &quot;Public Sans&quot;; color: rgb(23, 35, 47);"><span class="sc-interp">Donaciones</span></span>
+            </a>
+          
+            <a data-dc-tpl="291" href="#" class="acg-tile" style="text-decoration: none; background: rgb(255, 255, 255); border: 1px solid rgb(219, 231, 244); border-radius: 16px; padding: 22px 18px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px;">
+              <div data-dc-tpl="292" style="width: 48px; height: 48px; border-radius: 13px; background: rgb(234, 243, 252); display: flex; align-items: center; justify-content: center; color: rgb(21, 99, 196);">
+                <svg data-dc-tpl="293" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="294" d="M9 4h6v4H9zM3 16h6v4H3zM15 16h6v4h-6zM12 8v4M6 16v-2h12v2"></path></svg>
+              </div>
+              <span data-dc-tpl="295" style="font: 700 14px &quot;Public Sans&quot;; color: rgb(23, 35, 47);"><span class="sc-interp">Organigrama</span></span>
+            </a>
+          
+        </div>
+      </div>
+    </section>
+
+    
+    <section data-dc-tpl="296" style="background: linear-gradient(150deg, rgb(10, 42, 94), rgb(15, 59, 125)); color: rgb(255, 255, 255); position: relative; overflow: hidden;">
+      <div data-dc-tpl="297" style="position: absolute; left: -60px; bottom: -60px; width: 260px; height: 260px; border-radius: 50%; background: radial-gradient(circle, rgba(246, 190, 24, 0.3), transparent 70%);"></div>
+      <div data-dc-tpl="298" style="max-width: 1000px; margin: 0px auto; padding: 88px 40px; text-align: center; position: relative;">
+        <h2 data-dc-tpl="299" style="font: 800 48px / 1.08 &quot;Bricolage Grotesque&quot;; letter-spacing: -0.02em; margin: 0px 0px 16px; text-wrap: balance;"><span class="sc-interp">Participa en la Gandia que quieres</span></h2>
+        <p data-dc-tpl="300" style="font-size: 19px; color: rgb(196, 214, 236); max-width: 560px; margin: 0px auto 34px;"><span class="sc-interp">Afíliate, propón, colabora o simplemente cuéntanos qué mejorarías de tu barrio.</span></p>
+        <div data-dc-tpl="301" style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+          <a data-dc-tpl="302" href="#" class="acg-btn" style="text-decoration: none; background: rgb(246, 190, 24); color: rgb(10, 42, 94); font: 800 16px &quot;Public Sans&quot;; padding: 16px 32px; border-radius: 13px; box-shadow: rgba(246, 190, 24, 0.3) 0px 12px 26px;"><span class="sc-interp">Únete</span></a>
+          <a data-dc-tpl="303" href="#" class="acg-btn" style="text-decoration: none; background: rgba(255, 255, 255, 0.1); color: rgb(255, 255, 255); font: 700 16px &quot;Public Sans&quot;; padding: 16px 30px; border-radius: 13px; border: 1.5px solid rgba(255, 255, 255, 0.28);"><span class="sc-interp">Envía una propuesta</span></a>
+          <a data-dc-tpl="304" href="#" class="acg-btn" style="text-decoration: none; background: rgba(255, 255, 255, 0.1); color: rgb(255, 255, 255); font: 700 16px &quot;Public Sans&quot;; padding: 16px 30px; border-radius: 13px; border: 1.5px solid rgba(255, 255, 255, 0.28);"><span class="sc-interp">Colabora</span></a>
+        </div>
+      </div>
+    </section>
+
+    
+    <footer data-dc-tpl="305" id="footer" style="background: rgb(7, 30, 69); color: rgb(183, 199, 221); padding: 64px 0px 30px;">
+      <div data-dc-tpl="306" style="max-width: 1240px; margin: 0px auto; padding: 0px 40px;">
+        <div data-dc-tpl="307" style="display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.4fr; gap: 44px; padding-bottom: 44px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+          <div data-dc-tpl="308">
+            <div data-dc-tpl="309" style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+              <img data-dc-tpl="310" loading="lazy" src="assets/logo-icon.webp" alt="" width="512" height="467" style="height: 48px; width: 48px; object-fit: contain; background: rgb(255, 255, 255); border-radius: 12px; padding: 3px;">
+              <span data-dc-tpl="311" style="display: flex; flex-direction: column; line-height: 1;"><span data-dc-tpl="312" style="font: 800 19px &quot;Bricolage Grotesque&quot;; color: rgb(255, 255, 255);">Acción Civil</span><span data-dc-tpl="313" style="font: 700 10.5px &quot;Public Sans&quot;; letter-spacing: 0.34em; color: rgb(95, 212, 226); margin-top: 2px;">GANDIA</span></span>
+            </div>
+            <p data-dc-tpl="314" style="font-size: 14.5px; color: rgb(143, 166, 196); max-width: 320px; margin: 0px 0px 18px;"><span class="sc-interp">Formación política local, ciudadana e independiente de Gandia. Personas de Gandia trabajando por Gandia.</span></p>
+            <div data-dc-tpl="315" style="display: flex; gap: 10px;">
+              
+                <a data-dc-tpl="317" href="#" style="width: 38px; height: 38px; border-radius: 10px; background: rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: center; color: rgb(183, 199, 221); text-decoration: none;">
+                  <svg data-dc-tpl="318" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="319" d="M18 2h-3a4 4 0 0 0-4 4v3H8v4h3v9h4v-9h3l1-4h-4V6a1 1 0 0 1 1-1h3z"></path></svg>
+                </a>
+              
+                <a data-dc-tpl="317" href="#" style="width: 38px; height: 38px; border-radius: 10px; background: rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: center; color: rgb(183, 199, 221); text-decoration: none;">
+                  <svg data-dc-tpl="318" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="319" d="M23 4.5a8 8 0 0 1-2.3.6A4 4 0 0 0 22.4 3a8 8 0 0 1-2.5 1A4 4 0 0 0 13 7.5a11 11 0 0 1-8-4 4 4 0 0 0 1.2 5.3A4 4 0 0 1 4.5 8v.1a4 4 0 0 0 3.2 4 4 4 0 0 1-1.8.1 4 4 0 0 0 3.7 2.8A8 8 0 0 1 3 16.6 11 11 0 0 0 20 7.2a8 8 0 0 0 3-2.7z"></path></svg>
+                </a>
+              
+                <a data-dc-tpl="317" href="#" style="width: 38px; height: 38px; border-radius: 10px; background: rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: center; color: rgb(183, 199, 221); text-decoration: none;">
+                  <svg data-dc-tpl="318" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="319" d="M16 3H8a5 5 0 0 0-5 5v8a5 5 0 0 0 5 5h8a5 5 0 0 0 5-5V8a5 5 0 0 0-5-5zM12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8zM17.5 6.5h.01"></path></svg>
+                </a>
+              
+                <a data-dc-tpl="317" href="#" style="width: 38px; height: 38px; border-radius: 10px; background: rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: center; color: rgb(183, 199, 221); text-decoration: none;">
+                  <svg data-dc-tpl="318" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="319" d="M21 6.5a3 3 0 0 0-2-2C17 4 12 4 12 4s-5 0-7 .5a3 3 0 0 0-2 2A31 31 0 0 0 2.5 12 31 31 0 0 0 3 17.5a3 3 0 0 0 2 2c2 .5 7 .5 7 .5s5 0 7-.5a3 3 0 0 0 2-2 31 31 0 0 0 .5-5.5 31 31 0 0 0-.5-5.5zM10 15V9l5 3z"></path></svg>
+                </a>
+              
+            </div>
+          </div>
+          <div data-dc-tpl="320">
+            <div data-dc-tpl="321" style="font: 700 13px &quot;Public Sans&quot;; letter-spacing: 0.1em; text-transform: uppercase; color: rgb(255, 255, 255); margin-bottom: 16px;"><span class="sc-interp">Explorar</span></div>
+            <div data-dc-tpl="322" style="display: flex; flex-direction: column; gap: 11px;">
+              
+                <a data-dc-tpl="324" href="#" style="text-decoration: none; color: rgb(143, 166, 196); font-size: 14.5px;"><span class="sc-interp">Propuestas</span></a>
+              
+                <a data-dc-tpl="324" href="#participacion" style="text-decoration: none; color: rgb(143, 166, 196); font-size: 14.5px;"><span class="sc-interp">Participación ciudadana</span></a>
+              
+                <a data-dc-tpl="324" href="#accion" style="text-decoration: none; color: rgb(143, 166, 196); font-size: 14.5px;"><span class="sc-interp">Acción en Gandia</span></a>
+              
+                <a data-dc-tpl="324" href="#campana" style="text-decoration: none; color: rgb(143, 166, 196); font-size: 14.5px;"><span class="sc-interp">Campañas</span></a>
+              
+                <a data-dc-tpl="324" href="#transparencia" style="text-decoration: none; color: rgb(143, 166, 196); font-size: 14.5px;"><span class="sc-interp">Transparencia</span></a>
+              
+            </div>
+          </div>
+          <div data-dc-tpl="325">
+            <div data-dc-tpl="326" style="font: 700 13px &quot;Public Sans&quot;; letter-spacing: 0.1em; text-transform: uppercase; color: rgb(255, 255, 255); margin-bottom: 16px;"><span class="sc-interp">Legal</span></div>
+            <div data-dc-tpl="327" style="display: flex; flex-direction: column; gap: 11px;">
+              
+                <a data-dc-tpl="329" href="#" style="text-decoration: none; color: rgb(143, 166, 196); font-size: 14.5px;"><span class="sc-interp">Aviso legal</span></a>
+              
+                <a data-dc-tpl="329" href="#" style="text-decoration: none; color: rgb(143, 166, 196); font-size: 14.5px;"><span class="sc-interp">Política de privacidad</span></a>
+              
+                <a data-dc-tpl="329" href="#" style="text-decoration: none; color: rgb(143, 166, 196); font-size: 14.5px;"><span class="sc-interp">Cookies</span></a>
+              
+                <a data-dc-tpl="329" href="#" style="text-decoration: none; color: rgb(143, 166, 196); font-size: 14.5px;"><span class="sc-interp">Accesibilidad</span></a>
+              
+                <a data-dc-tpl="329" href="#" style="text-decoration: none; color: rgb(143, 166, 196); font-size: 14.5px;"><span class="sc-interp">Canal de denuncias</span></a>
+              
+            </div>
+          </div>
+          <div data-dc-tpl="330">
+            <div data-dc-tpl="331" style="font: 700 13px &quot;Public Sans&quot;; letter-spacing: 0.1em; text-transform: uppercase; color: rgb(255, 255, 255); margin-bottom: 16px;"><span class="sc-interp">Recibe novedades</span></div>
+            <p data-dc-tpl="332" style="font-size: 14px; color: rgb(143, 166, 196); margin: 0px 0px 14px;"><span class="sc-interp">Propuestas, campañas y actos en tu correo.</span></p>
+            <div data-dc-tpl="333" style="display: flex; gap: 8px; margin-bottom: 18px;">
+              <input data-dc-tpl="334" placeholder="Tu correo electrónico" style="flex: 1 1 0%; min-width: 0px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 11px; padding: 12px 14px; color: rgb(255, 255, 255); font: 400 14px &quot;Public Sans&quot;; outline: none;">
+              <button data-dc-tpl="335" class="acg-btn" style="border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; cursor: pointer; background: rgb(246, 190, 24); color: rgb(10, 42, 94); font: 700 14px &quot;Public Sans&quot;; padding: 0px 18px; border-radius: 11px;"><span class="sc-interp">Suscribirme</span></button>
+            </div>
+            <div data-dc-tpl="336" style="display: flex; align-items: center; gap: 8px; color: rgb(143, 166, 196); font-size: 13.5px;">
+              <svg data-dc-tpl="337" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle data-dc-tpl="338" cx="12" cy="12" r="9"></circle><path data-dc-tpl="339" d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18"></path></svg>
+              Castellano · Valencià
+            </div>
+          </div>
+        </div>
+        <div data-dc-tpl="340" style="display: flex; align-items: center; justify-content: space-between; padding-top: 24px; flex-wrap: wrap; gap: 12px;">
+          <span data-dc-tpl="341" style="font-size: 13px; color: rgb(110, 134, 166);">© 2026 Acción Civil Gandia · <span class="sc-interp">Todos los derechos reservados</span></span>
+          <span data-dc-tpl="342" style="font-size: 13px; color: rgb(110, 134, 166);"><span class="sc-interp">Hecho en Gandia, con la gente de Gandia</span></span>
+        </div>
+      </div>
+    </footer>
+  </div>
+  
+
+  
+  </div></div></div>
+<script type="text/x-dc" data-dc-script="">
+class Component extends DCLogic {
+  state = { lang:'es', device:'desktop', menuOpen:false, anim:0, mounted:false };
+
+  componentDidMount(){
+    const dur=1500, t0=performance.now();
+    const tick=(now)=>{ let p=Math.min(1,(now-t0)/dur); p=1-Math.pow(1-p,3); this.setState({anim:p}); if(p<1) this._raf=requestAnimationFrame(tick); };
+    this._raf=requestAnimationFrame(tick);
+    this._to=setTimeout(()=>this.setState({mounted:true}),90);
+  }
+  componentWillUnmount(){ if(this._raf) cancelAnimationFrame(this._raf); if(this._to) clearTimeout(this._to); }
+
+  fmt(n){ return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.'); }
+
+  content(lang){
+    const es = lang==='es';
+    const V=(a,b)=> es?a:b;
+    return {
+      nav:[
+        {label:V('Inicio','Inici'),href:'#top'},
+        {label:V('Conócenos','Coneix-nos'),href:'#'},
+        {label:V('Propuestas','Propostes'),href:'#'},
+        {label:V('Participación','Participació'),href:'#participacion'},
+        {label:V('Acción','Acció'),href:'#accion'},
+        {label:V('Campañas','Campanyes'),href:'#campana'},
+        {label:V('Actualidad','Actualitat'),href:'#actualidad'},
+        {label:V('Transparencia','Transparència'),href:'#transparencia'},
+        {label:V('Contacto','Contacte'),href:'#footer'}
+      ],
+      footerNav1:[
+        {label:V('Propuestas','Propostes'),href:'#'},
+        {label:V('Participación ciudadana','Participació ciutadana'),href:'#participacion'},
+        {label:V('Acción en Gandia','Acció a Gandia'),href:'#accion'},
+        {label:V('Campañas','Campanyes'),href:'#campana'},
+        {label:V('Transparencia','Transparència'),href:'#transparencia'}
+      ],
+      footerNav2:[
+        {label:V('Aviso legal','Avís legal')},
+        {label:V('Política de privacidad','Política de privacitat')},
+        {label:V('Cookies','Galetes')},
+        {label:V('Accesibilidad','Accessibilitat')},
+        {label:V('Canal de denuncias','Canal de denúncies')}
+      ],
+      social:[
+        {iconPath:'M18 2h-3a4 4 0 0 0-4 4v3H8v4h3v9h4v-9h3l1-4h-4V6a1 1 0 0 1 1-1h3z'},
+        {iconPath:'M23 4.5a8 8 0 0 1-2.3.6A4 4 0 0 0 22.4 3a8 8 0 0 1-2.5 1A4 4 0 0 0 13 7.5a11 11 0 0 1-8-4 4 4 0 0 0 1.2 5.3A4 4 0 0 1 4.5 8v.1a4 4 0 0 0 3.2 4 4 4 0 0 1-1.8.1 4 4 0 0 0 3.7 2.8A8 8 0 0 1 3 16.6 11 11 0 0 0 20 7.2a8 8 0 0 0 3-2.7z'},
+        {iconPath:'M16 3H8a5 5 0 0 0-5 5v8a5 5 0 0 0 5 5h8a5 5 0 0 0 5-5V8a5 5 0 0 0-5-5zM12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8zM17.5 6.5h.01'},
+        {iconPath:'M21 6.5a3 3 0 0 0-2-2C17 4 12 4 12 4s-5 0-7 .5a3 3 0 0 0-2 2A31 31 0 0 0 2.5 12 31 31 0 0 0 3 17.5a3 3 0 0 0 2 2c2 .5 7 .5 7 .5s5 0 7-.5a3 3 0 0 0 2-2 31 31 0 0 0 .5-5.5 31 31 0 0 0-.5-5.5zM10 15V9l5 3z'}
+      ],
+      heroStats:[
+        {value:'1.240', label:V('propuestas ciudadanas','propostes ciutadanes')},
+        {value:'22', label:V('barrios participando','barris participant')},
+        {value:'176', label:V('respuestas oficiales','respostes oficials')}
+      ],
+      heroBadgeN:'12.480',
+      prioridades:[
+        {iconPath:'M4 11.5 12 5l8 6.5M6 10.5V19h4v-5h4v5h4v-8.5', title:V('Vivienda','Habitatge'), summary:V('Acceso justo y vivienda asequible para jóvenes y familias de Gandia.','Accés just i habitatge assequible per a jóvens i famílies de Gandia.')},
+        {iconPath:'M12 4c3 3.6 5 6.4 5 9a5 5 0 0 1-10 0c0-2.6 2-5.4 5-9Z', title:V('Limpieza','Neteja'), summary:V('Calles y solares limpios en todos los barrios, no solo en el centro.','Carrers i solars nets a tots els barris, no sols al centre.')},
+        {iconPath:'M12 4 5 6.5V11c0 4.2 3 7 7 8.3 4-1.3 7-4.1 7-8.3V6.5L12 4Z', title:V('Seguridad','Seguretat'), summary:V('Convivencia, iluminación y presencia real en las zonas que lo necesitan.','Convivència, il·luminació i presència real a les zones que ho necessiten.')},
+        {iconPath:'M6.5 8h11l-1 11h-9l-1-11ZM9.5 8V6.5a2.5 2.5 0 0 1 5 0V8', title:V('Comercio y empleo','Comerç i ocupació'), summary:V('Apoyo al comercio local y al empleo de proximidad en la ciudad.','Suport al comerç local i a l\u2019ocupació de proximitat a la ciutat.')},
+        {iconPath:'M6.5 17.5a2.5 2.5 0 1 0 0-.01M17.5 17.5a2.5 2.5 0 1 0 0-.01M6.5 17.5 10 9h4.5l2.5 8.5M9.5 9h3.5', title:V('Movilidad','Mobilitat'), summary:V('Moverse por Gandia y hasta la playa de forma segura y sostenible.','Moure\u2019s per Gandia i fins a la platja de manera segura i sostenible.')},
+        {iconPath:'M12 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM6.5 19a5.5 5.5 0 0 1 11 0', title:V('Juventud','Joventut'), summary:V('Espacios, ocio y oportunidades reales para la gente joven.','Espais, oci i oportunitats reals per a la gent jove.')}
+      ],
+      partActions:[
+        {label:V('Crear propuesta','Crear proposta'), iconPath:'M12 5v14M5 12h14', bg:'#F6BE18', col:'#0A2A5E', border:'none'},
+        {label:V('Explorar','Explorar'), iconPath:'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14ZM20 20l-3.5-3.5', bg:'rgba(255,255,255,.08)', col:'#fff', border:'1px solid rgba(255,255,255,.2)'},
+        {label:V('Cercanas','Pròximes'), iconPath:'M12 21s7-5.6 7-11a7 7 0 0 0-14 0c0 5.4 7 11 7 11ZM12 10a1.5 1.5 0 1 0 0-.01', bg:'rgba(255,255,255,.08)', col:'#fff', border:'1px solid rgba(255,255,255,.2)'},
+        {label:V('Tendencia','Tendència'), iconPath:'M3 17l6-6 4 4 8-8M21 7v5M21 7h-5', bg:'rgba(255,255,255,.08)', col:'#fff', border:'1px solid rgba(255,255,255,.2)'}
+      ],
+      tendencias:[
+        {cat:V('Limpieza','Neteja'), barrio:V('Grau de Gandia','Grau de Gandia'), title:V('Más limpieza y contenedores en el Grau','Més neteja i contenidors al Grau'), autor:'Marta S.', apoyos:'842', coment:'63', estado:V('Recogiendo apoyos','Recollint suports'), estadoColor:'#0FA6B6', pct:84, umbral:V('842 / 1.000 · revisión local','842 / 1.000 · revisió local')},
+        {cat:V('Movilidad','Mobilitat'), barrio:V('Platja de Gandia','Platja de Gandia'), title:V('Carril bici seguro del centro a la playa','Carril bici segur del centre a la platja'), autor:'Vicent R.', apoyos:'1.204', coment:'128', estado:V('Estudio técnico','Estudi tècnic'), estadoColor:'#1563C4', pct:62, umbral:V('1.204 apoyos · en estudio','1.204 suports · en estudi')},
+        {cat:V('Vivienda','Habitatge'), barrio:V('Centre històric','Centre històric'), title:V('Vivienda asequible para jóvenes','Habitatge assequible per a jóvens'), autor:'Lucía M.', apoyos:'2.310', coment:'214', estado:V('Incluida en programa','Inclosa al programa'), estadoColor:'#2E9E5B', pct:100, umbral:V('Aceptada · en programa','Acceptada · al programa')}
+      ],
+      campana:{
+        tag:V('Campaña destacada','Campanya destacada'),
+        img:'FOTO · Litoral de Gandia',
+        title:V('Salvem el litoral de Gandia','Salvem el litoral de Gandia'),
+        text:V('Una costa cuidada, accesible y sostenible para vecinos y visitantes. Únete para exigir un plan real de protección del litoral.','Una costa cuidada, accessible i sostenible per a veïns i visitants. Uneix-te per exigir un pla real de protecció del litoral.'),
+        apoyos:'7.240', meta:'10.000', pct:72,
+        fecha:V('Hasta el 30 de septiembre de 2026','Fins al 30 de setembre de 2026'),
+        cta:V('Súmate a la campaña','Suma\u2019t a la campanya')
+      },
+      acciones:[
+        {title:V('Alumbrado reparado en la Plaça del Prado','Enllumenat reparat a la Plaça del Prado'), barrio:'Centre', fecha:V('Mar 2026','Març 2026'), estado:V('Solucionado','Solucionat'), estadoColor:'#2E9E5B', tintBg:'#E7F4EC', iconPath:'M20 6 9 17l-5-5'},
+        {title:V('Poda y limpieza de solares en Beniopa','Poda i neteja de solars a Beniopa'), barrio:'Beniopa', fecha:V('Feb 2026','Febr 2026'), estado:V('En ejecución','En execució'), estadoColor:'#1563C4', tintBg:'#E9F1FC', iconPath:'M12 20v-8M12 12l6-6M6 6l6 6'},
+        {title:V('Paso de peatones accesible en Roís de Corella','Pas de vianants accessible a Roís de Corella'), barrio:'Corea', fecha:V('Ene 2026','Gen 2026'), estado:V('Presentado','Presentat'), estadoColor:'#D98A0B', tintBg:'#FBF0DC', iconPath:'M7 3h7l4 4v14H7zM14 3v4h4'},
+        {title:V('Nuevo parque infantil en Marxuquera','Nou parc infantil a Marxuquera'), barrio:'Marxuquera', fecha:V('Dic 2025','Des 2025'), estado:V('En negociación','En negociació'), estadoColor:'#0FA6B6', tintBg:'#E4F5F7', iconPath:'M8 12a4 4 0 1 1 8 0M4 20a8 8 0 0 1 16 0'}
+      ],
+      compromisos:[
+        {value:'48', label:V('Cumplidos','Complits'), color:'#2E9E5B'},
+        {value:'31', label:V('En marcha','En marxa'), color:'#1563C4'},
+        {value:'19', label:V('Pendientes','Pendents'), color:'#D98A0B'},
+        {value:'6', label:V('Bloqueados','Bloquejats'), color:'#D24B4B'}
+      ],
+      compPct:62,
+      gente:[
+        {name:'Joan Server', role:V('Portavoz','Portaveu'), area:V('Urbanismo','Urbanisme'), barrio:'Grau'},
+        {name:'Amparo Císcar', role:V('Coordinadora','Coordinadora'), area:V('Participación','Participació'), barrio:'Beniopa'},
+        {name:'Rubén Escrivà', role:V('Tesorero','Tresorer'), area:V('Transparencia','Transparència'), barrio:'Centre'},
+        {name:'Neus Fuster', role:'Vocal', area:V('Juventud','Joventut'), barrio:'Corea'}
+      ],
+      newsFeat:{cat:V('Comunicado','Comunicat'), title:V('Presentamos 12 medidas para una Gandia más limpia y segura','Presentem 12 mesures per a una Gandia més neta i segura'), date:V('28 jun 2026','28 juny 2026')},
+      noticias:[
+        {cat:V('Noticia','Notícia'), title:V('Impulsamos una consulta vecinal sobre el tráfico del centro','Impulsem una consulta veïnal sobre el trànsit del centre'), date:V('24 jun 2026','24 juny 2026')},
+        {cat:V('Vídeo','Vídeo'), title:V('Recorrido por los solares abandonados de Beniopa','Recorregut pels solars abandonats de Beniopa'), date:V('19 jun 2026','19 juny 2026')},
+        {cat:V('Entrevista','Entrevista'), title:V('“La política local se hace en la calle, no en los despachos”','“La política local es fa al carrer, no als despatxos”'), date:V('12 jun 2026','12 juny 2026')}
+      ],
+      eventos:[
+        {day:'05', month:V('JUL','JUL'), title:V('Asamblea abierta de barrio','Assemblea oberta de barri'), place:V('Casa de Cultura','Casa de Cultura'), time:'19:00'},
+        {day:'12', month:V('JUL','JUL'), title:V('Ruta vecinal por el Grau','Ruta veïnal pel Grau'), place:V('Platja de Gandia','Platja de Gandia'), time:'10:30'},
+        {day:'20', month:V('JUL','JUL'), title:V('Taller: cómo presentar una propuesta','Taller: com presentar una proposta'), place:V('Sede Acción Civil','Seu Acció Civil'), time:'18:30'}
+      ],
+      transparencia:[
+        {label:V('Cuentas','Comptes'), iconPath:'M4 5h16v14H4zM4 9h16M8 13h5M8 16h8'},
+        {label:V('Presupuestos','Pressupostos'), iconPath:'M12 3v18M8 7h6a2.5 2.5 0 0 1 0 5H9a2.5 2.5 0 0 0 0 5h6'},
+        {label:V('Estatutos','Estatuts'), iconPath:'M7 3h7l4 4v14H7zM14 3v4h4M9 13h6M9 16h6'},
+        {label:V('Código ético','Codi ètic'), iconPath:'M12 3 5 6.5V11c0 4.2 3 7 7 8.3 4-1.3 7-4.1 7-8.3V6.5L12 3ZM9 11.5 11 13.5 15 9.5'},
+        {label:V('Donaciones','Donacions'), iconPath:'M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10Z'},
+        {label:V('Organigrama','Organigrama'), iconPath:'M9 4h6v4H9zM3 16h6v4H3zM15 16h6v4h-6zM12 8v4M6 16v-2h12v2'}
+      ],
+      t:{
+        participa:'Participa',
+        area:V('Área ciudadana','Àrea ciutadana'),
+        heroEyebrow:V('Formación ciudadana, local e independiente','Formació ciutadana, local i independent'),
+        heroTitle:V('Gandia se construye escuchando a su gente','Gandia es construeix escoltant la seua gent'),
+        heroText:V('Somos vecinos comprometidos con una política municipal independiente, cercana y centrada en soluciones reales.','Som veïns compromesos amb una política municipal independent, pròxima i centrada en solucions reals.'),
+        heroCta1:V('Haz una propuesta','Fes una proposta'),
+        heroCta2:V('Conoce Acción Civil','Coneix Acció Civil'),
+        heroImg:'FOTO · Platja i Grau de Gandia',
+        heroStatLabel:V('vecinas y vecinos participando','veïnes i veïns participant'),
+        prioTag:V('Propuestas prioritarias','Propostes prioritàries'),
+        prioTitle:V('Las áreas que más preocupan a Gandia','Les àrees que més preocupen a Gandia'),
+        verProp:V('Ver propuestas','Veure propostes'),
+        verPrograma:V('Ver todo el programa','Veure tot el programa'),
+        partTag:V('Participación ciudadana','Participació ciutadana'),
+        partTitle:V('¿Qué cambiarías de Gandia?','Què canviaries de Gandia?'),
+        partText:V('Cada propuesta se escucha, se debate y recibe respuesta. De la idea de un vecino a una acción real en la ciudad.','Cada proposta s\u2019escolta, es debat i rep resposta. De la idea d\u2019un veí a una acció real a la ciutat.'),
+        partCtaTitle:V('De la propuesta a la acción','De la proposta a l\u2019acció'),
+        partCtaText:V('Así funciona la participación','Així funciona la participació'),
+        trendTag:V('En tendencia','En tendència'),
+        trendTitle:V('Las propuestas que mueven a Gandia','Les propostes que mouen Gandia'),
+        explorarTodas:V('Explorar todas','Explorar-les totes'),
+        apoyar:V('Apoyar','Donar suport'),
+        apoyosLabel:V('apoyos','suports'),
+        material:V('Material de campaña','Material de campanya'),
+        accTag:V('Acción en Gandia','Acció a Gandia'),
+        accTitle:V('De la palabra a los hechos, barrio a barrio','De la paraula als fets, barri a barri'),
+        accText:V('Documentamos cada actuación: qué problema había, qué hicimos y cómo terminó.','Documentem cada actuació: quin problema hi havia, què vam fer i com va acabar.'),
+        mapaLabel:V('Mapa · actuaciones en Gandia','Mapa · actuacions a Gandia'),
+        verMapaCompleto:V('Ver el mapa completo','Veure el mapa complet'),
+        compTag:V('Compromisos y resultados','Compromisos i resultats'),
+        compTitle:V('Rendimos cuentas de lo que prometemos','Retem comptes del que prometem'),
+        compText:V('Cada compromiso tiene estado, fecha y pruebas. Sin letra pequeña.','Cada compromís té estat, data i proves. Sense lletra menuda.'),
+        cumplimiento:V('Cumplimiento general','Compliment general'),
+        genteTag:V('Nuestra gente','La nostra gent'),
+        genteTitle:V('Vecinas y vecinos que dan la cara','Veïnes i veïns que donen la cara'),
+        verEquipo:V('Ver todo el equipo','Veure tot l\u2019equip'),
+        newsTag:V('Actualidad','Actualitat'),
+        newsTitle:V('Lo último de Acción Civil','L\u2019últim d\u2019Acció Civil'),
+        verTodo:V('Ver todo','Veure-ho tot'),
+        eventsTitle:V('Próximos actos','Pròxims actes'),
+        verAgenda:V('Ver agenda','Veure agenda'),
+        ultimoVideo:V('Último vídeo','Últim vídeo'),
+        transpTag:V('Transparencia','Transparència'),
+        transpTitle:V('Todo a la vista, siempre','Tot a la vista, sempre'),
+        transpText:V('Cuentas, estatutos, donaciones y organización. Consulta cualquier documento cuando quieras.','Comptes, estatuts, donacions i organització. Consulta qualsevol document quan vulgues.'),
+        ctaTitle:V('Participa en la Gandia que quieres','Participa en la Gandia que vols'),
+        ctaText:V('Afíliate, propón, colabora o simplemente cuéntanos qué mejorarías de tu barrio.','Afilia\u2019t, proposa, col·labora o simplement conta\u2019ns què milloraries del teu barri.'),
+        ctaBtn1:V('Únete','Uneix-te'),
+        ctaBtn2:V('Envía una propuesta','Envia una proposta'),
+        ctaBtn3:V('Colabora','Col·labora'),
+        footerDesc:V('Formación política local, ciudadana e independiente de Gandia. Personas de Gandia trabajando por Gandia.','Formació política local, ciutadana i independent de Gandia. Persones de Gandia treballant per Gandia.'),
+        footerNavTitle:V('Explorar','Explorar'),
+        footerLegalTitle:V('Legal','Legal'),
+        newsletter:V('Recibe novedades','Rep novetats'),
+        newsletterText:V('Propuestas, campañas y actos en tu correo.','Propostes, campanyes i actes al teu correu.'),
+        newsletterPh:V('Tu correo electrónico','El teu correu electrònic'),
+        suscribir:V('Suscribirme','Subscriure\u2019m'),
+        footerRights:V('Todos los derechos reservados','Tots els drets reservats'),
+        footerMade:V('Hecho en Gandia, con la gente de Gandia','Fet a Gandia, amb la gent de Gandia')
+      }
+    };
+  }
+
+  renderVals(){
+    const s=this.state, c=this.content(s.lang), anim=s.anim, mounted=s.mounted;
+    const counters=[
+      {n:1240,label:s.lang==='es'?'Propuestas publicadas':'Propostes publicades'},
+      {n:38512,label:s.lang==='es'?'Apoyos ciudadanos':'Suports ciutadans'},
+      {n:9874,label:s.lang==='es'?'Comentarios':'Comentaris'},
+      {n:22,label:s.lang==='es'?'Barrios participantes':'Barris participants'},
+      {n:176,label:s.lang==='es'?'Respuestas oficiales':'Respostes oficials'}
+    ].map(x=>({value:this.fmt(x.n*anim), label:x.label}));
+
+    const tendencias=c.tendencias.map(t=>({...t, barW: mounted? t.pct+'%':'0%'}));
+    const campana={...c.campana, barW: mounted? c.campana.pct+'%':'0%'};
+
+    const isES=s.lang==='es', isVA=s.lang==='va', isDesk=s.device==='desktop', isMob=s.device==='mobile';
+    const tabBar=[
+      {label:isES?'Inicio':'Inici', href:'#top', col:'#1563C4', iconPath:'M4 11.5 12 5l8 6.5M6 10.5V19h4v-5h4v5h4v-8.5'},
+      {label:isES?'Propuestas':'Propostes', href:'#participacion', col:'#94A3B2', iconPath:'M7 3h10a2 2 0 0 1 2 2v16l-7-3-7 3V5a2 2 0 0 1 2-2ZM9 8h6M9 12h4'},
+      {label:isES?'Actualidad':'Actualitat', href:'#actualidad', col:'#94A3B2', iconPath:'M4 6h16M4 12h16M4 18h10'},
+      {label:isES?'Perfil':'Perfil', href:'#', col:'#94A3B2', iconPath:'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4.5 20a7.5 7.5 0 0 1 15 0'}
+    ];
+
+    return {
+      ...c,
+      counters, tendencias, campana, tabBar,
+      crearLabel:c.partActions[0].label, tabCrear:isES?'Crear':'Crear',
+      lang:s.lang, isES, isVA, isDesktop:isDesk, isMobile:isMob, menuOpen:s.menuOpen,
+      compPct:this.fmt(c.compPct*anim), compBarW: mounted? c.compPct+'%':'0%',
+      esBg:isES?'#fff':'transparent', esCol:isES?'#0A2A5E':'#5C6B7A',
+      vaBg:isVA?'#fff':'transparent', vaCol:isVA?'#0A2A5E':'#5C6B7A',
+      deskBtnBg:isDesk?'#0A2A5E':'transparent', deskBtnCol:isDesk?'#fff':'#5C6B7A',
+      mobBtnBg:isMob?'#0A2A5E':'transparent', mobBtnCol:isMob?'#fff':'#5C6B7A',
+      setES:()=>this.setState({lang:'es'}),
+      setVA:()=>this.setState({lang:'va'}),
+      setDesktop:()=>this.setState({device:'desktop'}),
+      setMobile:()=>this.setState({device:'mobile'}),
+      toggleMenu:()=>this.setState(x=>({menuOpen:!x.menuOpen})),
+      closeMenu:()=>this.setState({menuOpen:false})
+    };
+  }
+}
+</script>
+<script>
+(async () => {
+  if (!document.title || !document.title.trim()) document.title = "Acción Civil Gandia";
+  // Prepend so page-supplied @page / break rules (deck-stage's margin:0,
+  // author CSS) keep source-order precedence over the baseline.
+  const baseCss = document.createElement('style');
+  baseCss.textContent = "@media print {\n  figure, table { break-inside: avoid; }\n  *, *::before, *::after {\n    print-color-adjust: exact; -webkit-print-color-adjust: exact;\n    backdrop-filter: none !important; -webkit-backdrop-filter: none !important;\n    animation-delay: -99s !important; animation-duration: .001s !important;\n    animation-iteration-count: 1 !important; animation-fill-mode: both !important;\n    animation-play-state: running !important; transition-duration: 0s !important;\n  }\n}";
+  document.head.prepend(baseCss);
+  if (document.readyState === 'loading') {
+    await new Promise((r) => document.addEventListener('DOMContentLoaded', r, { once: true }));
+  }
+  let ds = document.querySelector('deck-stage');
+  // whenDefined never resolves when nothing registers the element, so only
+  // await it when a <deck-stage> tag exists (and race a timeout regardless).
+  if (ds && !customElements.get('deck-stage')) {
+    try {
+      await Promise.race([
+        customElements.whenDefined('deck-stage'),
+        new Promise((r) => setTimeout(r, 3000)),
+      ]);
+    } catch (e) {}
+    ds = document.querySelector('deck-stage');
+  }
+  // dc-runtime assigns window.DCLogic at init and mounts into #dc-root on
+  // DOMContentLoaded; settle on that subtree so React has rendered before
+  // print(). Non-DC pages fall through to weighing body.
+  const isDc = !ds && 'DCLogic' in window;
+  const settleRoot = ds || (isDc ? document.getElementById('dc-root') : null) || document.body;
+  if (settleRoot) {
+    // Weigh only content children — skip script/style/template so inline
+    // Babel/CSS doesn't register as stable "content" before the framework
+    // has mounted anything.
+    const MEDIA = 'img,svg,canvas,video,picture,iframe,embed,object';
+    const weigh = () => {
+      let text = 0, media = 0;
+      for (const c of settleRoot.children) {
+        const t = c.tagName;
+        if (t === 'SCRIPT' || t === 'STYLE' || t === 'TEMPLATE') continue;
+        text += (c.textContent || '').trim().length;
+        media += c.querySelectorAll(MEDIA).length + (c.matches(MEDIA) ? 1 : 0);
+      }
+      return text + media * 100;
+    };
+    // "Non-zero and stable" alone is not sufficient to mean rendered: generic
+    // body can carry a static shell while async main content is pending, and
+    // #dc-root can carry the root DC's static text while child refs are still
+    // .sc-placeholder boxes. Gate generic on readyState 'complete', and never
+    // accept stability while a dc-runtime placeholder is present.
+    const isGeneric = settleRoot === document.body;
+    const deadline = Date.now() + 15000;
+    let last = -1, stable = 0;
+    while (Date.now() < deadline) {
+      const n = weigh();
+      const ready =
+        (!isGeneric || document.readyState === 'complete') &&
+        !settleRoot.querySelector('.sc-placeholder');
+      if (n > 0 && n === last && ready) { if (++stable >= 2) break; } else { stable = 0; }
+      last = n;
+      await new Promise((r) => setTimeout(r, 250));
+    }
+  }
+  // Project support.js may predate runtime default-seeding; push via bridge.
+  if (isDc && window.__dcSetProps && window.__dcRootName) {
+    try {
+      const dpEl = document.querySelector('script[data-dc-script]');
+      const meta = JSON.parse((dpEl && dpEl.getAttribute('data-props')) || '{}');
+      const bag = {};
+      for (const k in meta)
+        if (k[0] !== '$' && meta[k] && meta[k].default !== undefined)
+          bag[k] = meta[k].default;
+      if (Object.keys(bag).length) {
+        window.__dcSetProps(window.__dcRootName(), bag);
+        await new Promise((r) => setTimeout(r, 50));
+      }
+    } catch (e) {}
+  }
+  // Reveal content gated on scroll or visibility before printing. Lazy <img>,
+  // IntersectionObserver fade-ins, and collapsed <details> don’t render while
+  // off-screen, so a long page would print with them blank or closed. Open
+  // every <details>, force native-lazy images eager, and scroll the document
+  // through its full height to trip lazy-load + IO; then wait (bounded) for the
+  // newly-triggered images. Inert for deck-stage (slides aren’t scroll-gated).
+  try {
+    for (const d of document.querySelectorAll('details')) d.open = true;
+    for (const img of document.querySelectorAll('img[loading="lazy"]'))
+      img.loading = 'eager';
+    const scroller = document.scrollingElement || document.documentElement;
+    const full = Math.max(scroller.scrollHeight, document.body.scrollHeight);
+    const step = window.innerHeight || 800;
+    for (let y = 0; y <= full; y += step) {
+      window.scrollTo(0, y);
+      await new Promise((r) => requestAnimationFrame(r));
+    }
+    window.scrollTo(0, 0);
+    await Promise.race([
+      Promise.all(
+        [...document.images].map((img) =>
+          img.complete
+            ? null
+            : new Promise((res) => {
+                img.addEventListener('load', res, { once: true });
+                img.addEventListener('error', res, { once: true });
+              })
+        )
+      ),
+      new Promise((r) => setTimeout(r, 4000)),
+    ]);
+  } catch (e) {}
+  try { await document.fonts.ready; } catch (e) {}
+  // Jump every animation to its end state so print() never captures a slide
+  // mid-entrance. Ordering matters: the 0s-transition style must be live
+  // BEFORE data-deck-active is set so attribute-keyed transitions don’t
+  // start a (now-0s) run from the pre-active base.
+  const st = document.createElement('style');
+  st.textContent = '*,*::before,*::after{animation-delay:-99s !important;animation-duration:.001s !important;animation-iteration-count:1 !important;animation-fill-mode:both !important;animation-play-state:running !important;transition-duration:0s !important}';
+  document.head.appendChild(st);
+  for (const d of document.querySelectorAll('deck-stage')) {
+    for (const c of d.children) {
+      const t = c.tagName;
+      if (t === 'SCRIPT' || t === 'STYLE' || t === 'TEMPLATE') continue;
+      c.setAttribute('data-deck-active', '');
+    }
+  }
+  // Re-append deck-stage’s @page last so no author @page can add a margin and
+  // spill each full-bleed slide onto two sheets. Backstop for old copies.
+  if (ds) {
+    let pg = document.getElementById('deck-stage-print-page');
+    if (!pg) {
+      pg = document.createElement('style');
+      pg.textContent = '@page{size:' + (+ds.getAttribute('width') || 1920) +
+        'px ' + (+ds.getAttribute('height') || 1080) + 'px;margin:0}';
+    }
+    document.body.appendChild(pg);
+  }
+  try {
+    const sweep = () => {
+      for (const a of document.getAnimations()) {
+        try { a.finish(); } catch (e) {
+          try { a.currentTime = (a.effect && a.effect.getComputedTiming().duration) || 0; a.pause(); } catch (e2) {}
+        }
+      }
+    };
+    sweep();
+    await new Promise((r) => requestAnimationFrame(r));
+    sweep();
+    await new Promise((r) => requestAnimationFrame(r));
+  } catch (e) {}
+  // Size the PDF page to the rendered design unless the file opted into
+  // standard paper via @page{size:letter|A4|…}. Decks own their own @page.
+  // Wrappers (body, …) lose padding+margin so the frame sits at (0,0); the
+  // frame itself loses only margin — its padding is INSIDE the measured
+  // rect and must stay, or content shifts and leaves a gap at bottom/right.
+  var __m = null;
+  try { __m = (() => {
+  var STAMP = true;
+  var docEl = document.documentElement;
+  var doc = { width: docEl.scrollWidth, height: docEl.scrollHeight };
+
+  var ds = document.querySelector('deck-stage');
+  if (ds) {
+    var dw = Number(ds.getAttribute('width')) || 1920;
+    var dh = Number(ds.getAttribute('height')) || 1080;
+    var n = typeof ds.length === 'number' ? ds.length : ds.children.length;
+    var idx = typeof ds.index === 'number' ? ds.index : 0;
+    var frames = [];
+    for (var i = 0; i < n; i++) frames.push({ left: 0, top: 0, width: dw, height: dh });
+    return { kind: 'deck', source: 'declared', doc: doc, frames: frames,
+      authored: frames.map(function(){return{width:true,height:true}}),
+      deck: { width: dw, height: dh, slideCount: n, index: idx },
+      signals: { paperPage: false, pxPage: false } };
+  }
+
+  // Declared kind: a doc-page tag names the kind outright, so no signal
+  // heuristics run (like the deck branch above, signals report false —
+  // they describe inferred classifications only). The tag alone is not
+  // trusted: the element must have upgraded (shadowRoot present), so a
+  // leftover tag whose script was deleted falls through to the heuristics
+  // that handle plain markup.
+  var stageSx = window.scrollX || 0, stageSy = window.scrollY || 0;
+  var dp = document.querySelector('doc-page');
+  if (dp && dp.shadowRoot) {
+    // Crop to the sheet, not the host — the desk around it is screen-only
+    // chrome that must not land in PNG exports.
+    var sheet = dp.shadowRoot.querySelector('.sheet');
+    var sr = (sheet || dp).getBoundingClientRect();
+    return { kind: 'paper-doc', source: 'declared', doc: doc,
+      frames: [{ left: sr.left + stageSx, top: sr.top + stageSy,
+        width: sr.width, height: sr.height }],
+      authored: [{ width: false, height: false }],
+      signals: { paperPage: false, pxPage: false } };
+  }
+  var paperPage = false, pxPage = false;
+  var eachRule = function (fn) {
+    for (var s = 0; s < document.styleSheets.length; s++) {
+      var rs; try { rs = document.styleSheets[s].cssRules; } catch (e) { continue; }
+      for (var r = 0; r < rs.length; r++) {
+        fn(rs[r]);
+        if (rs[r].cssRules) for (var n = 0; n < rs[r].cssRules.length; n++) fn(rs[r].cssRules[n]);
+      }
+    }
+  };
+  eachRule(function (r) {
+    if (r.type !== 6) return;
+    var m = /\bsize\s*:\s*([^;}]+)/i.exec(r.cssText || '');
+    if (!m) return;
+    if (/\b(letter|a[3-5]|legal|ledger)\b/i.test(m[1])) paperPage = true;
+    if (/\d+(?:\.\d+)?px\b/i.test(m[1])) pxPage = true;
+  });
+  var signals = { paperPage: paperPage, pxPage: pxPage };
+
+  var pxVal = function (v) {
+    var m = /^(\d+(?:\.\d+)?)px$/.exec(v || ''); return m ? +m[1] : 0;
+  };
+  var authoredPx = function (el, prop) {
+    if (pxVal(el.style[prop])) return true;
+    var attr = el.getAttribute(prop);
+    if (attr && /^\d+$/.test(attr)) return true;
+    var hit = false;
+    eachRule(function (r) {
+      if (hit || r.type !== 1 || !r.style) return;
+      try { if (el.matches(r.selectorText) && pxVal(r.style[prop])) hit = true; } catch (e) {}
+    });
+    return hit;
+  };
+
+  var el = document.body, rootPxW = false;
+  for (;;) {
+    var kids = [];
+    for (var c = 0; c < el.children.length; c++) {
+      var t = el.children[c].tagName;
+      if (t !== 'SCRIPT' && t !== 'STYLE' && t !== 'TEMPLATE') kids.push(el.children[c]);
+    }
+    if (kids.length !== 1 || !(kids[0] instanceof HTMLElement)) break;
+    if (STAMP) el.setAttribute('data-om-frame-wrap', '');
+    el = kids[0];
+    rootPxW = authoredPx(el, 'width');
+    if (rootPxW) break;
+  }
+  if (!rootPxW) rootPxW = authoredPx(el, 'width');
+
+  // @page{size:letter} alone is a flowing doc; with a px-width root it’s a
+  // fixed sheet pretending to be paper — fall through and size to render.
+  if (paperPage && !rootPxW) {
+    return { kind: 'paper-doc', source: 'inferred', doc: doc, signals: signals,
+      frames: [{ left: 0, top: 0, width: doc.width, height: doc.height }],
+      authored: [{ width: false, height: false }] };
+  }
+
+  var sx = window.scrollX || 0, sy = window.scrollY || 0;
+  var rectOf = function (e) {
+    var r = e.getBoundingClientRect();
+    var oy; try { oy = getComputedStyle(e).overflowY; } catch (err) {}
+    var h = oy === 'visible' ? Math.max(r.height, e.scrollHeight || 0) : r.height;
+    return { left: r.left + sx, top: r.top + sy, width: r.width, height: h };
+  };
+
+  // Multi-frame: ≥2 visible non-fixed children, each with authored px width
+  // AND height, all within ±2px of each other. Off unless the page opts in
+  // via data-om-multi-frame on the stop element — guards against card grids
+  // and pricing tables that match the geometry but aren’t separate canvases.
+  if (el.hasAttribute('data-om-multi-frame')) {
+    var cands = [];
+    for (var k = 0; k < el.children.length; k++) {
+      var ch = el.children[k];
+      var cs; try { cs = getComputedStyle(ch); } catch (e) { continue; }
+      if (cs.display === 'none' || cs.visibility === 'hidden' || cs.position === 'fixed') continue;
+      var rc = rectOf(ch);
+      if (rc.width < 2 || rc.height < 2) continue;
+      if (!authoredPx(ch, 'width') || !authoredPx(ch, 'height')) continue;
+      cands.push(rc);
+    }
+    if (cands.length >= 2) {
+      var w0 = cands[0].width, h0 = cands[0].height, ok = true;
+      for (var q = 1; q < cands.length; q++)
+        if (Math.abs(cands[q].width - w0) > 2 || Math.abs(cands[q].height - h0) > 2) ok = false;
+      if (ok) return { kind: 'multi-frame', source: 'inferred', doc: doc, signals: signals,
+        frames: cands, authored: cands.map(function(){return{width:true,height:true}}) };
+    }
+  }
+
+  if (STAMP) el.setAttribute('data-om-frame', '');
+  return { kind: 'single-canvas', source: 'inferred', doc: doc, signals: signals,
+    frames: [rectOf(el)],
+    authored: [{ width: rootPxW, height: authoredPx(el, 'height') }] };
+})(); } catch (e) {}
+  var frame = null;
+  if (__m && __m.kind === 'single-canvas') {
+    var f = __m.frames && __m.frames[0];
+    if (f && f.width >= 200 && f.height >= 200) {
+      frame = f;
+      var fst = document.createElement('style');
+      fst.textContent = '@media print{@page{size:' + Math.ceil(f.width) + 'px ' +
+        Math.ceil(f.height) + 'px;margin:0}' +
+        'html,body,[data-om-frame-wrap]{padding:0!important;margin:0!important;background:none!important}' +
+        '[data-om-frame]{margin:0!important}}';
+      document.body.appendChild(fst);
+    }
+  }
+  // Relax break-inside on oversized elements. An element taller than a
+  // printable page can’t honor break-inside: avoid — browsers either overflow
+  // it or push it whole to the next page, leaving a blank gap, then break it
+  // anyway at an arbitrary point. After the final layout (content revealed,
+  // animations jumped), find elements taller than a page that still compute
+  // break-inside: avoid and reset them to auto, so the browser breaks them at
+  // their children’s boundaries instead (children keep their own avoid). PAGE_PX
+  // is a conservative portrait estimate at 96 CSS px/in — Letter/A4 usable
+  // height minus our 0.5in margins — so only clearly-oversized elements are
+  // touched and under-page elements still stay whole. Skipped for decks (slides
+  // are sized to the page) and for fixed-size canvases (frame set, or an author
+  // px-based @page) — runs as before for flowing docs on letter/A4.
+  try {
+    if (!ds && !frame && !(__m && __m.signals && __m.signals.pxPage)) {
+      const PAGE_PX = 1024;
+      // Our print defaults add a real @page margin only when the source has
+      // no @page of its own; computed style can’t tell us (it reports screen
+      // media), so read the injected rule directly.
+      const defaults = document.querySelector('style[data-omelette-print-defaults]');
+      const pageInset = /@page\s*\{[^}]*margin/.test(defaults ? defaults.textContent || '' : '');
+      const SEL = 'section,article,figure,table,pre,blockquote,[class~="card" i],[class~="page" i],[class~="sheet" i]';
+      for (const el of document.body.querySelectorAll(SEL)) {
+        if (el instanceof HTMLElement && el.offsetHeight > PAGE_PX) {
+          el.setAttribute('data-om-oversized', '');
+          // Fake-paged docs simulate sheets with over-tall break-after:page
+          // boxes; honoring the break spills half-blank pages and ends a
+          // colored box mid-sheet. Flow them, and (only when we own the page
+          // inset) drop the redundant padding/background via the rule below.
+          const cs = getComputedStyle(el);
+          if (cs.breakAfter === 'page' || cs.pageBreakAfter === 'always') {
+            el.setAttribute('data-om-fakepage', '');
+          }
+        }
+      }
+      const ost = document.createElement('style');
+      ost.textContent = '@media print{' +
+        '[data-om-oversized]{break-inside:auto !important;page-break-inside:auto !important}' +
+        '[data-om-fakepage]{break-after:auto !important;page-break-after:auto !important}' +
+        (pageInset ? '[data-om-fakepage]{padding:0 !important;background:none !important}' : '') +
+        '}';
+      document.head.appendChild(ost);
+    }
+  } catch (e) {}
+  // macOS Preview renders Skia-PDF Luminosity soft-masks as opaque grey boxes;
+  // swap the CSS that triggers them for Preview-safe forms.
+  try {
+    for (const el of document.body.querySelectorAll('*')) {
+      const cs = getComputedStyle(el);
+
+      if (cs.boxShadow !== 'none' && cs.filter === 'none') {
+        const outs = [], kept = [];
+        for (const s of cs.boxShadow.split(/,(?![^(]*[)])/)) {
+          const t = s.trim();
+          const m = t.match(/^(rgba?[(][^)]+[)]) (-?[0-9.]+px) (-?[0-9.]+px) ([0-9.]+px) -?[0-9.]+px$/);
+          if (m && parseFloat(m[4]) > 0) outs.push('drop-shadow(' + m[2] + ' ' + m[3] + ' ' + m[4] + ' ' + m[1] + ')');
+          else kept.push(t);
+        }
+        if (outs.length) {
+          el.style.setProperty('filter', outs.join(' '), 'important');
+          el.style.setProperty('box-shadow', kept.join(', ') || 'none', 'important');
+        }
+      }
+
+      const mask = cs.maskImage && cs.maskImage !== 'none' ? cs.maskImage : cs.webkitMaskImage;
+      if (mask && mask !== 'none' && cs.filter === 'none') el.style.setProperty('filter', 'opacity(1)', 'important');
+    }
+  } catch (e) {}
+  setTimeout(() => { try { window.print(); } catch (e) {} }, 200);
+})();
+</script>
+
+
+</body></html>

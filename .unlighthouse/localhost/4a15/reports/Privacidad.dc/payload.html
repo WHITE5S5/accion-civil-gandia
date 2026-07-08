@@ -1,0 +1,369 @@
+<html lang="es" data-acg-mobile="0"><head><style>
+    .sc-placeholder{background:color-mix(in srgb,currentColor 8%,transparent);
+      border:1px solid color-mix(in srgb,currentColor 50%,transparent);
+      border-radius:2px;box-sizing:border-box;overflow:hidden}
+    @keyframes sc-shine{0%{background-position:100% 50%}100%{background-position:0% 50%}}
+    html.sc-dc-streaming .sc-placeholder,
+    html.sc-dc-streaming .sc-interp.sc-missing{position:relative;
+      background:color-mix(in srgb,currentColor 5%,transparent);
+      border-color:transparent}
+    html.sc-dc-streaming .sc-placeholder::before,
+    html.sc-dc-streaming .sc-interp.sc-missing::before{content:'';
+      position:absolute;inset:0;pointer-events:none;
+      background:linear-gradient(90deg,rgba(217,119,87,0) 25%,rgba(247,225,211,.95) 37%,rgba(217,119,87,0) 63%);
+      background-size:400% 100%;animation:sc-shine 1.4s ease infinite}
+    html.sc-dc-streaming .sc-placeholder:nth-child(n+9 of .sc-placeholder)::before,
+    html.sc-dc-streaming .sc-interp.sc-missing:nth-child(n+9 of .sc-interp.sc-missing)::before{animation:none;
+      background:color-mix(in srgb,currentColor 8%,transparent)}
+    .sc-placeholder-error{padding:4px 8px;font:11px/1.4 ui-monospace,monospace;
+      color:color-mix(in srgb,currentColor 70%,transparent);word-break:break-word}
+    .sc-interp.sc-missing{display:inline-block;width:2em;height:1em;overflow:hidden;
+      vertical-align:text-bottom;background:rgba(255,255,255,.3);border:1px solid rgba(0,0,0,.5);
+      border-radius:2px;box-sizing:border-box;color:transparent;
+      user-select:none}
+    .sc-interp.sc-unresolved{font-family:ui-monospace,monospace;font-size:.85em;
+      color:color-mix(in srgb,currentColor 50%,transparent);
+      background:color-mix(in srgb,currentColor 10%,transparent);border-radius:3px;
+      padding:0 3px}
+    .sc-host.sc-has-error{position:relative}
+    .sc-logic-error{position:absolute;top:8px;left:8px;z-index:2147483647;max-width:60ch;
+      padding:6px 10px;background:#b00020;color:#fff;font:12px/1.4 ui-monospace,monospace;
+      border-radius:4px;white-space:pre-wrap;pointer-events:none}
+    /* Mirrors PRINT_BASELINE_CSS in apps/web deck-stage-export.ts — keep both
+       in sync until dc-runtime regains a build step. */
+    @media print {
+      @page { margin: 0.5cm; }
+      figure, table { break-inside: avoid; }
+      #dc-root, #dc-root > .sc-host { height: auto; }
+      *, *::before, *::after {
+        print-color-adjust: exact; -webkit-print-color-adjust: exact;
+        backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+        animation-delay: -99s !important; animation-duration: .001s !important;
+        animation-iteration-count: 1 !important; animation-fill-mode: both !important;
+        animation-play-state: running !important; transition-duration: 0s !important;
+      }
+    }
+  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script><style>x-dc{display:none!important}</style><script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous"></script><script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
+<style>html,body{height:100%;margin:0}#dc-root,#dc-root>.sc-host{height:100%}</style><title data-dc-tpl="1">Política de privacidad — Acción Civil Gandia</title><meta name="description" content="Política de privacidad de Acción Civil Gandia. Tratamiento de datos personales, derechos ARCO y base legal." data-dc-tpl="2"><meta name="robots" content="index, follow" data-dc-tpl="3"><link rel="canonical" href="https://accioncivilgandia.org/privacidad" data-dc-tpl="4"><link rel="alternate" hreflang="ca" href="https://accioncivilgandia.org/privacidad?lang=va" data-dc-tpl="6"><meta property="og:type" content="website" data-dc-tpl="8"><meta property="og:title" content="Política de privacidad — Acción Civil Gandia" data-dc-tpl="9"><meta property="og:description" content="Política de privacidad y protección de datos de Acción Civil Gandia conforme al RGPD." data-dc-tpl="10"><link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png" data-dc-tpl="11"><link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" data-dc-tpl="12"><link rel="preconnect" href="https://fonts.googleapis.com" data-dc-tpl="13"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" data-dc-tpl="14"><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Public+Sans:ital,wght@0,400..700;1,400&amp;display=swap" rel="stylesheet" data-dc-tpl="15"><style data-dc-tpl="16">
+  *{box-sizing:border-box}
+  body{margin:0}
+  ::selection{background:#F6BE18;color:#0A2A5E}
+  .acg-btn{transition:transform .2s,filter .2s,background .2s}
+  .acg-btn:hover{filter:brightness(1.04)}
+  .acg-btn:active{transform:translateY(1px)}
+  .acg-skip{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:9999}
+  .acg-skip:focus{position:fixed;top:12px;left:12px;width:auto;height:auto;padding:12px 20px;background:#1563C4;color:#fff;font:700 14px 'Public Sans';border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.25);text-decoration:none;outline:none}
+  :focus-visible{outline:3px solid #1563C4;outline-offset:2px;border-radius:4px}
+  .legal-section{margin-bottom:32px}
+  .legal-section h2{font:800 22px/1.2 'Bricolage Grotesque';color:#0A2A5E;margin:0 0 12px}
+  .legal-section p,.legal-section li{font-size:15px;color:#42525F;line-height:1.7}
+  .legal-section ul{padding-left:20px;margin:8px 0}
+  .acg-nav-item{position:relative}
+  .acg-nav-item:hover .acg-dd{opacity:1;visibility:visible;transform:translateY(0)}
+  .acg-dd{position:absolute;top:100%;left:-12px;margin-top:8px;background:#fff;border:1px solid #E9EEF4;border-radius:14px;padding:8px 0;min-width:200px;box-shadow:0 12px 32px rgba(10,42,94,.12);opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .2s,visibility .2s,transform .2s;z-index:900}
+  .acg-dd-link{display:block;padding:9px 18px;text-decoration:none;color:#33414F;font:500 13.5px 'Public Sans';white-space:nowrap;transition:background .15s,color .15s}
+  .acg-dd-link:hover{background:#F0F4F9;color:#0A2A5E}
+  .acg-bn{display:flex;flex-direction:column;align-items:center;text-decoration:none;color:#5C6B7A;font:600 10px 'Public Sans';gap:2px;padding:6px 2px;flex:1;text-align:center;border:none;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .acg-sheet{position:fixed;inset:0;z-index:850;background:rgba(7,30,69,.5);backdrop-filter:blur(4px)}
+  .acg-sheet-body{position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:24px 24px 0 0;padding:12px 20px max(20px,env(safe-area-inset-bottom));max-height:75vh;overflow-y:auto;box-shadow:0 -12px 40px rgba(10,42,94,.18)}
+  html[data-acg-mobile='1'] body{padding-bottom:68px}
+  html[data-acg-mobile='1'] [data-om-raster]{display:none!important}
+</style><script type="application/ld+json" data-dc-tpl="17">
+{"@context":"https://schema.org","@type":"PoliticalParty","name":"Acción Civil Gandia","alternateName":"Acció Civil Gandia","url":"https://accioncivilgandia.org","description":"Partido político local, ciudadano e independiente de Gandia, Valencia. Formación municipalista centrada en los problemas reales de los vecinos de Gandia, el Grao de Gandia y la Playa de Gandia.","foundingDate":"2022","address":{"@type":"PostalAddress","streetAddress":"Avda. República Argentina 42, entresuelo","addressLocality":"Gandia","addressRegion":"Valencia","postalCode":"46702","addressCountry":"ES"},"areaServed":{"@type":"City","name":"Gandia","containedInPlace":{"@type":"AdministrativeArea","name":"Valencia, Comunitat Valenciana, España"}},"knowsLanguage":["es","ca"],"keywords":"partido político Gandia, elecciones municipales Gandia, propuestas Gandia, participación ciudadana Gandia, Grao de Gandia, Playa de Gandia, seguridad Gandia, policía proximidad Gandia, pequeño comercio Gandia, municipalista Gandia"}
+</script></head>
+<body>
+<div id="dc-root"><div class="sc-host" data-sc-name="Privacidad"><div data-dc-tpl="18" style="font-family: &quot;Public Sans&quot;, system-ui, -apple-system, sans-serif; color: rgb(23, 35, 47); background: rgb(244, 247, 251); -webkit-font-smoothing: antialiased; line-height: 1.55; min-height: 100vh;">
+  <a data-dc-tpl="19" href="#main-content" class="acg-skip">Saltar al contenido</a>
+
+  <div data-dc-tpl="20" style="max-width: 100%; margin: 0px auto;">
+
+    <header data-dc-tpl="21" style="position: sticky; top: 0px; z-index: 800; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(14px); border-bottom: 1px solid rgb(233, 238, 244);">
+      <div data-dc-tpl="22" style="padding: 0px 40px; height: 70px; display: flex; align-items: center; gap: 24px;">
+        <a data-dc-tpl="23" href="Acción Civil Gandia.dc.html" style="display: flex; align-items: center; text-decoration: none; flex-shrink: 0;">
+          <img data-dc-tpl="24" src="assets/logo-icon.webp" alt="Acción Civil Gandia" width="512" height="467" style="height: 42px; width: 42px; object-fit: contain;">
+        </a>
+        <div data-dc-tpl="25" style="margin-left: auto; display: flex; align-items: center; gap: 10px;">
+          <div data-dc-tpl="26" style="display: flex; background: rgb(240, 244, 249); border-radius: 10px; padding: 3px;">
+            <button data-dc-tpl="27" class="acg-btn" style="border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; cursor: pointer; font: 700 12.5px &quot;Public Sans&quot;; padding: 6px 11px; border-radius: 7px; background: rgb(10, 42, 94); color: rgb(255, 255, 255);">ES</button>
+            <button data-dc-tpl="28" class="acg-btn" style="border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; cursor: pointer; font: 700 12.5px &quot;Public Sans&quot;; padding: 6px 11px; border-radius: 7px; background: transparent; color: rgb(92, 107, 122);">VA</button>
+          </div>
+          <a data-dc-tpl="29" href="Acción Civil Gandia.dc.html" class="acg-btn" style="text-decoration: none; background: rgb(255, 255, 255); border: 1px solid rgb(228, 235, 242); color: rgb(10, 42, 94); font: 700 14px &quot;Public Sans&quot;; padding: 10px 16px; border-radius: 11px; display: inline-flex; align-items: center; gap: 8px;">
+            <svg data-dc-tpl="30" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path data-dc-tpl="31" d="M15 6l-6 6 6 6"></path></svg><span class="sc-interp">Volver</span>
+          </a>
+        </div>
+      </div>
+    </header><div data-dc-tpl="32" style="padding: 0px 40px; background: rgb(255, 255, 255); border-bottom: 1px solid rgb(238, 242, 247);">
+      <div data-dc-tpl="33" style="display: flex; align-items: center; gap: 8px; height: 44px; font-size: 13.5px; color: rgb(92, 107, 122);">
+        <a data-dc-tpl="34" href="Acción Civil Gandia.dc.html" style="text-decoration: none; color: rgb(92, 107, 122);"><span class="sc-interp">Inicio</span></a>
+        <span data-dc-tpl="35" style="color: rgb(184, 196, 210);">/</span>
+        <span data-dc-tpl="36" style="color: rgb(10, 42, 94); font-weight: 600;"><span class="sc-interp">Política de privacidad</span></span>
+      </div>
+    </div>
+
+    <main data-dc-tpl="37" id="main-content">
+    <section data-dc-tpl="38" style="padding: 48px 40px; background: rgb(255, 255, 255);">
+      <div data-dc-tpl="39" style="max-width: 740px;">
+        <h1 data-dc-tpl="40" style="font: 800 36px / 1.1 &quot;Bricolage Grotesque&quot;; color: rgb(10, 42, 94); margin: 0px 0px 8px;"><span class="sc-interp">Política de privacidad</span></h1>
+        <p data-dc-tpl="41" style="font-size: 14px; color: rgb(148, 163, 178); margin: 0px 0px 36px;"><span class="sc-interp">Última actualización: julio 2026</span></p>
+
+        <div data-dc-tpl="42" class="legal-section">
+          <h2 data-dc-tpl="43"><span class="sc-interp">1. Responsable del tratamiento</span></h2>
+          <p data-dc-tpl="44"><span class="sc-interp">El responsable del tratamiento de los datos personales es Acción Civil Gandia, con domicilio en Gandia, Valencia, España. Puede contactarnos en info@accioncivilgandia.org.</span></p>
+        </div>
+
+        <div data-dc-tpl="45" class="legal-section">
+          <h2 data-dc-tpl="46"><span class="sc-interp">2. Datos que recopilamos</span></h2>
+          <p data-dc-tpl="47"><span class="sc-interp">Este sitio web utiliza únicamente cookies funcionales (idioma seleccionado y consentimiento de cookies) almacenadas en el navegador del usuario mediante localStorage. No recopilamos datos personales identificativos, no utilizamos cookies de terceros ni herramientas de analítica.</span></p>
+        </div>
+
+        <div data-dc-tpl="48" class="legal-section">
+          <h2 data-dc-tpl="49"><span class="sc-interp">3. Finalidad y base legal</span></h2>
+          <p data-dc-tpl="50"><span class="sc-interp">Los datos funcionales almacenados (preferencia de idioma y estado de consentimiento) tienen como única finalidad mejorar la experiencia de navegación. La base legal es el interés legítimo del titular del sitio web (art. 6.1.f RGPD).</span></p>
+        </div>
+
+        <div data-dc-tpl="51" class="legal-section">
+          <h2 data-dc-tpl="52"><span class="sc-interp">4. Derechos del usuario</span></h2>
+          <p data-dc-tpl="53"><span class="sc-interp">De conformidad con el RGPD y la LOPDGDD, usted tiene derecho a:</span></p>
+          <ul data-dc-tpl="54">
+            <li data-dc-tpl="55"><span class="sc-interp">Acceder a sus datos personales</span></li>
+            <li data-dc-tpl="56"><span class="sc-interp">Rectificar datos inexactos</span></li>
+            <li data-dc-tpl="57"><span class="sc-interp">Solicitar la supresión de sus datos</span></li>
+            <li data-dc-tpl="58"><span class="sc-interp">Oponerse al tratamiento</span></li>
+            <li data-dc-tpl="59"><span class="sc-interp">Solicitar la portabilidad de los datos</span></li>
+          </ul>
+          <p data-dc-tpl="60"><span class="sc-interp">Para ejercer estos derechos, puede escribir a info@accioncivilgandia.org. Asimismo, tiene derecho a presentar una reclamación ante la Agencia Española de Protección de Datos (www.aepd.es).</span></p>
+        </div>
+
+        <div data-dc-tpl="61" class="legal-section">
+          <h2 data-dc-tpl="62"><span class="sc-interp">5. Conservación de datos</span></h2>
+          <p data-dc-tpl="63"><span class="sc-interp">Los datos funcionales almacenados en localStorage permanecen en el navegador del usuario hasta que este los elimine manualmente o borre los datos de navegación. No se transfieren a ningún servidor.</span></p>
+        </div>
+
+        <div data-dc-tpl="64" class="legal-section">
+          <h2 data-dc-tpl="65"><span class="sc-interp">6. Transferencias internacionales</span></h2>
+          <p data-dc-tpl="66"><span class="sc-interp">No realizamos transferencias internacionales de datos personales. El sitio web utiliza Google Fonts, servicio que puede implicar conexiones a servidores de Google; consulte la política de privacidad de Google para más información.</span></p>
+        </div>
+      </div>
+    </section>
+    </main>
+
+  </div>
+
+    
+    <footer data-dc-tpl="67" id="footer" role="contentinfo" style="background: rgb(7, 30, 69); color: rgb(183, 199, 221); padding: 64px 0px 30px;">
+      <div data-dc-tpl="68" style="max-width: 1240px; margin: 0px auto; padding: 0px 40px;">
+        <div data-dc-tpl="69" style="display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.4fr; gap: 44px; padding-bottom: 44px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+          <div data-dc-tpl="70">
+            <div data-dc-tpl="71" style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+              <div data-dc-tpl="72" style="background: rgb(255, 255, 255); border-radius: 50%; padding: 8px; display: inline-flex; align-items: center; justify-content: center; box-shadow: rgba(0, 0, 0, 0.12) 0px 4px 16px;"><img data-dc-tpl="73" loading="lazy" src="assets/logo-icon.webp" alt="Acción Civil Gandia" width="512" height="467" style="height: 44px; width: 44px; object-fit: contain;"></div>
+            </div>
+            <p data-dc-tpl="74" style="font-size: 14.5px; color: rgb(143, 166, 196); max-width: 320px; margin: 0px 0px 18px;"><span class="sc-interp">Formación política local, ciudadana e independiente de Gandia. Personas de Gandia trabajando por Gandia.</span></p>
+            <div data-dc-tpl="75" style="display: flex; gap: 10px;">
+              
+                <a data-dc-tpl="77" href="#" style="width: 38px; height: 38px; border-radius: 10px; background: rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: center; color: rgb(183, 199, 221); text-decoration: none;">
+                  <svg data-dc-tpl="78" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="79" d="M18 2h-3a4 4 0 0 0-4 4v3H8v4h3v9h4v-9h3l1-4h-4V6a1 1 0 0 1 1-1h3z"></path></svg>
+                </a>
+              
+                <a data-dc-tpl="77" href="#" style="width: 38px; height: 38px; border-radius: 10px; background: rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: center; color: rgb(183, 199, 221); text-decoration: none;">
+                  <svg data-dc-tpl="78" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="79" d="M23 4.5a8 8 0 0 1-2.3.6A4 4 0 0 0 22.4 3a8 8 0 0 1-2.5 1A4 4 0 0 0 13 7.5a11 11 0 0 1-8-4 4 4 0 0 0 1.2 5.3A4 4 0 0 1 4.5 8v.1a4 4 0 0 0 3.2 4 4 4 0 0 1-1.8.1 4 4 0 0 0 3.7 2.8A8 8 0 0 1 3 16.6 11 11 0 0 0 20 7.2a8 8 0 0 0 3-2.7z"></path></svg>
+                </a>
+              
+                <a data-dc-tpl="77" href="#" style="width: 38px; height: 38px; border-radius: 10px; background: rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: center; color: rgb(183, 199, 221); text-decoration: none;">
+                  <svg data-dc-tpl="78" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="79" d="M16 3H8a5 5 0 0 0-5 5v8a5 5 0 0 0 5 5h8a5 5 0 0 0 5-5V8a5 5 0 0 0-5-5zM12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8zM17.5 6.5h.01"></path></svg>
+                </a>
+              
+                <a data-dc-tpl="77" href="#" style="width: 38px; height: 38px; border-radius: 10px; background: rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: center; color: rgb(183, 199, 221); text-decoration: none;">
+                  <svg data-dc-tpl="78" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path data-dc-tpl="79" d="M21 6.5a3 3 0 0 0-2-2C17 4 12 4 12 4s-5 0-7 .5a3 3 0 0 0-2 2A31 31 0 0 0 2.5 12 31 31 0 0 0 3 17.5a3 3 0 0 0 2 2c2 .5 7 .5 7 .5s5 0 7-.5a3 3 0 0 0 2-2 31 31 0 0 0 .5-5.5 31 31 0 0 0-.5-5.5zM10 15V9l5 3z"></path></svg>
+                </a>
+              
+            </div>
+          </div>
+          <div data-dc-tpl="80">
+            <div data-dc-tpl="81" style="font: 700 13px &quot;Public Sans&quot;; letter-spacing: 0.1em; text-transform: uppercase; color: rgb(255, 255, 255); margin-bottom: 16px;"><span class="sc-interp">Explorar</span></div>
+            <div data-dc-tpl="82" style="display: flex; flex-direction: column; gap: 11px;">
+              
+                <a data-dc-tpl="84" href="Propuestas.dc.html" style="text-decoration: none; color: rgb(143, 166, 196); font-size: 14.5px;"><span class="sc-interp">Propuestas</span></a>
+              
+                <a data-dc-tpl="84" href="Participacion.dc.html" style="text-decoration: none; color: rgb(143, 166, 196); font-size: 14.5px;"><span class="sc-interp">Participación ciudadana</span></a>
+              
+                <a data-dc-tpl="84" href="Accion.dc.html" style="text-decoration: none; color: rgb(143, 166, 196); font-size: 14.5px;"><span class="sc-interp">Acción en Gandia</span></a>
+              
+                <a data-dc-tpl="84" href="Campanas.dc.html" style="text-decoration: none; color: rgb(143, 166, 196); font-size: 14.5px;"><span class="sc-interp">Campañas</span></a>
+              
+                <a data-dc-tpl="84" href="Transparencia.dc.html" style="text-decoration: none; color: rgb(143, 166, 196); font-size: 14.5px;"><span class="sc-interp">Transparencia</span></a>
+              
+            </div>
+          </div>
+          <div data-dc-tpl="85">
+            <div data-dc-tpl="86" style="font: 700 13px &quot;Public Sans&quot;; letter-spacing: 0.1em; text-transform: uppercase; color: rgb(255, 255, 255); margin-bottom: 16px;"><span class="sc-interp">Legal</span></div>
+            <div data-dc-tpl="87" style="display: flex; flex-direction: column; gap: 11px;">
+              
+                <a data-dc-tpl="89" href="AvisoLegal.dc.html" style="text-decoration: none; color: rgb(143, 166, 196); font-size: 14.5px;"><span class="sc-interp">Aviso legal</span></a>
+              
+                <a data-dc-tpl="89" href="Privacidad.dc.html" style="text-decoration: none; color: rgb(143, 166, 196); font-size: 14.5px;"><span class="sc-interp">Política de privacidad</span></a>
+              
+                <a data-dc-tpl="89" href="Cookies.dc.html" style="text-decoration: none; color: rgb(143, 166, 196); font-size: 14.5px;"><span class="sc-interp">Cookies</span></a>
+              
+                <a data-dc-tpl="89" href="Accesibilidad.dc.html" style="text-decoration: none; color: rgb(143, 166, 196); font-size: 14.5px;"><span class="sc-interp">Accesibilidad</span></a>
+              
+                <a data-dc-tpl="89" href="mailto:info@accioncivilgandia.org" style="text-decoration: none; color: rgb(143, 166, 196); font-size: 14.5px;"><span class="sc-interp">Canal de denuncias</span></a>
+              
+            </div>
+          </div>
+          <div data-dc-tpl="90">
+            <div data-dc-tpl="91" style="font: 700 13px &quot;Public Sans&quot;; letter-spacing: 0.1em; text-transform: uppercase; color: rgb(255, 255, 255); margin-bottom: 16px;"><span class="sc-interp">Recibe novedades</span></div>
+            <p data-dc-tpl="92" style="font-size: 14px; color: rgb(143, 166, 196); margin: 0px 0px 14px;"><span class="sc-interp">Propuestas, campañas y actos en tu correo.</span></p>
+            <div data-dc-tpl="93" style="display: flex; gap: 8px; margin-bottom: 18px;">
+              <input data-dc-tpl="94" placeholder="Tu correo electrónico" style="flex: 1 1 0%; min-width: 0px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 11px; padding: 12px 14px; color: rgb(255, 255, 255); font: 400 14px &quot;Public Sans&quot;; outline: none;">
+              <button data-dc-tpl="95" class="acg-btn" style="border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; cursor: pointer; background: rgb(246, 190, 24); color: rgb(10, 42, 94); font: 700 14px &quot;Public Sans&quot;; padding: 0px 18px; border-radius: 11px;"><span class="sc-interp">Enviar</span></button>
+            </div>
+            <div data-dc-tpl="96" style="display: flex; align-items: center; gap: 8px; color: rgb(143, 166, 196); font-size: 13.5px;">
+              <svg data-dc-tpl="97" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle data-dc-tpl="98" cx="12" cy="12" r="9"></circle><path data-dc-tpl="99" d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18M12 3c-2.5 2.6-2.5 15.4 0 18"></path></svg>
+              Castellano · Valencià
+            </div>
+          </div>
+        </div>
+        <div data-dc-tpl="100" style="display: flex; align-items: center; justify-content: space-between; padding-top: 24px; flex-wrap: wrap; gap: 12px;">
+          <span data-dc-tpl="101" style="font-size: 13px; color: rgb(110, 134, 166);">© 2026 Acción Civil Gandia · <span class="sc-interp">Todos los derechos reservados</span></span>
+          <span data-dc-tpl="102" style="font-size: 13px; color: rgb(110, 134, 166);"><span class="sc-interp">Hecho en Gandia, con la gente de Gandia</span></span>
+        </div>
+      </div>
+    </footer>
+
+
+    
+    <div data-dc-tpl="103" class="acg-seo-keywords" aria-hidden="true" style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border: 0px;">
+      <p data-dc-tpl="104">Acción Civil Gandia - partido político local municipalista Gandia Valencia. Propuestas políticas Gandia 2027. Elecciones municipales Gandia. Vecinos de Gandia, Grao de Gandia, Playa de Gandia, Benipeixcar, Beniopa, Santa Anna, Corea, Marchuquera. Seguridad ciudadana Gandia, policía de proximidad, cámaras de seguridad, antiokupación. Pequeño comercio Gandia, empleo juvenil, cultura accesible, desestacionalización playa, transporte público Gandia, limpieza urbana, participación ciudadana. Partido político independiente Gandia. Formación política local Gandia.</p>
+    </div>
+
+  
+  <nav data-dc-tpl="105" style="display: none; position: fixed; bottom: 0px; left: 0px; right: 0px; z-index: 800; background: rgb(255, 255, 255); border-top: 1px solid rgb(233, 238, 244); padding: 6px 0 max(8px,env(safe-area-inset-bottom)); justify-content: space-around; align-items: stretch; box-shadow: rgba(10, 42, 94, 0.08) 0px -4px 20px; max-width: 100%; margin: 0px auto;">
+    <a data-dc-tpl="106" href="Acción Civil Gandia.dc.html" class="acg-bn">
+      <svg data-dc-tpl="107" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path data-dc-tpl="108" d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+      <span class="sc-interp">Inicio</span>
+    </a>
+    <a data-dc-tpl="109" href="Propuestas.dc.html" class="acg-bn">
+      <svg data-dc-tpl="110" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path data-dc-tpl="111" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path data-dc-tpl="112" d="M14 2v6h6M16 13H8M16 17H8M10 9H8"></path></svg>
+      <span class="sc-interp">Programa</span>
+    </a>
+    <a data-dc-tpl="113" href="Participacion.dc.html" class="acg-bn" style="position: relative;">
+      <div data-dc-tpl="114" style="width: 46px; height: 46px; border-radius: 50%; background: rgb(10, 42, 94); display: flex; align-items: center; justify-content: center; margin: -16px 0px 0px; box-shadow: rgba(10, 42, 94, 0.3) 0px 4px 14px;">
+        <svg data-dc-tpl="115" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path data-dc-tpl="116" d="M12 5v14M5 12h14"></path></svg>
+      </div>
+      <span class="sc-interp">Participa</span>
+    </a>
+    <a data-dc-tpl="117" href="Actualidad.dc.html" class="acg-bn">
+      <svg data-dc-tpl="118" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path data-dc-tpl="119" d="M19 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12l4 4V6a2 2 0 0 0-2-2z"></path></svg>
+      <span class="sc-interp">Noticias</span>
+    </a>
+    <button data-dc-tpl="120" class="acg-bn">
+      <svg data-dc-tpl="121" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect data-dc-tpl="122" x="3" y="3" width="7" height="7" rx="1.5"></rect><rect data-dc-tpl="123" x="14" y="3" width="7" height="7" rx="1.5"></rect><rect data-dc-tpl="124" x="3" y="14" width="7" height="7" rx="1.5"></rect><rect data-dc-tpl="125" x="14" y="14" width="7" height="7" rx="1.5"></rect></svg>
+      <span class="sc-interp">Más</span>
+    </button>
+  </nav>
+
+  
+  </div></div></div>
+<script type="text/x-dc" data-dc-script="">
+class Component extends DCLogic {
+  state = { lang:this.initLang(), device:null, viewportW:this.vw(), menuOpen:false };
+  initLang(){ try{ return localStorage.getItem('acg_lang')||'es'; }catch(e){ return 'es'; } }
+  vw(){ try{ return Math.max(document.documentElement?document.documentElement.clientWidth:0, window.innerWidth||0, 320); }catch(e){ return 1280; } }
+  syncVp(){ const w=this.vw(); try{ document.documentElement.setAttribute('data-acg-mobile',w<=900?'1':'0'); }catch(e){} this.setState({viewportW:w}); }
+  componentDidMount(){ this._onR=()=>this.syncVp(); this._onR(); try{ window.addEventListener('resize',this._onR,{passive:true}); }catch(e){ window.addEventListener('resize',this._onR); } }
+  componentWillUnmount(){ if(this._onR) window.removeEventListener('resize',this._onR); }
+
+  renderVals(){
+    const s=this.state, es=s.lang==='es', V=(a,b)=>es?a:b, viewportW=s.viewportW||1280, forcedMob=s.device==='mobile', isMob=forcedMob||(!s.device&&viewportW<=900);
+    return {
+      lang:s.lang,
+      frameMax:forcedMob?'430px':'100%',
+      frameStyle:forcedMob?'box-shadow:0 30px 80px rgba(10,42,94,.28);border-radius:34px;overflow:hidden;margin:24px auto;border:10px solid #0B1F3F;background:#F4F7FB':'',
+      pagePad:isMob?'0 16px':'0 40px',
+      secPad:isMob?'30px 16px':'48px 40px',
+      h1Sz:isMob?'26px':'36px',
+      esBg:es?'#0A2A5E':'transparent', esCol:es?'#fff':'#5C6B7A',
+      vaBg:!es?'#0A2A5E':'transparent', vaCol:!es?'#fff':'#5C6B7A',
+      setES:()=>{localStorage.setItem('acg_lang','es');this.setState({lang:'es'})},
+      setVA:()=>{localStorage.setItem('acg_lang','va');this.setState({lang:'va'})},
+      avisoLegal:V('Aviso legal','Avís legal'),
+      t:{
+        volver:V('Volver','Tornar'),
+        inicio:V('Inicio','Inici'),
+        bnInicio:V('Inicio','Inici'),
+        bnPrograma:V('Programa','Programa'),
+        bnParticipa:V('Participa','Participa'),
+        bnNoticias:V('Noticias','Not\u00edcies'),
+        bnMas:V('M\u00e1s','M\u00e9s'),
+        pageTitle:V('Política de privacidad','Política de privacitat'),
+        lastUpdate:V('Última actualización: julio 2026','Última actualització: juliol 2026'),
+        s1Title:V('1. Responsable del tratamiento','1. Responsable del tractament'),
+        s1Text:V('El responsable del tratamiento de los datos personales es Acción Civil Gandia, con domicilio en Gandia, Valencia, España. Puede contactarnos en info@accioncivilgandia.org.','El responsable del tractament de les dades personals és Acció Civil Gandia, amb domicili a Gandia, València, Espanya. Pot contactar-nos a info@accioncivilgandia.org.'),
+        s2Title:V('2. Datos que recopilamos','2. Dades que recopilem'),
+        s2Text:V('Este sitio web utiliza únicamente cookies funcionales (idioma seleccionado y consentimiento de cookies) almacenadas en el navegador del usuario mediante localStorage. No recopilamos datos personales identificativos, no utilizamos cookies de terceros ni herramientas de analítica.','Aquest lloc web utilitza únicament cookies funcionals (idioma seleccionat i consentiment de cookies) emmagatzemades al navegador de l\x27usuari mitjançant localStorage. No recopilem dades personals identificatives, no utilitzem cookies de tercers ni eines d\x27analítica.'),
+        s3Title:V('3. Finalidad y base legal','3. Finalitat i base legal'),
+        s3Text:V('Los datos funcionales almacenados (preferencia de idioma y estado de consentimiento) tienen como única finalidad mejorar la experiencia de navegación. La base legal es el interés legítimo del titular del sitio web (art. 6.1.f RGPD).','Les dades funcionals emmagatzemades (preferència d\x27idioma i estat de consentiment) tenen com a única finalitat millorar l\x27experiència de navegació. La base legal és l\x27interès legítim del titular del lloc web (art. 6.1.f RGPD).'),
+        s4Title:V('4. Derechos del usuario','4. Drets de l\x27usuari'),
+        s4Text:V('De conformidad con el RGPD y la LOPDGDD, usted tiene derecho a:','De conformitat amb el RGPD i la LOPDGDD, vosté té dret a:'),
+        s4l1:V('Acceder a sus datos personales','Accedir a les seues dades personals'),
+        s4l2:V('Rectificar datos inexactos','Rectificar dades inexactes'),
+        s4l3:V('Solicitar la supresión de sus datos','Sol·licitar la supressió de les seues dades'),
+        s4l4:V('Oponerse al tratamiento','Oposar-se al tractament'),
+        s4l5:V('Solicitar la portabilidad de los datos','Sol·licitar la portabilitat de les dades'),
+        s4Text2:V('Para ejercer estos derechos, puede escribir a info@accioncivilgandia.org. Asimismo, tiene derecho a presentar una reclamación ante la Agencia Española de Protección de Datos (www.aepd.es).','Per a exercir estos drets, pot escriure a info@accioncivilgandia.org. Així mateix, té dret a presentar una reclamació davant l\x27Agència Espanyola de Protecció de Dades (www.aepd.es).'),
+        s5Title:V('5. Conservación de datos','5. Conservació de dades'),
+        s5Text:V('Los datos funcionales almacenados en localStorage permanecen en el navegador del usuario hasta que este los elimine manualmente o borre los datos de navegación. No se transfieren a ningún servidor.','Les dades funcionals emmagatzemades en localStorage romanen al navegador de l\x27usuari fins que este les elimine manualment o esborre les dades de navegació. No es transfereixen a cap servidor.'),
+        s6Title:V('6. Transferencias internacionales','6. Transferències internacionals'),
+        s6Text:V('No realizamos transferencias internacionales de datos personales. El sitio web utiliza Google Fonts, servicio que puede implicar conexiones a servidores de Google; consulte la política de privacidad de Google para más información.','No realitzem transferències internacionals de dades personals. El lloc web utilitza Google Fonts, servei que pot implicar connexions a servidors de Google; consulte la política de privacitat de Google per a més informació.')
+      ,
+        footerDesc:V('Formación política local, ciudadana e independiente de Gandia. Personas de Gandia trabajando por Gandia.','Formació política local, ciutadana i independent de Gandia. Persones de Gandia treballant per Gandia.'),
+        footerNavTitle:V('Explorar','Explorar'),
+        footerLegalTitle:V('Legal','Legal'),
+        newsletter:V('Recibe novedades','Rep novetats'),
+        newsletterText:V('Propuestas, campañas y actos en tu correo.','Propostes, campanyes i actes al teu correu.'),
+        newsletterPh:V('Tu correo electrónico','El teu correu electrònic'),
+        suscribir:V('Enviar','Enviar'),
+        footerRights:V('Todos los derechos reservados','Tots els drets reservats'),
+        footerMade:V('Hecho en Gandia, con la gente de Gandia','Fet a Gandia, amb la gent de Gandia'),
+        seoText:V('Acción Civil Gandia es un partido político local y municipalista de Gandia, Valencia. Trabajamos por los vecinos de Gandia, el Grao de Gandia, la Playa de Gandia, Benipeixcar, Beniopa, Santa Anna, Corea y Marchuquera. Nuestras propuestas políticas abarcan seguridad ciudadana, policía de proximidad, pequeño comercio, empleo juvenil, cultura accesible, desestacionalización de la playa, cámaras de seguridad, antiokupación, transporte público, limpieza urbana y participación ciudadana. Partido político Gandia 2027. Elecciones municipales Gandia.','Acció Civil Gandia és un partit polític local i municipalista de Gandia, València. Treballem pels veïns de Gandia, el Grau de Gandia, la Platja de Gandia, Benipeixcar, Beniopa, Santa Anna, Corea i Marxuquera. Les nostres propostes polítiques abasten seguretat ciutadana, policia de proximitat, xicotet comerç, ocupació juvenil, cultura accessible, desestacionalització de la platja, càmeres de seguretat, antiokupació, transport públic, neteja urbana i participació ciutadana. Partit polític Gandia 2027. Eleccions municipals Gandia.'),
+},
+      footerNav1:[
+        {label:V('Propuestas','Propostes'),href:'Propuestas.dc.html'},
+        {label:V('Participación ciudadana','Participació ciutadana'),href:'Participacion.dc.html'},
+        {label:V('Acción en Gandia','Acció a Gandia'),href:'Accion.dc.html'},
+        {label:V('Campañas','Campanyes'),href:'Campanas.dc.html'},
+        {label:V('Transparencia','Transparència'),href:'Transparencia.dc.html'}
+      ],
+      footerNav2:[
+        {label:V('Aviso legal','Avís legal'),href:'AvisoLegal.dc.html'},
+        {label:V('Política de privacidad','Política de privacitat'),href:'Privacidad.dc.html'},
+        {label:V('Cookies','Galetes'),href:'Cookies.dc.html'},
+        {label:V('Accesibilidad','Accessibilitat'),href:'Accesibilidad.dc.html'},
+        {label:V('Canal de denuncias','Canal de denúncies'),href:'mailto:info@accioncivilgandia.org'}
+      ],
+      social:[
+        {iconPath:'M18 2h-3a4 4 0 0 0-4 4v3H8v4h3v9h4v-9h3l1-4h-4V6a1 1 0 0 1 1-1h3z'},
+        {iconPath:'M23 4.5a8 8 0 0 1-2.3.6A4 4 0 0 0 22.4 3a8 8 0 0 1-2.5 1A4 4 0 0 0 13 7.5a11 11 0 0 1-8-4 4 4 0 0 0 1.2 5.3A4 4 0 0 1 4.5 8v.1a4 4 0 0 0 3.2 4 4 4 0 0 1-1.8.1 4 4 0 0 0 3.7 2.8A8 8 0 0 1 3 16.6 11 11 0 0 0 20 7.2a8 8 0 0 0 3-2.7z'},
+        {iconPath:'M16 3H8a5 5 0 0 0-5 5v8a5 5 0 0 0 5 5h8a5 5 0 0 0 5-5V8a5 5 0 0 0-5-5zM12 8a4 4 0 1 1 0 8 4 4 0 0 1 0-8zM17.5 6.5h.01'},
+        {iconPath:'M21 6.5a3 3 0 0 0-2-2C17 4 12 4 12 4s-5 0-7 .5a3 3 0 0 0-2 2A31 31 0 0 0 2.5 12 31 31 0 0 0 3 17.5a3 3 0 0 0 2 2c2 .5 7 .5 7 .5s5 0 7-.5a3 3 0 0 0 2-2 31 31 0 0 0 .5-5.5 31 31 0 0 0-.5-5.5zM10 15V9l5 3z'}
+      ],
+      isMob,
+      footerPad: isMob?'36px 0 24px':'64px 0 30px',
+      footerGrid: isMob?'1fr':'1.6fr 1fr 1fr 1.4fr',
+      footerGap: isMob?'28px':'44px',
+      menuOpen:s.menuOpen,
+      btNavDisp: isMob?'flex':'none',
+      toggleMenu:()=>this.setState(x=>({menuOpen:!x.menuOpen})),
+      closeMenu:()=>this.setState({menuOpen:false}),
+      stopEvt:(e)=>{e.stopPropagation();},
+
+    };
+  }
+}
+</script>
+
+
+</body></html>

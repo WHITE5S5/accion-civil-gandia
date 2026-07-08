@@ -1,0 +1,9 @@
+# Desactiva el post-procesado de Netlify (Pretty URLs / minify).
+# CRÍTICO: la optimización reescribe los atributos con comillas simples y
+# rompe los style="" que contienen 'Public Sans' (escape \' inválido en HTML).
+[build.processing]
+  skip_processing = true
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"

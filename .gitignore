@@ -19,3 +19,11 @@ CONTENIDO_REAL_SCRAPEADO.md
 
 # Print versions (generados)
 *-print-*.dc.html
+
+# Local Netlify folder
+.netlify
+
+# Local secrets
+.env
+.env.*
+!.env.example
