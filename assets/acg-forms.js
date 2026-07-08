@@ -41,7 +41,7 @@
   function post(url, data, btn, st, okMsg, onOk) {
     var old = btn.textContent;
     btn.disabled = true; btn.style.opacity = '.6'; btn.textContent = T.sending;
-    fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(data) })
+    fetch(url, { method: 'POST', headers: (function(){var h={'content-type':'application/json'};try{var t=localStorage.getItem('acg_session');if(t)h.authorization='Bearer '+t;}catch(e){}return h;})(), body: JSON.stringify(data) })
       .then(function (r) { return r.json().then(function (j) { return { s: r.status, j: j }; }); })
       .then(function (r) {
         if (r.s >= 200 && r.s < 300 && r.j && r.j.ok) { show(st, okMsg, true); if (onOk) onOk(); }

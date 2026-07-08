@@ -64,6 +64,10 @@ const TABLAS = {
     select: 'id,codigo,categoria,texto,contacto,estado,respuesta,created_at',
     campos: ['estado', 'respuesta'], soloEditar: true, orden: 'created_at.desc',
   },
+  comments: {
+    select: 'id,texto,estado,created_at,proposal_id',
+    campos: ['estado'], soloEditar: true, orden: 'created_at.desc',
+  },
   members_inbox: {
     select: 'id,nombre,apellidos,cuota_tipo,estado,stripe_customer_id,created_at',
     campos: [], soloLeer: true, orden: 'created_at.desc',
@@ -214,12 +218,14 @@ const F={ // definición de formularios por pestaña
   ['concepto','Concepto','text'],['importe_eur','Importe en euros (ej. 120,50)','text']]},
  proposals:{titulo:'Propuestas ciudadanas',desc:'Moderación: publica, marca en estudio o rechaza (con motivo). Lo publicado saldrá en Participación.',cols:[['titulo','Título'],['categoria','Categoría'],['estado','Estado'],['created_at','Recibida']],campos:[
   ['estado','Decisión','select',['pendiente_moderacion','publicada','en_estudio','aprobada','rechazada']],['motivo_rechazo','Motivo (si se rechaza)','textarea']],ro:['titulo','descripcion','contacto_nombre','contacto_email']},
+ comments:{titulo:'Comentarios',desc:'Moderación de comentarios en propuestas (Fase 3).',cols:[['texto','Comentario'],['estado','Estado'],['created_at','Fecha']],campos:[
+  ['estado','Estado','select',['pendiente','publicado','oculto']]],ro:['texto']},
  denuncias:{titulo:'Canal de denuncias',desc:'⚠ Ley 2/2023: acuse en 7 días y resolución en 3 meses. La respuesta la ve el informante con su código.',cols:[['codigo','Código'],['categoria','Categoría'],['estado','Estado'],['created_at','Recibida']],campos:[
   ['estado','Estado','select',['nueva','en_tramite','cerrada']],['respuesta','Respuesta al informante','textarea']],ro:['texto','contacto']},
  members_inbox:{titulo:'Afiliaciones',desc:'Altas pagadas vía Stripe (se activa en Fase 4).',cols:[['nombre','Nombre'],['apellidos','Apellidos'],['cuota_tipo','Cuota'],['estado','Estado']],campos:[]},
  donations:{titulo:'Donaciones',desc:'Donaciones recibidas (Fase 4). Export completo para Tribunal de Cuentas: ver spec.',cols:[['donor_nombre','Nombre'],['importe_cents','Importe'],['ejercicio','Ejercicio'],['estado','Estado']],campos:[]}
 };
-const ORDEN=['posts','events','campaigns','actuaciones','equipo','tesoreria','proposals','denuncias','members_inbox','donations'];
+const ORDEN=['posts','events','campaigns','actuaciones','equipo','tesoreria','proposals','comments','denuncias','members_inbox','donations'];
 let TAB='posts', ROWS=[], BARRIOS=[];
 
 async function call(body){

@@ -5,6 +5,7 @@
 //      SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY (opcionales para persistencia)
 import { verifyTurnstile, rateLimited, sendEmail } from './contacto.mjs';
 import { supa, supaConfigured } from './lib/supa.mjs';
+import { getUser } from './lib/auth.mjs';
 
 const err = (status, code, message) =>
   new Response(JSON.stringify({ error: { code, message } }), {
@@ -50,8 +51,11 @@ export default async (req, context) => {
   if (descripcion.length < 30 || descripcion.length > 5000) return err(400, 'invalid_descripcion', 'Descripción entre 30 y 5000 caracteres');
   if (!inList(categoria, CATEGORIAS)) return err(400, 'invalid_categoria', 'Categoría no válida');
   if (!inList(barrio, BARRIOS)) return err(400, 'invalid_barrio', 'Barrio no válido');
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return err(400, 'invalid_email', 'Email no válido (necesario para responderte)');
-  if (!anonimo && (nombre.length < 2 || nombre.length > 80)) return err(400, 'invalid_nombre', 'Nombre entre 2 y 80 caracteres (o marca "anónima")');
+  const user = await getUser(req);      // Fase 3: sesión opcional — vincula la propuesta a la cuenta
+  if (!user) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return err(400, 'invalid_email', 'Email no válido (necesario para responderte)');
+    if (!anonimo && (nombre.length < 2 || nombre.length > 80)) return err(400, 'invalid_nombre', 'Nombre entre 2 y 80 caracteres (o marca "anónima")');
+  }
   if (!(await verifyTurnstile(b.turnstileToken, ip))) return err(403, 'turnstile_failed', 'Verificación anti-spam fallida');
 
   let stored = false;
@@ -64,8 +68,9 @@ export default async (req, context) => {
       if (barrioLookup.ok && Array.isArray(barrioLookup.json) && barrioLookup.json[0]) barrioId = barrioLookup.json[0].id;
     }
     const insert = await supa('POST', 'proposals', {
-      contacto_nombre: anonimo ? null : nombre,
-      contacto_email: email,
+      user_id: user ? user.id : null,
+      contacto_nombre: user ? null : (anonimo ? null : nombre),
+      contacto_email: user ? null : email,
       titulo,
       descripcion,
       categoria,
