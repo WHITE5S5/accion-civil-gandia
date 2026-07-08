@@ -99,6 +99,13 @@ La carpeta `deploy_netlify/` ya incluye `netlify/functions/`. Dos opciones:
 7. Falta frontend: páginas `/afiliacion` y `/donar` (formularios) — pedírselas a Claude
    cuando llegues aquí; los endpoints ya están listos y testeados.
 
+## Panel de administración (activo desde 2026-07-08)
+
+- URL: `https://accioncivilgandia.netlify.app/admin`
+- Contraseña: variable `ADMIN_PASSWORD` en Netlify (entregada al usuario por chat; cambiarla = editar la variable y redesplegar).
+- Permite: crear/editar/publicar noticias, agenda, campañas (destacada + %), actuaciones y equipo; moderar propuestas ciudadanas; gestionar denuncias (con aviso de plazo Ley 2/2023); tesorería (ingresos/gastos → alimenta la página pública de Transparencia vía /api/tesoreria); ver afiliaciones y donaciones (Fase 4).
+- Toda acción queda en `audit_log`. v1 con contraseña compartida — la atribución individual llega con Fase 3.
+
 ## Resumen de variables de entorno
 
 | Variable | Servicio | Fase |
@@ -111,6 +118,7 @@ La carpeta `deploy_netlify/` ya incluye `netlify/functions/`. Dos opciones:
 | SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SUPABASE_ANON_KEY | Supabase | 2 |
 | STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_PRICE_CUOTA_* | Stripe | 4 |
 | ENCRYPTION_KEY | (propia, 32 bytes base64) | 4 |
+| ADMIN_PASSWORD | (propia) — panel /admin | ✅ configurada |
 
 ## Cómo probar las funciones en local (sin Netlify)
 

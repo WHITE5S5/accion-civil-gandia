@@ -366,12 +366,26 @@
 <script type="text/x-dc" data-dc-script>
 
 class Component extends DCLogic {
-  state = { lang:this.initLang(), device:null, viewportW:this.vw(), menuOpen:false };
+  state = { lang:this.initLang(), device:null, viewportW:this.vw(), menuOpen:false, remoteFeed:null, remoteStatus:'idle' };
   initLang(){ try{ return localStorage.getItem('acg_lang')||'es'; }catch(e){ return 'es'; } }
   vw(){ try{ return Math.max(document.documentElement?document.documentElement.clientWidth:0, window.innerWidth||0, 320); }catch(e){ return 1280; } }
   syncVp(){ const w=this.vw(); try{ document.documentElement.setAttribute('data-acg-mobile',w<=900?'1':'0'); }catch(e){} this.setState({viewportW:w}); }
-  componentDidMount(){ this._onR=()=>this.syncVp(); this._onR(); try{ window.addEventListener('resize',this._onR,{passive:true}); }catch(e){ window.addEventListener('resize',this._onR); } }
+  componentDidMount(){ this._onR=()=>this.syncVp(); this._onR(); try{ window.addEventListener('resize',this._onR,{passive:true}); }catch(e){ window.addEventListener('resize',this._onR); } this._loadFeed(); }
+  componentDidUpdate(){ if(this._feedLang!==this.state.lang) this._loadFeed(); }
   componentWillUnmount(){ if(this._onR) window.removeEventListener('resize',this._onR); }
+  async _loadFeed(){
+    const lang=this.state.lang==='va'?'va':'es';
+    this._feedLang=lang;
+    try{
+      const r=await fetch('/api/tesoreria');
+      if(!r.ok) throw new Error('tesoreria_'+r.status);
+      const data=await r.json();
+      this.setState({ remoteFeed:data, remoteStatus:'ready' });
+    }catch(e){
+      console.error('Transparencia feed fallback', e);
+      if(this.state.remoteStatus!=='ready') this.setState({ remoteFeed:null, remoteStatus:'error' });
+    }
+  }
 
   data(lang){
     const es=lang==='es', V=(a,b)=>es?a:b;
@@ -502,8 +516,10 @@ class Component extends DCLogic {
     const forcedMob=s.device==='mobile';
     const isMob=forcedMob||(!s.device&&viewportW<=900);
     try{document.documentElement.setAttribute('data-acg-mobile',isMob?'1':'0');}catch(e){}
+    const remote=s.remoteFeed;
+    const rOk = remote && remote.movimientos > 0;
     return {
-      ...d, lang:s.lang, isMob,
+      ...d, ...(rOk?{ingresos:remote.ingresos, gastos:remote.gastos, saldo:remote.saldo}:{}), lang:s.lang, isMob,
       footerPad: isMob?'36px 0 24px':'64px 0 30px',
       footerGrid: isMob?'1fr':'1.6fr 1fr 1fr 1.4fr',
       footerGap: isMob?'28px':'44px',
