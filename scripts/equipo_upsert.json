@@ -1,0 +1,138 @@
+[
+ {
+  "slug": "alcazar",
+  "nombre": "Alejandro Alcázar",
+  "cargo_es": "Presidente",
+  "cargo_va": "President",
+  "bio_es": "Presidente de Acción Civil Gandia. Lidera la dirección estratégica del partido y representa la formación ante las instituciones y la ciudadanía.",
+  "bio_va": "President d'Acció Civil Gandia. Lidera la direcció estratègica del partit i representa la formació davant les institucions i la ciutadania.",
+  "foto": "assets/miembros/miembro-alcazar.webp",
+  "orden": 0,
+  "activo": true,
+  "areas": {
+   "area_es": "Dirección y estrategia",
+   "area_va": "Direcció i estratègia",
+   "ini": "AA",
+   "avBg": "#1563C4"
+  }
+ },
+ {
+  "slug": "reig",
+  "nombre": "Miguel Reig",
+  "cargo_es": "Vicepresidente ejecutivo",
+  "cargo_va": "Vicepresident executiu",
+  "bio_es": "Vicepresidente ejecutivo. Coordina la gestión interna del partido y la ejecución de las líneas de trabajo aprobadas por la directiva.",
+  "bio_va": "Vicepresident executiu. Coordina la gestió interna del partit i l'execució de les línies de treball aprovades per la directiva.",
+  "foto": "assets/miembros/miembro-reig.webp",
+  "orden": 1,
+  "activo": true,
+  "areas": {
+   "area_es": "Coordinación y gestión",
+   "area_va": "Coordinació i gestió",
+   "ini": "MR",
+   "avBg": "#0FA6B6"
+  }
+ },
+ {
+  "slug": "mesa",
+  "nombre": "Sebastián Mesa",
+  "cargo_es": "Tesorero",
+  "cargo_va": "Tresorer",
+  "bio_es": "Tesorero del partido. Gestiona la tesorería, las cuentas y la administración económica de la organización con total transparencia.",
+  "bio_va": "Tresorer del partit. Gestiona la tresoreria, els comptes i l'administració econòmica de l'organització amb total transparència.",
+  "foto": "assets/miembros/miembro-mesa.webp",
+  "orden": 2,
+  "activo": true,
+  "areas": {
+   "area_es": "Finanzas y administración",
+   "area_va": "Finances i administració",
+   "ini": "SM",
+   "avBg": "#2E9E5B"
+  }
+ },
+ {
+  "slug": "sanchez",
+  "nombre": "Antonio Sánchez",
+  "cargo_es": "Secretario General",
+  "cargo_va": "Secretari General",
+  "bio_es": "Secretario General. Se encarga de la organización interna, las actas de las reuniones y la coordinación administrativa del partido.",
+  "bio_va": "Secretari General. S'encarrega de l'organització interna, les actes de les reunions i la coordinació administrativa del partit.",
+  "foto": "assets/miembros/miembro-sanchez.webp",
+  "orden": 3,
+  "activo": true,
+  "areas": {
+   "area_es": "Organización y actas",
+   "area_va": "Organització i actes",
+   "ini": "AS",
+   "avBg": "#D98A0B"
+  }
+ },
+ {
+  "slug": "mondejar",
+  "nombre": "Alicia Mondéjar",
+  "cargo_es": "Vocal",
+  "cargo_va": "Vocal",
+  "bio_es": "Vocal de la junta directiva. Colabora en las iniciativas de participación ciudadana y en la relación directa con los vecinos de Gandia.",
+  "bio_va": "Vocal de la junta directiva. Col·labora en les iniciatives de participació ciutadana i en la relació directa amb els veïns de Gandia.",
+  "foto": "assets/miembros/miembro-mondejar.webp",
+  "orden": 4,
+  "activo": true,
+  "areas": {
+   "area_es": "Participación ciudadana",
+   "area_va": "Participació ciutadana",
+   "ini": "AM",
+   "avBg": "#6B4EE6"
+  }
+ },
+ {
+  "slug": "sendroiu",
+  "nombre": "Cristina Sendroiu",
+  "cargo_es": "Vocal",
+  "cargo_va": "Vocal",
+  "bio_es": "Vocal de la junta directiva. Impulsa las acciones sociales, el voluntariado y la presencia del partido en los barrios de Gandia.",
+  "bio_va": "Vocal de la junta directiva. Impulsa les accions socials, el voluntariat i la presència del partit als barris de Gandia.",
+  "foto": "assets/miembros/miembro-sendroiu.webp",
+  "orden": 5,
+  "activo": true,
+  "areas": {
+   "area_es": "Acción social y voluntariado",
+   "area_va": "Acció social i voluntariat",
+   "ini": "CS",
+   "avBg": "#C2410C"
+  }
+ },
+ {
+  "slug": "vila",
+  "nombre": "Eduardo Vila Tormo",
+  "cargo_es": "Departamento Jurídico",
+  "cargo_va": "Departament Jurídic",
+  "bio_es": "Letrado del departamento jurídico. Asesora legalmente al partido en todas sus actuaciones y garantiza el cumplimiento normativo.",
+  "bio_va": "Lletrat del departament jurídic. Assessora legalment el partit en totes les seues actuacions i garanteix el compliment normatiu.",
+  "foto": "assets/miembros/miembro-vila.webp",
+  "orden": 6,
+  "activo": true,
+  "areas": {
+   "area_es": "Asesoría legal",
+   "area_va": "Assessoria legal",
+   "ini": "EV",
+   "avBg": "#0A2A5E"
+  }
+ },
+ {
+  "slug": "tormo",
+  "nombre": "José Tormo Miñana",
+  "cargo_es": "Departamento Jurídico",
+  "cargo_va": "Departament Jurídic",
+  "bio_es": "Pasante del departamento jurídico. Apoya en la revisión de documentación legal y en la tramitación de expedientes del partido.",
+  "bio_va": "Passant del departament jurídic. Dóna suport en la revisió de documentació legal i en la tramitació d'expedients del partit.",
+  "foto": "assets/miembros/miembro-tormo.webp",
+  "orden": 7,
+  "activo": true,
+  "areas": {
+   "area_es": "Apoyo jurídico",
+   "area_va": "Suport jurídic",
+   "ini": "JT",
+   "avBg": "#33414F"
+  }
+ }
+]

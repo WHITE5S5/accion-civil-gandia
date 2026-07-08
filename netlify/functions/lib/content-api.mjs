@@ -236,13 +236,20 @@ function normalizeActuacion(row, lang) {
 }
 
 function normalizeEquipo(row, lang) {
+  const extra = row.areas || {};
+  const foto = clean(row.foto);
+  const cargo = pick(row.cargo_es, row.cargo_va, lang);
   return {
     slug: row.slug,
-    href: `/equipo/${row.slug}`,
-    nombre: row.nombre,
-    cargo: pick(row.cargo_es, row.cargo_va, lang),
+    href: row.slug === 'alcazar' ? '/equipo/perfil' : `/equipo/${row.slug}`,
+    nombre: row.nombre, name: row.nombre,
+    cargo, role: cargo,
+    area: pick(extra.area_es, extra.area_va, lang),
     bio: pick(row.bio_es, row.bio_va, lang),
     foto: fallbackImage(row.foto, 'assets/logo-icon.webp'),
+    img: foto, noImg: !foto,
+    ini: extra.ini || String(row.nombre || '').split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase(),
+    avBg: extra.avBg || '#1563C4',
     orden: Number(row.orden || 0),
   };
 }
@@ -420,7 +427,7 @@ export async function getActuaciones(params = {}) {
 export async function getEquipo(params = {}) {
   const lang = isVa(params.lang) ? 'va' : 'es';
   const query = new URLSearchParams({
-    select: 'slug,nombre,cargo_es,cargo_va,bio_es,bio_va,foto,orden,activo',
+    select: 'slug,nombre,cargo_es,cargo_va,bio_es,bio_va,foto,orden,activo,areas',
     order: 'orden.asc',
   });
   query.set('activo', 'eq.true');
