@@ -96,6 +96,8 @@
 **Objetivo: participación real — propuestas, votos y debate.**
 
 - [ ] Supabase Auth: registro email+password y magic link. Verificación de email obligatoria.
+- [ ] **Login social con Google** (Supabase Auth provider OAuth) — fricción cero para el ciudadano, lo estándar en cualquier web. Configurar proyecto en Google Cloud Console (OAuth consent screen + client ID/secret) y activar el provider en Supabase. El email llega ya verificado.
+- [ ] **Opt-in de marketing en el registro**: checkbox discreto (visualmente secundario, al pie del formulario) "Quiero recibir novedades y comunicaciones de Acción Civil". Requisitos legales RGPD/LSSI innegociables: **desmarcado por defecto** (jamás pre-marcado ni oculto — sería consentimiento inválido y sancionable), texto claro de finalidad, consentimiento registrado en `consents` (timestamp + IP + texto aceptado, igual que la newsletter) y baja en un clic. Si acepta → alta automática en la lista Brevo correspondiente al idioma.
 - [ ] Roles: `visitante` → `registrado` → `afiliado` → `moderador` → `admin` (RLS por rol en cada tabla).
 - [ ] Propuestas ciudadanas: creación (desde F1 inbox), moderación previa a publicación, **1 persona = 1 voto** (constraint único user+proposal), a favor/en contra.
 - [ ] Comentarios con moderación (cola en Directus) — imprescindible en política local.

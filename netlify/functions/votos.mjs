@@ -18,6 +18,14 @@ export default async (req, context) => {
   const user = await getUser(req);
   if (!user) return jsonErr(401, 'login_required', 'Inicia sesión para votar');
 
+  // GET ?proposalId= — estado inicial: mi voto actual + contadores (para pintar el botón al cargar)
+  if (req.method === 'GET') {
+    const pid = new URL(req.url).searchParams.get('proposalId') || '';
+    if (!/^[0-9a-f-]{36}$/.test(pid)) return jsonErr(400, 'bad_id', 'Propuesta no válida');
+    const v = await supa('GET', `votes?proposal_id=eq.${pid}&user_id=eq.${user.id}&select=valor`);
+    return jsonOk({ ok: true, miVoto: (v.json && v.json[0] && v.json[0].valor) || 0, ...(await counts(pid)) });
+  }
+
   let b;
   try { b = await req.json(); } catch { return jsonErr(400, 'bad_json', 'Cuerpo inválido'); }
   const proposalId = String(b.proposalId || '');

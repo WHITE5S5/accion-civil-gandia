@@ -21,7 +21,7 @@ export default async (req) => {
   if (!p) return page('Enlace no válido', 'El enlace ha caducado o no es correcto. Vuelve a suscribirte desde el pie de cualquier página.', false);
 
   const key = process.env.BREVO_API_KEY;
-  if (!key) return page('Casi listo', 'Tu confirmación es válida pero el alta automática aún no está configurada. Escríbenos a info@accioncivilgandia.org.', false);
+  if (!key) return page('Casi listo', 'Tu confirmación es válida pero el alta automática aún no está configurada. Escríbenos a accioncivilgandia@gmail.com.', false);
 
   const listId = Number(p.lang === 'va' ? process.env.BREVO_LIST_ID_VA : process.env.BREVO_LIST_ID_ES) || undefined;
   const r = await fetch('https://api.brevo.com/v3/contacts', {
@@ -35,7 +35,7 @@ export default async (req) => {
   });
   if (!r.ok && r.status !== 204) {
     console.error('brevo fail', r.status, await r.text());
-    return page('Algo ha fallado', 'No hemos podido completar el alta. Inténtalo más tarde o escríbenos a info@accioncivilgandia.org.', false);
+    return page('Algo ha fallado', 'No hemos podido completar el alta. Inténtalo más tarde o escríbenos a accioncivilgandia@gmail.com.', false);
   }
   const es = p.lang !== 'va';
   return page(es ? '¡Suscripción confirmada!' : 'Subscripció confirmada!',

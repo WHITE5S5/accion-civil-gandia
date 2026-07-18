@@ -5,10 +5,10 @@
 import { rateLimited, verifyTurnstile } from './contacto.mjs';
 import { supa, supaConfigured, stripe, stripeConfigured, validaDni, dniHash, encrypt, jsonErr, jsonOk } from './lib/supa.mjs';
 
+// Cuotas mensuales: base (15 €) y media (30 €) con precio fijo; "libre" con importe elegido (≥30 €).
 const PRICES = () => ({
-  mensual: process.env.STRIPE_PRICE_CUOTA_MENSUAL,
-  anual: process.env.STRIPE_PRICE_CUOTA_ANUAL,
-  reducida: process.env.STRIPE_PRICE_CUOTA_REDUCIDA,
+  base: process.env.STRIPE_PRICE_CUOTA_BASE,
+  media: process.env.STRIPE_PRICE_CUOTA_MEDIA,
 });
 
 export default async (req, context) => {
@@ -29,7 +29,7 @@ export default async (req, context) => {
   const dni = validaDni(b.dni);
   const direccion = String(b.direccion || '').trim();
   const cp = String(b.cp || '').trim();
-  const cuotaTipo = ['mensual', 'anual', 'reducida'].includes(b.cuotaTipo) ? b.cuotaTipo : null;
+  const cuotaTipo = ['base', 'media', 'libre'].includes(b.cuotaTipo) ? b.cuotaTipo : null;
   const fnac = String(b.fechaNacimiento || '');
 
   if (nombre.length < 2 || apellidos.length < 2) return jsonErr(400, 'invalid_nombre', 'Nombre y apellidos obligatorios');
@@ -41,8 +41,17 @@ export default async (req, context) => {
   if (!(edad >= 18)) return jsonErr(400, 'menor_de_edad', 'Debes ser mayor de 18 años');
   if (!(await verifyTurnstile(b.turnstileToken, ip))) return jsonErr(403, 'turnstile_failed', 'Verificación anti-spam fallida');
 
-  const price = PRICES()[cuotaTipo];
-  if (!price) return jsonErr(503, 'service_unconfigured', 'Cuota no configurada en Stripe');
+  let lineItem;
+  if (cuotaTipo === 'libre') {
+    const imp = Math.round(Number(b.importeCents));
+    if (!Number.isFinite(imp) || imp < 3000 || imp > 5000000)
+      return jsonErr(400, 'invalid_importe', 'La cuota libre debe ser de 30 € o más al mes');
+    lineItem = { quantity: 1, price_data: { currency: 'eur', unit_amount: imp, recurring: { interval: 'month' }, product: process.env.STRIPE_PRODUCT_CUOTA } };
+  } else {
+    const price = PRICES()[cuotaTipo];
+    if (!price) return jsonErr(503, 'service_unconfigured', 'Cuota no configurada en Stripe');
+    lineItem = { price, quantity: 1 };
+  }
 
   // Deduplicar por DNI
   const hash = dniHash(dni);
@@ -66,9 +75,10 @@ export default async (req, context) => {
   const s = await stripe('checkout/sessions', {
     mode: 'subscription',
     customer: cust.json.id,
-    'line_items[0]': { price, quantity: 1 },
+    'line_items[0]': lineItem,
+    // Cuotas SOLO por domiciliación bancaria SEPA (decisión del partido: recurrente real,
+    // 0,35 € fijo vs comisión de tarjeta). SEPA verificado y activo en la cuenta 2026-07-15.
     'payment_method_types[0]': 'sepa_debit',
-    'payment_method_types[1]': 'card',
     subscription_data: {
       metadata: {
         dni_encrypted: encrypt(dni), dni_hash: hash,

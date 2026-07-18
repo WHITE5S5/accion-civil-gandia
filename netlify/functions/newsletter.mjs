@@ -3,7 +3,7 @@
 // Env: NEWSLETTER_SECRET (obligatoria), RESEND_API_KEY (obligatoria), APP_BASE_URL,
 //      TURNSTILE_SECRET_KEY (opcional)
 import { createHmac } from 'node:crypto';
-import { verifyTurnstile, rateLimited, sendEmail } from './contacto.mjs';
+import { verifyTurnstile, rateLimited, sendEmail, emailShell, emailBtn } from './contacto.mjs';
 
 const err = (status, code, message) =>
   new Response(JSON.stringify({ error: { code, message } }), {
@@ -51,13 +51,12 @@ export default async (req, context) => {
   const r = await sendEmail({
     to: email,
     subject: es ? 'Confirma tu suscripción — Acción Civil Gandia' : 'Confirma la teua subscripció — Acció Civil Gandia',
-    html: `<div style="font-family:sans-serif;max-width:520px">
-      <h2 style="color:#0A2A5E">${es ? 'Confirma tu suscripción' : 'Confirma la teua subscripció'}</h2>
+    html: emailShell({ lang, title: es ? 'Confirma tu suscripción' : 'Confirma la teua subscripció', body: `
       <p>${es
         ? 'Has pedido recibir novedades de Acción Civil Gandia. Pulsa el botón para confirmar tu correo. Si no lo has pedido tú, ignora este mensaje.'
         : 'Has demanat rebre novetats d’Acció Civil Gandia. Prem el botó per confirmar el teu correu. Si no ho has demanat tu, ignora aquest missatge.'}</p>
-      <p style="margin:28px 0"><a href="${url}" style="background:#1563C4;color:#fff;padding:13px 26px;border-radius:10px;text-decoration:none;font-weight:700">${es ? 'Confirmar suscripción' : 'Confirmar subscripció'}</a></p>
-      <p style="color:#5C6B7A;font-size:13px">${es ? 'El enlace caduca en 48 horas.' : 'L’enllaç caduca en 48 hores.'}</p></div>`,
+      ${emailBtn(url, es ? 'Confirmar suscripción' : 'Confirmar subscripció')}
+      <p style="color:#8A99A8;font-size:13px">${es ? 'El enlace caduca en 48 horas.' : 'L’enllaç caduca en 48 hores.'}</p>` }),
   });
   if (r.unconfigured) return err(503, 'service_unconfigured', 'Envío no configurado todavía');
   if (!r.ok) { console.error('resend fail', r.status, r.body); return err(502, 'send_failed', 'No se pudo enviar'); }

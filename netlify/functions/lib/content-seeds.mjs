@@ -1,11 +1,18 @@
 const iso = (value) => new Date(value).toISOString();
 
+// Lista canónica única de barrios/distritos de Gandia (misma en admin, Crear propuesta y Voluntarios).
 export const seedBarrios = [
-  { slug: 'centro', nombre_es: 'Centro', nombre_va: 'Centre', lat: 38.9683, lng: -0.1847 },
-  { slug: 'grao', nombre_es: 'Playa-Grao', nombre_va: 'Platja-Grau', lat: 38.9952, lng: -0.1535 },
-  { slug: 'beniopa', nombre_es: 'Beniopa', nombre_va: 'Beniopa', lat: 38.9802, lng: -0.1974 },
-  { slug: 'benipeixcar', nombre_es: 'Benipeixcar', nombre_va: 'Benipeixcar', lat: 38.9716, lng: -0.1762 },
-  { slug: 'corea', nombre_es: 'Corea', nombre_va: 'Corea', lat: 38.9648, lng: -0.1713 },
+  { slug: 'centro', nombre_es: 'Centro Histórico', nombre_va: 'Centre Històric', orden: 10, lat: 38.9683, lng: -0.1847 },
+  { slug: 'raval', nombre_es: 'El Raval – El Prado', nombre_va: 'El Raval – El Prado', orden: 20, lat: null, lng: null },
+  { slug: 'germanies', nombre_es: 'Germanies – Els Jardinets', nombre_va: 'Germanies – Els Jardinets', orden: 30, lat: null, lng: null },
+  { slug: 'republica-argentina', nombre_es: 'Pl. El·líptica – Rep. Argentina', nombre_va: 'Pl. El·líptica – Rep. Argentina', orden: 40, lat: null, lng: null },
+  { slug: 'corea', nombre_es: 'Corea', nombre_va: 'Corea', orden: 50, lat: 38.9648, lng: -0.1713 },
+  { slug: 'santa-anna', nombre_es: 'Santa Anna', nombre_va: 'Santa Anna', orden: 60, lat: null, lng: null },
+  { slug: 'beniopa', nombre_es: 'Beniopa – Sant Pere', nombre_va: 'Beniopa – Sant Pere', orden: 70, lat: 38.9802, lng: -0.1974 },
+  { slug: 'benipeixcar', nombre_es: 'Benipeixcar', nombre_va: 'Benipeixcar', orden: 80, lat: 38.9716, lng: -0.1762 },
+  { slug: 'grao', nombre_es: 'Grau – Venècia – Rafalcaid', nombre_va: 'Grau – Venècia – Rafalcaid', orden: 90, lat: 38.9952, lng: -0.1535 },
+  { slug: 'playa', nombre_es: 'Playa de Gandia', nombre_va: 'Platja de Gandia', orden: 100, lat: null, lng: null },
+  { slug: 'marchuquera', nombre_es: 'Marxuquera', nombre_va: 'Marxuquera', orden: 110, lat: null, lng: null },
 ];
 
 export const seedPosts = [

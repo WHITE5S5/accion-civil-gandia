@@ -10,6 +10,11 @@ import campaigns from '../netlify/functions/campaigns.mjs';
 import actuaciones from '../netlify/functions/actuaciones.mjs';
 import equipo from '../netlify/functions/equipo.mjs';
 import home from '../netlify/functions/home.mjs';
+import chat from '../netlify/functions/chat.mjs';
+import donaciones from '../netlify/functions/donaciones.mjs';
+import afiliacion from '../netlify/functions/afiliacion.mjs';
+import stripeWebhook from '../netlify/functions/stripe-webhook.mjs';
+import { validaDni } from '../netlify/functions/lib/supa.mjs';
 
 const ctx = { ip: '1.2.3.4' };
 const post = (url, body) => new Request(`http://local${url}`, {
@@ -54,10 +59,9 @@ await check('token válido sin Brevo -> aviso', new Response(html, { status: goo
 console.log(html.includes('Casi listo') ? '  OK  página "Casi listo" (Brevo sin configurar)' : (fail++, '  FAIL página confirm'));
 pass++;
 
-console.log('== propuesta ==');
-await check('categoría inválida', await propuesta(post('/api/propuesta', { titulo: 'Más bancos en el parque', descripcion: 'x'.repeat(40), categoria: 'Inventada', barrio: 'Centro', nombre: 'Ana', email: 'a@b.co' }), { ip: '3.3.3.3' }), 400, 'invalid_categoria');
-await check('válida sin Resend -> 503', await propuesta(post('/api/propuesta', { titulo: 'Más bancos en el parque', descripcion: 'Propuesta de ejemplo con descripción suficientemente larga para pasar validación.', categoria: 'Medio ambiente', barrio: 'Centro', nombre: 'Ana', email: 'a@b.co' }), { ip: '3.3.3.4' }), 503, 'service_unconfigured');
-await check('anónima OK', await propuesta(post('/api/propuesta', { titulo: 'Más bancos en el parque', descripcion: 'Propuesta de ejemplo con descripción suficientemente larga para pasar validación.', categoria: 'Medio ambiente', barrio: 'Centro', anonimo: true, email: 'a@b.co' }), { ip: '3.3.3.5' }), 503, 'service_unconfigured');
+console.log('== propuesta (F3: exige sesión) ==');
+await check('categoría inválida', await propuesta(post('/api/propuesta', { titulo: 'Más bancos en el parque', descripcion: 'x'.repeat(40), categoria: 'Inventada', barrio: 'Centro' }), { ip: '3.3.3.3' }), 400, 'invalid_categoria');
+await check('sin sesión -> 401', await propuesta(post('/api/propuesta', { titulo: 'Más bancos en el parque', descripcion: 'Propuesta de ejemplo con descripción suficientemente larga para pasar validación.', categoria: 'Medio ambiente', barrio: 'Centro' }), { ip: '3.3.3.4' }), 401, 'login_required');
 
 console.log('== fase 2 content ==');
 await check('posts GET', await posts(new Request('http://local/api/posts?lang=es')), 200, true);
@@ -67,10 +71,30 @@ await check('actuaciones GET', await actuaciones(new Request('http://local/api/a
 await check('equipo GET', await equipo(new Request('http://local/api/equipo?lang=va')), 200, true);
 await check('home GET', await home(new Request('http://local/api/home?lang=es')), 200, true);
 
+console.log('== chat (F3) ==');
+await check('sin Supabase -> 503', await chat(new Request('http://local/api/chat'), ctx), 503, 'unconfigured');
+process.env.SUPABASE_URL = 'http://127.0.0.1:1';           // simula configurado pero inaccesible
+process.env.SUPABASE_SERVICE_ROLE_KEY = 'test';
+await check('GET sin sesión -> 401', await chat(new Request('http://local/api/chat'), ctx), 401, 'login_required');
+await check('POST sin sesión -> 401', await chat(post('/api/chat', { texto: 'hola' }), ctx), 401, 'login_required');
+delete process.env.SUPABASE_URL; delete process.env.SUPABASE_SERVICE_ROLE_KEY;
+
 console.log('== rate limit ==');
 let last;
 for (let i = 0; i < 12; i++) last = await contacto(post('/api/contacto', { nombre: 'Ana', email: 'a@b.co', mensaje: 'mensaje repetido de prueba xxx' }), { ip: '9.9.9.9' });
 await check('12ª petición -> 429', last, 429, 'rate_limited');
+
+console.log('== stripe F4 (sin claves -> guard 503) ==');
+await check('donaciones GET -> 405', await donaciones(new Request('http://local/api/donaciones'), { ip: '7.0.0.1' }), 405);
+await check('donaciones sin claves -> 503', await donaciones(post('/api/donaciones', {}), { ip: '7.0.0.2' }), 503, 'service_unconfigured');
+await check('afiliacion GET -> 405', await afiliacion(new Request('http://local/api/afiliacion'), { ip: '7.0.0.3' }), 405);
+await check('afiliacion sin claves -> 503', await afiliacion(post('/api/afiliacion', {}), { ip: '7.0.0.4' }), 503, 'service_unconfigured');
+await check('webhook sin secret -> 503', await stripeWebhook(post('/api/stripe/webhook', {})), 503);
+console.log('== LO 8/2007: validación de DNI/NIE ==');
+console.log(validaDni('12345678Z') ? '  OK  DNI válido aceptado' : (fail++, '  FAIL DNI válido')); pass++;
+console.log(!validaDni('12345678A') ? '  OK  DNI con letra errónea rechazado' : (fail++, '  FAIL letra DNI')); pass++;
+console.log(validaDni('X1234567L') ? '  OK  NIE válido aceptado' : (fail++, '  FAIL NIE válido')); pass++;
+console.log(!validaDni('00000000') ? '  OK  DNI sin letra rechazado' : (fail++, '  FAIL DNI sin letra')); pass++;
 
 console.log(`\nRESULTADO: ${pass} OK, ${fail} FAIL`);
 process.exit(fail ? 1 : 0);

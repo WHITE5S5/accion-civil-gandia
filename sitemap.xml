@@ -2,266 +2,254 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://accioncivilgandia.org/</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/accesibilidad</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/accesibilidad</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/accion-en-gandia</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/accion-en-gandia</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/actualidad</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/actualidad</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/actualidad/nit-dels-ciris</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/actualidad/nit-dels-ciris</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/agenda</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/agenda</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/aviso-legal</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/aviso-legal</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/barrio</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/buscar</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/buscar</loc>
-    <lastmod>2026-07-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://accioncivilgandia.org/campanas</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/campanas</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/campanas/38-camaras-seguridad</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/campanas/38-camaras-seguridad</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/ciudadano</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/como-funciona</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/como-funciona</loc>
-    <lastmod>2026-07-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://accioncivilgandia.org/conocenos</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/conocenos</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/contacto</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/contacto</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/cookies</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/cookies</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/crear</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/crear</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/crear-propuesta</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/crear-propuesta</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/detalle-actuacion</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/detalle-actuacion</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/equipo</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/equipo</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/equipo/perfil</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/equipo/perfil</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/evento</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/evento</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/historia</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/historia</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/mapa-actuaciones</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/mapa-actuaciones</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/participa</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/participa</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/participacion</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/participacion</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/preguntas-frecuentes</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/preguntas-frecuentes</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/privacidad</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/privacidad</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/programa-pdf</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/programa-pdf</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/propuesta</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/propuesta</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/propuesta-ciudadana</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/propuesta-ciudadana</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/propuestas</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/propuestas</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/propuestas/categoria</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/propuestas/categoria</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/propuestas/cultura</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/propuestas/cultura</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/propuestas/desestacionalizacion-playa</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/propuestas/desestacionalizacion-playa</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/propuestas/empleo</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/propuestas/empleo</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/propuestas/gandia-unida</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/propuestas/gandia-unida</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/propuestas/policia-proximidad</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/propuestas/policia-proximidad</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/propuestas/reactivacion-comercio</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/propuestas/reactivacion-comercio</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/propuestas/seguridad</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/propuestas/seguridad</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/propuestas/servicios-basicos</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/propuestas/servicios-basicos</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/sitemap</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/sitemap</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/transparencia</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/transparencia</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/valores</loc>
-    <lastmod>2026-07-03</lastmod>
+    <loc>https://accioncivilgandia.netlify.app/valores</loc>
+    <lastmod>2026-07-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -273,43 +261,43 @@
 
   <!-- Perfiles de miembros (7) -->
   <url>
-    <loc>https://accioncivilgandia.org/equipo/reig</loc>
+    <loc>https://accioncivilgandia.netlify.app/equipo/reig</loc>
     <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/equipo/mesa</loc>
+    <loc>https://accioncivilgandia.netlify.app/equipo/mesa</loc>
     <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/equipo/sanchez</loc>
+    <loc>https://accioncivilgandia.netlify.app/equipo/sanchez</loc>
     <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/equipo/mondejar</loc>
+    <loc>https://accioncivilgandia.netlify.app/equipo/mondejar</loc>
     <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/equipo/sendroiu</loc>
+    <loc>https://accioncivilgandia.netlify.app/equipo/sendroiu</loc>
     <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/equipo/vila</loc>
+    <loc>https://accioncivilgandia.netlify.app/equipo/vila</loc>
     <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/equipo/tormo</loc>
+    <loc>https://accioncivilgandia.netlify.app/equipo/tormo</loc>
     <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -317,59 +305,35 @@
 
   <!-- Campañas (2) -->
   <url>
-    <loc>https://accioncivilgandia.org/campanas/antiokupacion</loc>
+    <loc>https://accioncivilgandia.netlify.app/campanas/antiokupacion</loc>
     <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/campanas/mesas</loc>
+    <loc>https://accioncivilgandia.netlify.app/campanas/mesas</loc>
     <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
 
   <!-- Barrios (4) -->
-  <url>
-    <loc>https://accioncivilgandia.org/barrio/grao</loc>
-    <lastmod>2026-07-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://accioncivilgandia.org/barrio/beniopa</loc>
-    <lastmod>2026-07-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://accioncivilgandia.org/barrio/benipeixcar</loc>
-    <lastmod>2026-07-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://accioncivilgandia.org/barrio/corea</loc>
-    <lastmod>2026-07-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
 
   <!-- Actuaciones (3) -->
   <url>
-    <loc>https://accioncivilgandia.org/actuacion/camaras</loc>
+    <loc>https://accioncivilgandia.netlify.app/actuacion/camaras</loc>
     <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/actuacion/bici</loc>
+    <loc>https://accioncivilgandia.netlify.app/actuacion/bici</loc>
     <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/actuacion/grao</loc>
+    <loc>https://accioncivilgandia.netlify.app/actuacion/grao</loc>
     <lastmod>2026-07-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -377,13 +341,13 @@
 
   <!-- Noticias (2) -->
   <url>
-    <loc>https://accioncivilgandia.org/actualidad/camaras</loc>
+    <loc>https://accioncivilgandia.netlify.app/actualidad/camaras</loc>
     <lastmod>2026-07-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/actualidad/mesas</loc>
+    <loc>https://accioncivilgandia.netlify.app/actualidad/mesas</loc>
     <lastmod>2026-07-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -391,13 +355,13 @@
 
   <!-- Eventos (2) -->
   <url>
-    <loc>https://accioncivilgandia.org/agenda/asamblea</loc>
+    <loc>https://accioncivilgandia.netlify.app/agenda/asamblea</loc>
     <lastmod>2026-07-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/agenda/mesa-barrio</loc>
+    <loc>https://accioncivilgandia.netlify.app/agenda/mesa-barrio</loc>
     <lastmod>2026-07-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -406,12 +370,12 @@
   <!-- FIN NUEVAS PÁGINAS -->
 
   <url>
-    <loc>https://accioncivilgandia.org/programa-electoral</loc>
+    <loc>https://accioncivilgandia.netlify.app/programa-electoral</loc>
     <lastmod>2026-07-07</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://accioncivilgandia.org/comunidad</loc>
+    <loc>https://accioncivilgandia.netlify.app/comunidad</loc>
     <lastmod>2026-07-07</lastmod>
     <priority>0.7</priority>
   </url>

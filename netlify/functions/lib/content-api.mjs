@@ -10,29 +10,30 @@ import {
 
 const POST_THEME = {
   noticia: { catBg: '#EAF3FC', catCol: '#1563C4', cat_es: 'Noticia', cat_va: 'Notícia' },
-  comunicado: { catBg: '#FBF0DC', catCol: '#D98A0B', cat_es: 'Comunicado', cat_va: 'Comunicat' },
+  comunicado: { catBg: '#FBF0DC', catCol: '#9A6208', cat_es: 'Comunicado', cat_va: 'Comunicat' },
   video: { catBg: '#E4F5F7', catCol: '#0B7C89', cat_es: 'Vídeo', cat_va: 'Vídeo' },
   entrevista: { catBg: '#EEEAFB', catCol: '#6B4EE6', cat_es: 'Entrevista', cat_va: 'Entrevista' },
 };
 
 const EVENT_THEME = {
-  asamblea: { catBg: '#EEEAFB', catCol: '#6B4EE6', dateBg: '#EEEAFB', dateCol: '#6B4EE6', monthCol: '#8B7CC8' },
+  asamblea: { catBg: '#EEEAFB', catCol: '#6B4EE6', dateBg: '#EEEAFB', dateCol: '#6B4EE6', monthCol: '#5B47B8' },
   comision: { catBg: '#EAF3FC', catCol: '#1563C4', dateBg: '#EAF3FC', dateCol: '#1563C4', monthCol: '#6B9DD4' },
-  institucional: { catBg: '#FBF0DC', catCol: '#9A6208', dateBg: '#FBF0DC', dateCol: '#D98A0B', monthCol: '#C4A254' },
-  taller: { catBg: '#E7F4EC', catCol: '#1E7A45', dateBg: '#E7F4EC', dateCol: '#2E9E5B', monthCol: '#5DAF7E' },
+  institucional: { catBg: '#FBF0DC', catCol: '#9A6208', dateBg: '#FBF0DC', dateCol: '#9A6208', monthCol: '#8A6D14' },
+  taller: { catBg: '#E7F4EC', catCol: '#1E7A45', dateBg: '#E7F4EC', dateCol: '#1E7A45', monthCol: '#1E7A45' },
 };
 
 const ACTION_THEME = {
-  completada: { color: '#2E9E5B', tint: '#E7F4EC', estado_es: 'Solucionado', estado_va: 'Solucionat' },
+  completada: { color: '#1E7A45', tint: '#E7F4EC', estado_es: 'Solucionado', estado_va: 'Solucionat' },
   en_curso: { color: '#1563C4', tint: '#EAF3FC', estado_es: 'En ejecución', estado_va: 'En execució' },
-  propuesta: { color: '#D98A0B', tint: '#FBF0DC', estado_es: 'Presentado', estado_va: 'Presentat' },
+  propuesta: { color: '#9A6208', tint: '#FBF0DC', estado_es: 'Presentado', estado_va: 'Presentat' },
 };
 
 const clean = (value) => String(value || '').trim();
 const strip = (value) => clean(value).replace(/[#*_`>\-]/g, ' ').replace(/\s+/g, ' ').trim();
 const lower = (value) => clean(value).toLowerCase();
 const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
-const fallbackImage = (value, fallback) => clean(value) || fallback;
+const absUrl = (u) => { const s = clean(u); return !s || /^(https?:)?\/\/|^\/|^data:/.test(s) ? s : '/' + s; };
+const fallbackImage = (value, fallback) => absUrl(clean(value) || fallback);
 const isVa = (lang) => lang === 'va';
 
 function pick(es, va, lang) {
@@ -154,7 +155,10 @@ function normalizePost(row, lang) {
     read: readTime(excerpt, lang),
     comments: '—',
     imgSrc: fallbackImage(row.imagen, 'assets/og-actualidad.webp'),
+    imgRaw: absUrl(clean(row.imagen)),
     body: pick(row.cuerpo_es, row.cuerpo_va, lang),
+    videoUrl: clean(row.video_url) || '',
+    dateISO: row.publicado_at || row.created_at || null,
   };
 }
 
@@ -178,8 +182,12 @@ function normalizeEvent(row, lang) {
     date,
     dateLabel: formatDate(date, lang, { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }),
     place: clean(row.lugar) || pick(row.barrio_nombre_es, row.barrio_nombre_va, lang),
+    dateISO: row.fecha || null,
+    lat: Number((row.lat ?? row.barrios?.lat) || 0),
+    lng: Number((row.lng ?? row.barrios?.lng) || 0),
     capacity: pick('Público abierto', 'Públic obert', lang),
     full: false,
+    inscribible: !!row.inscribible,
     cat: pick(
       kind === 'institucional' ? 'Institucional' : kind === 'comision' ? 'Comisión' : kind === 'taller' ? 'Taller' : 'Asamblea',
       kind === 'institucional' ? 'Institucional' : kind === 'comision' ? 'Comissió' : kind === 'taller' ? 'Taller' : 'Assemblea',
@@ -193,6 +201,9 @@ function normalizeCampaign(row, lang) {
   const { progress, target, support } = campaignMeta(row);
   const title = pick(row.titulo_es, row.titulo_va, lang);
   return {
+    objetivos: Array.isArray(row.objetivos) ? row.objetivos : [],
+    cronologia: Array.isArray(row.cronologia) ? row.cronologia : [],
+    docs: Array.isArray(row.docs) ? row.docs : [],
     slug: row.slug,
     href: campaignHref(row.slug),
     title,
@@ -208,7 +219,7 @@ function normalizeCampaign(row, lang) {
     tagBg: '#EAF3FC',
     tagCol: '#1563C4',
     fecha: formatDate(row.created_at, lang, { month: 'short', year: 'numeric', timeZone: 'UTC' }),
-    update: pick('Actualizada desde CMS', 'Actualitzada des del CMS', lang),
+    update: pick('Seguimiento actualizado', 'Seguiment actualitzat', lang),
   };
 }
 
@@ -232,7 +243,18 @@ function normalizeActuacion(row, lang) {
     tint: theme.tint,
     stateKey: row.estado,
     desc: pick(row.descripcion_es, row.descripcion_va, lang),
+    docs: Array.isArray(row.docs) ? row.docs : [],
+    cronologia: Array.isArray(row.cronologia) ? row.cronologia : [],
   };
+}
+
+// Versión de las fotos de miembros: se reemplazan reusando el mismo nombre de archivo,
+// y las /assets/* estuvieron mucho tiempo con Cache-Control immutable (1 año). Sin cambiar
+// la URL, el navegador sigue sirviendo la foto vieja cacheada. Subir este valor al cambiar fotos.
+const EQUIPO_IMG_VER = 'v=20260718';
+function versionFoto(p) {
+  if (!p || !p.startsWith('assets/')) return p;
+  return p + (p.includes('?') ? '&' : '?') + EQUIPO_IMG_VER;
 }
 
 function normalizeEquipo(row, lang) {
@@ -246,8 +268,8 @@ function normalizeEquipo(row, lang) {
     cargo, role: cargo,
     area: pick(extra.area_es, extra.area_va, lang),
     bio: pick(row.bio_es, row.bio_va, lang),
-    foto: fallbackImage(row.foto, 'assets/logo-icon.webp'),
-    img: foto, noImg: !foto,
+    foto: versionFoto(fallbackImage(row.foto, 'assets/logo-icon.webp')),
+    img: versionFoto(foto), noImg: !foto,
     ini: extra.ini || String(row.nombre || '').split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase(),
     avBg: extra.avBg || '#1563C4',
     orden: Number(row.orden || 0),
@@ -293,12 +315,18 @@ export async function getPosts(params = {}) {
     featured: items[0] || null,
     items,
     total: items.length,
-    videos: items.filter((item) => item.catKey === 'video').slice(0, 3).map((item) => ({
-      title: item.title,
-      date: item.date,
-      dur: item.read,
-      views: '—',
-    })),
+    videos: items.filter((item) => item.catKey === 'video' && item.videoUrl).slice(0, 3).map((item) => {
+      // Miniatura oficial de YouTube a partir del enlace del vídeo
+      const yt = String(item.videoUrl).match(/(?:youtu\.be\/|v=|\/shorts\/)([\w-]{6,})/);
+      return {
+        title: item.title,
+        date: item.date,
+        dur: item.read,
+        views: '—',
+        url: item.videoUrl,
+        imgSrc: item.imgRaw ? item.imgSrc : (yt ? `https://i.ytimg.com/vi/${yt[1]}/hqdefault.jpg` : item.imgSrc),
+      };
+    }),
   };
 }
 
@@ -307,7 +335,7 @@ export async function getEvents(params = {}) {
   const slug = clean(params.slug);
   const from = clean(params.desde);
   const query = new URLSearchParams({
-    select: 'slug,titulo_es,titulo_va,descripcion_es,descripcion_va,fecha,hora_inicio,hora_fin,lugar,direccion,estado,created_at,barrios:barrios(slug,nombre_es,nombre_va,lat,lng)',
+    select: 'inscribible,slug,titulo_es,titulo_va,descripcion_es,descripcion_va,fecha,hora_inicio,hora_fin,lugar,direccion,estado,created_at,lat,lng,barrios:barrios(slug,nombre_es,nombre_va,lat,lng)',
     order: 'fecha.asc,hora_inicio.asc',
   });
   query.set('estado', 'eq.publicado');
@@ -353,6 +381,20 @@ export async function getCampaigns(params = {}) {
     .filter((row) => !estado || row.estado === estado)
     .filter((row) => !slug || row.slug === slug);
   const { items, source } = await fetchRows(`campaigns?${query.toString()}`, seedFiltered, normalizeCampaign, lang);
+  // Apoyos REALES desde campaign_supports; pct coherente con ellos (meta 100).
+  // Nunca inventar apoyos desde 'progreso' (0 apoyos con 38% de barra no es viable).
+  try {
+    const sup = await supaRead('campaign_supports?select=campaign_slug');
+    if (sup.ok && Array.isArray(sup.json)) {
+      const counts = {};
+      for (const r of sup.json) counts[r.campaign_slug] = (counts[r.campaign_slug] || 0) + 1;
+      for (const item of items) {
+        const n = counts[item.slug] || 0;
+        item.apoyos = numberLabel(n, lang);
+        item.pct = Math.min(100, n); // meta = 100 apoyos → n apoyos = n%
+      }
+    }
+  } catch (e) {}
   const featured = items.find((item) => item.slug === '38-camaras-seguridad') || items[0] || null;
   return {
     ok: true,
@@ -369,7 +411,7 @@ export async function getActuaciones(params = {}) {
   const barrio = clean(params.barrio);
   const slug = clean(params.slug);
   const query = new URLSearchParams({
-    select: 'slug,titulo_es,titulo_va,descripcion_es,descripcion_va,estado,cronologia,lat,lng,created_at,barrios:barrios(slug,nombre_es,nombre_va,lat,lng)',
+    select: 'slug,titulo_es,titulo_va,descripcion_es,descripcion_va,estado,cronologia,docs,lat,lng,created_at,barrios:barrios(slug,nombre_es,nombre_va,lat,lng)',
     order: 'created_at.desc',
   });
   if (slug) query.set('slug', `eq.${slug}`);
@@ -386,7 +428,8 @@ export async function getActuaciones(params = {}) {
     if (item.stateKey === 'completada') current.solved += 1;
   });
   const barrios = Array.from(grouped.values()).map((entry) => ({
-    href: entry.slug ? `/barrio/${entry.slug}` : '/barrio',
+    // Vista real filtrada (las fichas /barrio/* estáticas tenían contenido inventado)
+    href: entry.slug ? `/accion-en-gandia?barrio=${entry.slug}` : '/accion-en-gandia',
     name: entry.name,
     count: String(entry.count),
     solucionadas: entry.solved ? String(entry.solved) : '—',
@@ -405,9 +448,9 @@ export async function getActuaciones(params = {}) {
   };
   const stats = [
     { value: String(filteredItems.length), label: pick('acciones registradas', 'accions registrades', lang), color: '#1563C4' },
-    { value: String(new Set(filteredItems.map((item) => item.barrioSlug)).size), label: pick('barrios activos', 'barris actius', lang), color: '#2E9E5B' },
-    { value: String(states.en_curso), label: pick('en ejecución', 'en execució', lang), color: '#0FA6B6' },
-    { value: String(states.completada), label: pick('resueltas', 'resoltes', lang), color: '#D98A0B' },
+    { value: String(new Set(filteredItems.map((item) => item.barrioSlug)).size), label: pick('barrios activos', 'barris actius', lang), color: '#1E7A45' },
+    { value: String(states.en_curso), label: pick('en ejecución', 'en execució', lang), color: '#0B7580' },
+    { value: String(states.completada), label: pick('resueltas', 'resoltes', lang), color: '#9A6208' },
   ];
   return {
     ok: true,
@@ -432,7 +475,49 @@ export async function getEquipo(params = {}) {
   });
   query.set('activo', 'eq.true');
   const { items, source } = await fetchRows(`equipo?${query.toString()}`, seedEquipo.filter((row) => row.activo), normalizeEquipo, lang);
-  return { ok: true, source, items };
+  const vol = await getVoluntarios({ lang });
+  return { ok: true, source, items, voluntarios: vol.items };
+}
+
+// Paleta para el avatar de iniciales cuando el voluntario no tiene foto.
+const VOL_COLORS = ['#1563C4', '#0FA6B6', '#2E9E5B', '#D98A0B', '#6B4EE6', '#C2410C'];
+function normalizeVoluntario(row, lang, i) {
+  const bar = row.barrios || {};
+  const foto = clean(row.foto);
+  const nombre = String(row.nombre || '').trim();
+  return {
+    nombre,
+    barrio: pick(bar.nombre_es, bar.nombre_va, lang) || '',
+    foto: foto || null,
+    ini: nombre.split(/\s+/).map((w) => w[0]).filter(Boolean).join('').slice(0, 2).toUpperCase() || '·',
+    avBg: VOL_COLORS[i % VOL_COLORS.length],
+  };
+}
+
+export async function getVoluntarios(params = {}) {
+  const lang = isVa(params.lang) ? 'va' : 'es';
+  const query = new URLSearchParams({
+    select: 'nombre,foto,orden,activo,barrios(nombre_es,nombre_va)',
+    order: 'orden.asc,created_at.asc',
+  });
+  query.set('activo', 'eq.true');
+  // Sin seed: si aún no hay voluntarios reales, la sección se oculta (nada de ejemplos falsos).
+  const { items, source } = await fetchRows(`voluntarios?${query.toString()}`, [], (row, l) => row, lang);
+  return { ok: true, source, items: items.map((row, i) => normalizeVoluntario(row, lang, i)) };
+}
+
+export async function getBarrios(params = {}) {
+  const lang = isVa(params.lang) ? 'va' : 'es';
+  const query = new URLSearchParams({
+    select: 'id,slug,nombre_es,nombre_va,orden',
+    order: 'orden.asc,nombre_es.asc',
+  });
+  const { items, source } = await fetchRows(`barrios?${query.toString()}`, seedBarrios, (row) => row, lang);
+  return {
+    ok: true,
+    source,
+    items: items.map((b) => ({ id: b.id || null, slug: b.slug, nombre_es: b.nombre_es, nombre_va: b.nombre_va })),
+  };
 }
 
 export async function getHome(params = {}) {
@@ -451,12 +536,25 @@ export async function getHome(params = {}) {
     campaign: campaigns.featured,
     actuaciones: actuaciones.items.slice(0, 5),
     pins: actuaciones.pins,
+    // Cumplimiento REAL sobre TODAS las actuaciones (no solo las 5 del recorte)
+    cumplimiento: actuaciones.items.length
+      ? Math.round(actuaciones.items.filter((a) => a.stateKey === 'completada' || /solucion/i.test(a.estado || '')).length / actuaciones.items.length * 100)
+      : 0,
   };
 }
 
 export function cacheHeaders(seconds = 300) {
+  // Frescura: el navegador revalida SIEMPRE (nunca sirve una copia vieja) y la CDN de Netlify
+  // cachea como mucho unos segundos, de modo que al publicar/borrar/editar en el admin el cambio
+  // aparece en la web pública casi al instante (antes tardaba hasta el TTL: 5 min). La CDN sigue
+  // absorbiendo ráfagas de tráfico, así que no se pierde rendimiento.
+  const cdn = Math.min(Number(seconds) || 0, 5);
+  if (cdn <= 0) {
+    return { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' };
+  }
   return {
     'content-type': 'application/json; charset=utf-8',
-    'cache-control': `public, max-age=${seconds}`,
+    'cache-control': 'public, max-age=0, must-revalidate',
+    'netlify-cdn-cache-control': `public, s-maxage=${cdn}, stale-while-revalidate=30`,
   };
 }

@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Afíliate — Acción Civil Gandia</title>
+<meta name="description" content="Hazte socio/a de Acción Civil Gandia. Rellena tus datos y completa el pago seguro con Stripe. Baja cuando quieras.">
+<meta name="robots" content="noindex,follow">
+<link rel="canonical" href="https://accioncivilgandia.netlify.app/afiliarse">
+<meta property="og:title" content="Afíliate a Acción Civil Gandia">
+<meta property="og:description" content="Hazte socio/a. Cuota mensual, pago seguro con Stripe, baja cuando quieras.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://accioncivilgandia.netlify.app/afiliarse">
+<meta property="og:image" content="https://accioncivilgandia.netlify.app/assets/logo-icon.webp">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Public+Sans:ital,wght@0,400..700;1,400&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Public Sans,system-ui,-apple-system,sans-serif;color:#17232F;background:#F4F7FB;-webkit-font-smoothing:antialiased;line-height:1.6}
+  a{color:#1563C4}
+  .top{background:#0A2A5E;color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px}
+  .top .brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:#fff}
+  .top .brand img{height:38px;width:38px;object-fit:contain;background:#fff;border-radius:50%;padding:5px}
+  .top .brand b{font:800 16px Fraunces,serif;letter-spacing:.2px}
+  .top .lang{margin-left:auto;display:flex;gap:2px}
+  .top .lang button{border:1.5px solid rgba(255,255,255,.35);background:transparent;color:#fff;font:700 12px Public Sans;padding:5px 11px;border-radius:3px;cursor:pointer}
+  .top .lang button.on{background:#F6BE18;border-color:#F6BE18;color:#0A2A5E}
+  .hero{background:linear-gradient(135deg,#0A2A5E,#123f86);color:#fff;padding:38px 20px 30px;text-align:center}
+  .hero h1{font:800 30px Fraunces,serif;margin:0 0 8px}
+  .hero p{font:400 15px Public Sans;color:#cdd9ec;max-width:520px;margin:0 auto}
+  .wrap{max-width:560px;margin:-18px auto 40px;padding:0 16px}
+  .card{background:#fff;border-radius:18px;box-shadow:0 20px 60px rgba(10,42,94,.14);padding:26px 24px}
+  .lbl{display:block;font:600 12.5px Public Sans;color:#42525F;margin:14px 0 5px}
+  .inp{width:100%;border:1.5px solid #E1E8F1;border-radius:10px;padding:11px 13px;font:400 14.5px Public Sans;outline:none;background:#fff}
+  .inp:focus{border-color:#1563C4}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .amt{display:flex;gap:8px;flex-wrap:wrap;margin-top:2px}
+  .chip{flex:1;min-width:80px;border:1.5px solid #E1E8F1;background:#fff;color:#33414F;font:700 15px Public Sans;padding:13px 8px;border-radius:11px;cursor:pointer;text-align:center}
+  .chip.on{background:#0A2A5E;color:#fff;border-color:#0A2A5E}
+  .chk{display:flex;gap:9px;align-items:flex-start;font:400 12.5px Public Sans;color:#42525F;margin:11px 0;cursor:pointer;line-height:1.45}
+  .chk input{margin-top:2px}
+  .go{width:100%;border:none;cursor:pointer;background:#0A2A5E;color:#fff;font:800 16px Public Sans;padding:15px;border-radius:12px;margin-top:20px}
+  .go:disabled{opacity:.6;cursor:default}
+  .msg{display:none;font:600 13px Public Sans;margin-top:12px;text-align:center}
+  .fine{font:400 11.5px Public Sans;color:#8A97A5;margin:12px 0 0;text-align:center}
+  .foot{text-align:center;padding:22px 20px 34px;font:400 12.5px Public Sans;color:#5C6B7A}
+  .foot a{color:#5C6B7A;margin:0 7px}
+  @media(max-width:460px){.row2{grid-template-columns:1fr}.hero h1{font-size:25px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/"><img src="/assets/logo-icon.webp" alt="Acción Civil Gandia"><b>Acción Civil Gandia</b></a>
+  <div class="lang"><button data-lang="es" class="on">ES</button><button data-lang="va">VA</button></div>
+</header>
+
+<section class="hero">
+  <h1 data-va="Afilia’t a Acció Civil">Afíliate a Acción Civil</h1>
+  <p data-va="Fes-te soci/a del partit. Quota mensual, pagament segur i baixa quan vulgues.">Hazte socio/a del partido. Cuota mensual, pago seguro y baja cuando quieras.</p>
+</section>
+
+<div class="wrap">
+  <div class="card">
+    <p style="font:400 13.5px Public Sans;color:#5C6B7A;margin:0 0 6px" data-va="Les teues dades d’afiliació són categoria especial (RGPD art. 9) i es tracten xifrades.">Tus datos de afiliación son categoría especial (RGPD art. 9) y se tratan cifrados.</p>
+
+    <label class="lbl" data-va="Quota mensual">Cuota mensual</label>
+    <div class="amt" id="amt">
+      <button type="button" class="chip on" data-t="base">15 €</button>
+      <button type="button" class="chip" data-t="media">30 €</button>
+      <button type="button" class="chip" data-t="libre" data-va="Altra">Otra</button>
+    </div>
+    <input id="libre" class="inp" type="number" min="30" step="1" placeholder="€/mes (mínimo 30)" data-va-ph="€/mes (mínim 30)" style="display:none;margin-top:10px">
+
+    <div class="row2" style="margin-top:6px">
+      <div><label class="lbl" data-va="Nom">Nombre</label><input id="n" class="inp"></div>
+      <div><label class="lbl" data-va="Cognoms">Apellidos</label><input id="a" class="inp"></div>
+    </div>
+    <div class="row2">
+      <div><label class="lbl">DNI / NIE</label><input id="d" class="inp"></div>
+      <div><label class="lbl" data-va="Data de naixement">Fecha de nacimiento</label><input id="fn" class="inp" type="date"></div>
+    </div>
+    <label class="lbl">Email</label><input id="e" class="inp" type="email">
+    <div class="row2">
+      <div><label class="lbl" data-va="Adreça">Dirección</label><input id="dir" class="inp"></div>
+      <div><label class="lbl" data-va="Codi postal">Código postal</label><input id="cp" class="inp" inputmode="numeric"></div>
+    </div>
+    <label class="lbl" data-va="Telèfon (opcional)">Teléfono (opcional)</label><input id="tel" class="inp">
+
+    <div style="margin-top:16px">
+      <label class="chk"><input type="checkbox" id="c1"><span data-va="Accepte els estatuts del partit.">Acepto los estatutos del partido.</span></label>
+      <label class="chk"><input type="checkbox" id="c2"><span data-va="Done el meu consentiment explícit al tractament de les meues dades d’afiliació política (RGPD art. 9).">Doy mi consentimiento explícito al tratamiento de mis datos de afiliación política (RGPD art. 9).</span></label>
+    </div>
+
+    <button class="go" id="go" data-va="Afiliar-me">Afiliarme</button>
+    <div class="msg" id="msg"></div>
+    <p class="fine" data-va="Pagament segur amb Stripe · domiciliació SEPA o targeta · baixa quan vulgues">Pago seguro con Stripe · domiciliación SEPA o tarjeta · baja cuando quieras</p>
+  </div>
+</div>
+
+<footer class="foot">
+  <div>© Acción Civil Gandia</div>
+  <div style="margin-top:6px">
+    <a href="/aviso-legal">Aviso legal</a>·<a href="/privacidad">Privacidad</a>·<a href="/participa">Otras formas de participar</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var VA = (localStorage.getItem('acg_lang')||'es')==='va';
+  function T(es,va){return VA?va:es;}
+  // ---- idioma ----
+  function applyLang(){
+    document.documentElement.lang = VA?'ca':'es';
+    document.querySelectorAll('[data-va]').forEach(function(el){
+      if(el.__es==null) el.__es = el.textContent;
+      el.textContent = VA ? el.getAttribute('data-va') : el.__es;
+    });
+    document.querySelectorAll('[data-va-ph]').forEach(function(el){
+      if(el.__esph==null) el.__esph = el.getAttribute('placeholder')||'';
+      el.setAttribute('placeholder', VA ? el.getAttribute('data-va-ph') : el.__esph);
+    });
+    document.querySelectorAll('.lang button').forEach(function(b){b.classList.toggle('on', b.getAttribute('data-lang')===(VA?'va':'es'));});
+  }
+  document.querySelectorAll('.lang button').forEach(function(b){
+    b.addEventListener('click',function(){VA=b.getAttribute('data-lang')==='va';localStorage.setItem('acg_lang',VA?'va':'es');applyLang();});
+  });
+  applyLang();
+
+  // ---- cuota chips ----
+  var tipo='base';
+  var libre=document.getElementById('libre');
+  document.querySelectorAll('#amt .chip').forEach(function(b){
+    b.addEventListener('click',function(){
+      document.querySelectorAll('#amt .chip').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on'); tipo=b.getAttribute('data-t');
+      if(tipo==='libre'){libre.style.display='block';libre.focus();} else {libre.style.display='none';}
+    });
+  });
+
+  // ---- helpers ----
+  function v(id){var el=document.getElementById(id);return el?el.value.trim():'';}
+  function ck(id){var el=document.getElementById(id);return !!(el&&el.checked);}
+  var msg=document.getElementById('msg');
+  function say(t,ok){msg.textContent=t;msg.style.color=ok?'#1E7A45':'#C0392B';msg.style.display='block';}
+  var CAMPOS=['n','a','d','fn','e','dir','cp','tel','libre'];
+  function clearErr(){CAMPOS.forEach(function(id){var el=document.getElementById(id);if(el)el.style.borderColor='';});msg.style.display='none';}
+  function bad(id,t){var el=document.getElementById(id);if(el){el.style.borderColor='#C0392B';el.focus();}say(t);return false;}
+
+  // ---- restricción de teclado en vivo (bloquea caracteres inválidos) ----
+  function sanit(id,fn){var el=document.getElementById(id);if(!el)return;el.addEventListener('input',function(){var c=el.selectionStart,val=el.value,nv=fn(val);if(nv!==val){el.value=nv;try{el.setSelectionRange(c-(val.length-nv.length),c-(val.length-nv.length));}catch(e){}}el.style.borderColor='';});}
+  sanit('tel',function(s){return s.replace(/[^0-9+\s]/g,'');});        // teléfono: solo dígitos, + y espacios
+  sanit('cp',function(s){return s.replace(/\D/g,'').slice(0,5);});      // CP: 5 dígitos
+  sanit('d',function(s){return s.toUpperCase().replace(/[^0-9A-Z]/g,'').slice(0,9);}); // DNI/NIE
+  document.getElementById('d').setAttribute('inputmode','text');
+  document.getElementById('tel').setAttribute('inputmode','tel');
+  document.getElementById('cp').setAttribute('inputmode','numeric');
+
+  // ---- validadores ----
+  function validaDni(raw){
+    var dni=String(raw||'').toUpperCase().replace(/[\s-]/g,'');
+    var m=dni.match(/^([XYZ]?)(\d{7,8})([A-Z])$/);
+    if(!m)return null;
+    var num=m[2]; if(m[1])num=({X:'0',Y:'1',Z:'2'})[m[1]]+num;
+    if(num.length!==8)return null;
+    return ('TRWAGMYFPDXBNJZSQVHLCKE'[Number(num)%23]===m[3])?dni:null;
+  }
+  var NAME_RE=/^[A-Za-zÀ-ÿ’'.\- ]{2,60}$/;
+  var EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  var TEL_RE=/^(?:\+34)?[6-9]\d{8}$/;
+  function edadDe(fn){var d=new Date(fn);if(isNaN(d.getTime()))return -1;var t=new Date(),e=t.getFullYear()-d.getFullYear(),m=t.getMonth()-d.getMonth();if(m<0||(m===0&&t.getDate()<d.getDate()))e--;return e;}
+
+  var go=document.getElementById('go');
+  go.addEventListener('click',function(){
+    clearErr();
+    var importeCents=null;
+    if(tipo==='libre'){
+      importeCents=Math.round(parseFloat((v('libre')||'').replace(',','.'))*100);
+      if(!(importeCents>=3000)) return bad('libre',T('La cuota libre debe ser de 30 € o más.','La quota lliure ha de ser de 30 € o més.'));
+    }
+    if(!NAME_RE.test(v('n'))) return bad('n',T('Introduce un nombre válido (solo letras).','Introduïx un nom vàlid (sols lletres).'));
+    if(!NAME_RE.test(v('a'))) return bad('a',T('Introduce unos apellidos válidos (solo letras).','Introduïx uns cognoms vàlids (sols lletres).'));
+    if(!validaDni(v('d'))) return bad('d',T('DNI/NIE no válido. Revisa el número y la letra.','DNI/NIE no vàlid. Revisa el número i la lletra.'));
+    if(!v('fn')) return bad('fn',T('Indica tu fecha de nacimiento.','Indica la teua data de naixement.'));
+    var edad=edadDe(v('fn'));
+    if(edad<0) return bad('fn',T('Fecha de nacimiento no válida.','Data de naixement no vàlida.'));
+    if(edad<18) return bad('fn',T('Debes ser mayor de 18 años para afiliarte.','Has de ser major de 18 anys per a afiliar-te.'));
+    if(edad>120) return bad('fn',T('Revisa la fecha de nacimiento.','Revisa la data de naixement.'));
+    if(!EMAIL_RE.test(v('e'))) return bad('e',T('Email no válido.','Email no vàlid.'));
+    if(v('dir').length<5) return bad('dir',T('Introduce una dirección válida (calle y número).','Introduïx una adreça vàlida (carrer i número).'));
+    if(!/^\d{5}$/.test(v('cp'))) return bad('cp',T('El código postal debe tener 5 dígitos.','El codi postal ha de tindre 5 dígits.'));
+    if(v('tel') && !TEL_RE.test(v('tel').replace(/\s/g,''))) return bad('tel',T('Teléfono no válido (9 dígitos, ej. 612345678).','Telèfon no vàlid (9 dígits, ex. 612345678).'));
+    if(!(ck('c1')&&ck('c2')))
+      return say(T('Debes aceptar los estatutos y el tratamiento de datos.','Has d’acceptar els estatuts i el tractament de dades.'));
+    var orig=go.textContent; go.disabled=true; go.textContent=T('Redirigiendo a pago seguro…','Redirigint a pagament segur…');
+    fetch('/api/afiliacion',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({
+      nombre:v('n'),apellidos:v('a'),dni:v('d'),email:v('e'),direccion:v('dir'),cp:v('cp'),telefono:v('tel'),
+      fechaNacimiento:v('fn'),cuotaTipo:tipo,importeCents:importeCents,aceptaEstatutos:true,aceptaPrivacidadArt9:true
+    })}).then(function(r){return r.json().catch(function(){return {};}).then(function(j){return {s:r.status,j:j};});})
+    .then(function(r){
+      if(r.j&&r.j.checkoutUrl){window.location=r.j.checkoutUrl;return;}
+      go.disabled=false; go.textContent=orig;
+      say((r.j&&r.j.error&&r.j.error.message)||T('No se pudo procesar. Revisa los datos e inténtalo de nuevo.','No s’ha pogut processar. Revisa les dades i torna-ho a provar.'));
+    }).catch(function(){go.disabled=false;go.textContent=orig;say(T('Error de conexión.','Error de connexió.'));});
+  });
+
+  // ---- agradecimiento al volver de Stripe ----
+  try{
+    var p=new URLSearchParams(location.search);
+    if(p.get('afiliacion')==='ok'){
+      document.querySelector('.card').innerHTML='<div style="text-align:center;padding:20px 6px"><div style="font-size:48px;margin-bottom:10px">✅</div><h2 style="font:800 24px Fraunces,serif;color:#0A2A5E;margin:0 0 8px">'+T('¡Gracias!','Gràcies!')+'</h2><p style="font:400 14.5px Public Sans;color:#5C6B7A;margin:0">'+T('Tu afiliación está en marcha. Recibirás la confirmación por email.','La teua afiliació està en marxa. Rebràs la confirmació per email.')+'</p></div>';
+    }
+  }catch(e){}
+})();
+</script>
+<script src="/assets/acg-shop.js?v=7" defer></script>
+</body>
+</html>

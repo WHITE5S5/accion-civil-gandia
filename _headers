@@ -1,10 +1,20 @@
 /*
+  Cache-Control: public, max-age=0, must-revalidate
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://unpkg.com; connect-src 'self' https://*.supabase.co; frame-src https://challenges.cloudflare.com
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://challenges.cloudflare.com https://*.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.supabase.co https://i.ytimg.com https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://unpkg.com; connect-src 'self' https://*.supabase.co https://photon.komoot.io https://nominatim.openstreetmap.org https://*.sentry.io; frame-src https://challenges.cloudflare.com https://www.openstreetmap.org
 
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
+
+# Los JS de assets cambian con cada fase: cache corto y revalidable
+/assets/*.js
+  Cache-Control: public, max-age=300, must-revalidate
+
+# Fotos de miembros: se reemplazan reusando el mismo nombre → NO immutable
+# (si no, el navegador sirve la vieja hasta un año). Revalidable.
+/assets/miembros/*
+  Cache-Control: public, max-age=300, must-revalidate

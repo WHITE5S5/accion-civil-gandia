@@ -27,3 +27,10 @@ CONTENIDO_REAL_SCRAPEADO.md
 .env
 .env.*
 !.env.example
+
+# Artefactos regenerables y material interno (añadido 2026-07-18)
+deploy_netlify/
+.tokensave/
+auditoria-unlighthouse*/
+contenido_borrador/
+.playwright-mcp/

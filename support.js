@@ -88,6 +88,18 @@
       border:1px solid color-mix(in srgb,currentColor 50%,transparent);
       border-radius:2px;box-sizing:border-box;overflow:hidden}
     @keyframes sc-shine{0%{background-position:100% 50%}100%{background-position:0% 50%}}
+    /* Esqueleto de carga reutilizable (nunca datos de ejemplo) */
+    .acg-sk{position:relative;overflow:hidden;color:transparent!important;
+      background:#EEF2F6!important;border-color:#E4EBF2!important;box-shadow:none!important;pointer-events:none}
+    .acg-sk *{visibility:hidden!important}
+    .acg-sk::after{content:'';position:absolute;inset:0;pointer-events:none;
+      background:linear-gradient(90deg,rgba(233,238,244,0) 20%,rgba(210,220,232,.85) 40%,rgba(233,238,244,0) 60%);
+      background-size:300% 100%;animation:sc-shine 1.35s ease infinite}
+    /* Aparición suave del contenido real (del esqueleto a lo real, sin salto brusco) */
+    @media (prefers-reduced-motion: no-preference){
+      .acg-in{animation:acgIn .45s cubic-bezier(.22,.61,.36,1) both}
+      @keyframes acgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+    }
     html.sc-dc-streaming .sc-placeholder,
     html.sc-dc-streaming .sc-interp.sc-missing{position:relative;
       background:color-mix(in srgb,currentColor 5%,transparent);
@@ -113,7 +125,7 @@
     .sc-host.sc-has-error{position:relative}
     .sc-logic-error{position:absolute;top:8px;left:8px;z-index:2147483647;max-width:60ch;
       padding:6px 10px;background:#b00020;color:#fff;font:12px/1.4 ui-monospace,monospace;
-      border-radius:4px;white-space:pre-wrap;pointer-events:none}
+      border-radius:3px;white-space:pre-wrap;pointer-events:none}
     /* Mirrors PRINT_BASELINE_CSS in apps/web deck-stage-export.ts \u2014 keep both
        in sync until dc-runtime regains a build step. */
     @media print {
@@ -1655,4 +1667,491 @@
     console.error("[dc] failed to load React or boot:", err);
     throw err;
   });
+})();
+
+/* === ACG: cableado de formularios publicos (newsletter, contacto, propuesta) === */
+(function () {
+  var CATS = ['Urbanismo y vivienda', 'Movilidad y transporte', 'Medio ambiente', 'Cultura y fiestas', 'Educación', 'Sanidad', 'Servicios sociales', 'Seguridad ciudadana', 'Economía local', 'Deportes', 'Turismo', 'Otro'];
+  var BARR = ['Toda la ciudad', 'Centro', 'Playa-Grao', 'Beniopa', 'Benipeixcar', 'Santa Anna', 'Corea', 'Marchuquera', 'Otro barrio'];
+  function lang() { try { return localStorage.getItem('acg_lang') === 'va' ? 'va' : 'es'; } catch (e) { return 'es'; } }
+  function T(es, va) { return lang() === 'va' ? va : es; }
+  function emailOk(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); }
+  function val(root, f) { var el = root.querySelector('[data-f="' + f + '"]'); return el ? String(el.value || '').trim() : ''; }
+  function msgIn(form, text, ok) {
+    var m = form.querySelector('.acg-form-msg');
+    if (!m) { m = document.createElement('div'); m.className = 'acg-form-msg'; form.appendChild(m); }
+    m.style.cssText = 'display:block;padding:12px 16px;border-radius:3px;font:600 14px Public Sans;' +
+      (ok ? 'background:#E7F4EC;color:#1F7A43;border:1.5px solid #BFE3CC' : 'background:#FDECEC;color:#B3261E;border:1.5px solid #F2C7C4');
+    m.textContent = text;
+    if (m.scrollIntoView) m.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+  function busy(btn, on) {
+    if (!btn) return;
+    if (on) { btn.__h = btn.innerHTML; btn.disabled = true; btn.style.opacity = '.6'; btn.textContent = T('Enviando…', 'Enviant…'); }
+    else { btn.disabled = false; btn.style.opacity = ''; if (btn.__h) btn.innerHTML = btn.__h; }
+  }
+  function post(url, body, token) {
+    var h = { 'content-type': 'application/json' };
+    if (token) h.authorization = 'Bearer ' + token;
+    return fetch(url, { method: 'POST', headers: h, body: JSON.stringify(body) })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, status: r.status, d: d }; }); });
+  }
+  function serverMsg(res, fallback) {
+    return (res && res.d && res.d.error && res.d.error.message) ? res.d.error.message : fallback;
+  }
+
+  /* --- Newsletter (footer de todas las paginas) --- */
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('.acg-nl-btn') : null;
+    if (!btn) return;
+    e.preventDefault();
+    var row = btn.parentElement;
+    var inp = row.querySelector('.acg-nl-in') || row.querySelector('input');
+    var m = row.parentElement.querySelector('.acg-nl-msg');
+    if (!m) { m = document.createElement('div'); m.className = 'acg-nl-msg'; row.insertAdjacentElement('afterend', m); }
+    function fb(text, ok) { m.style.cssText = 'margin:-8px 0 12px;font:600 13px Public Sans;color:' + (ok ? '#7BD89B' : '#FFB3AD'); m.textContent = text; }
+    var email = String(inp && inp.value || '').trim();
+    if (!emailOk(email)) { fb(T('Escribe un correo válido', 'Escriu un correu vàlid'), false); return; }
+    busy(btn, true);
+    post('/api/newsletter', { email: email, lang: lang() })
+      .then(function (r) {
+        busy(btn, false);
+        if (r.ok) { if (inp) inp.value = ''; fb(T('¡Hecho! Revisa tu correo y confirma la suscripción.', 'Fet! Revisa el teu correu i confirma la subscripció.'), true); }
+        else fb(serverMsg(r, T('No se pudo procesar. Prueba más tarde.', 'No s’ha pogut processar. Prova més tard.')), false);
+      })
+      .catch(function () { busy(btn, false); fb(T('Sin conexión. Prueba más tarde.', 'Sense connexió. Prova més tard.'), false); });
+  });
+
+  /* --- Contacto --- */
+  document.addEventListener('submit', function (e) {
+    var form = e.target;
+    if (!form || form.id !== 'acg-form-contacto') return;
+    e.preventDefault();
+    var btn = form.querySelector('button[type="submit"]');
+    var priv = form.querySelector('#privacy-check');
+    var nombre = val(form, 'nombre'), apellidos = val(form, 'apellidos'), email = val(form, 'email'), mensaje = val(form, 'mensaje');
+    var sel = form.querySelector('[data-f="asunto"]');
+    var asunto = sel && sel.selectedIndex > -1 ? sel.options[sel.selectedIndex].text : '';
+    if (nombre.length < 2) return msgIn(form, T('Escribe tu nombre (mínimo 2 letras).', 'Escriu el teu nom (mínim 2 lletres).'), false);
+    if (!emailOk(email)) return msgIn(form, T('Escribe un correo válido.', 'Escriu un correu vàlid.'), false);
+    if (mensaje.length < 10) return msgIn(form, T('El mensaje debe tener al menos 10 caracteres.', 'El missatge ha de tindre almenys 10 caràcters.'), false);
+    if (priv && !priv.checked) return msgIn(form, T('Debes aceptar la política de privacidad.', 'Has d’acceptar la política de privacitat.'), false);
+    busy(btn, true);
+    post('/api/contacto', { nombre: nombre, apellidos: apellidos, email: email, asunto: asunto, mensaje: mensaje, hp: val(form, 'hp') })
+      .then(function (r) {
+        busy(btn, false);
+        if (r.ok) {
+          form.querySelectorAll('input[data-f],textarea[data-f]').forEach(function (el) { el.value = ''; });
+          if (priv) priv.checked = false;
+          msgIn(form, T('¡Mensaje enviado! Te responderemos en 24-48 h laborables.', 'Missatge enviat! Et respondrem en 24-48 h laborables.'), true);
+        } else msgIn(form, serverMsg(r, T('No se pudo enviar. Prueba más tarde.', 'No s’ha pogut enviar. Prova més tard.')), false);
+      })
+      .catch(function () { busy(btn, false); msgIn(form, T('Sin conexión. Prueba más tarde.', 'Sense connexió. Prova més tard.'), false); });
+  }, true);
+
+  /* --- Crear propuesta: la gestiona /assets/acg-forms.js (con imágenes). Aquí se DESACTIVA
+     este handler para no enviar el POST dos veces (causaba la propuesta duplicada). --- */
+  document.addEventListener('submit', function (e) {
+    var form = e.target;
+    if (!form || form.id !== 'acg-form-propuesta') return;
+    return; // duplicado desactivado: el envío lo hace acg-forms.js
+    e.preventDefault();
+    var btn = form.querySelector('button[type="submit"]');
+    var titulo = val(form, 'titulo'), desc = val(form, 'descripcion'), nombre = val(form, 'nombre'), email = val(form, 'email');
+    var selC = form.querySelector('[data-f="categoria"]'), selB = form.querySelector('[data-f="barrio"]');
+    var priv = form.querySelector('#priv-check'), anon = form.querySelector('#anon-check');
+    var token = ''; try { token = localStorage.getItem('acg_session') || ''; } catch (err) {}
+    if (!token) { msgIn(form, T('Debes iniciar sesión para enviar una propuesta. Ve a "Mi cuenta" y vuelve.', 'Has d’iniciar sessió per enviar una proposta. Vés a "El meu compte" i torna.'), false); return; }
+    if (titulo.length < 5) return msgIn(form, T('El título debe tener al menos 5 caracteres.', 'El títol ha de tindre almenys 5 caràcters.'), false);
+    if (desc.length < 30) return msgIn(form, T('Describe tu propuesta con al menos 30 caracteres.', 'Descriu la teua proposta amb almenys 30 caràcters.'), false);
+    if (!selC || selC.selectedIndex < 1) return msgIn(form, T('Selecciona una categoría.', 'Selecciona una categoria.'), false);
+    if (priv && !priv.checked) return msgIn(form, T('Debes aceptar la política de privacidad.', 'Has d’acceptar la política de privacitat.'), false);
+    var categoria = CATS[selC.selectedIndex - 1] || 'Otro';
+    var barrio = selB ? (BARR[selB.selectedIndex] || 'Toda la ciudad') : 'Toda la ciudad';
+    busy(btn, true);
+    post('/api/propuesta', { titulo: titulo, descripcion: desc, categoria: categoria, barrio: barrio, nombre: nombre, email: email, anonimo: !!(anon && anon.checked), hp: val(form, 'hp') }, token)
+      .then(function (r) {
+        busy(btn, false);
+        if (r.ok) {
+          form.querySelectorAll('input[data-f],textarea[data-f]').forEach(function (el) { el.value = ''; });
+          if (priv) priv.checked = false;
+          if (anon) anon.checked = false;
+          if (selC) selC.selectedIndex = 0;
+          msgIn(form, T('¡Propuesta enviada! Pasará a revisión del equipo antes de publicarse.', 'Proposta enviada! Passarà a revisió de l’equip abans de publicar-se.'), true);
+        } else if (r.status === 401) {
+          msgIn(form, T('Tu sesión ha caducado. Inicia sesión de nuevo en "Mi cuenta".', 'La teua sessió ha caducat. Inicia sessió de nou a "El meu compte".'), false);
+        } else msgIn(form, serverMsg(r, T('No se pudo enviar. Prueba más tarde.', 'No s’ha pogut enviar. Prova més tard.')), false);
+      })
+      .catch(function () { busy(btn, false); msgIn(form, T('Sin conexión. Prueba más tarde.', 'Sense connexió. Prova més tard.'), false); });
+  }, true);
+})();
+
+/* === ACG: buscador global real (sobre APIs publicas) === */
+(function () {
+  function lang() { try { return localStorage.getItem('acg_lang') === 'va' ? 'va' : 'es'; } catch (e) { return 'es'; } }
+  function T(es, va) { return lang() === 'va' ? va : es; }
+  function norm(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
+
+  var TYPES = [
+    { ep: '/api/proposals', label: ['Propuesta', 'Proposta'], color: '#1563C4', bg: '#EAF3FC',
+      url: function (it) { return '/propuesta-ciudadana?id=' + encodeURIComponent(it.id); } },
+    { ep: '/api/posts', label: ['Noticia', 'Notícia'], color: '#9A6208', bg: '#FBF0DC',
+      url: function (it) { return it.href || '/actualidad'; } },
+    { ep: '/api/events', label: ['Evento', 'Esdeveniment'], color: '#2E9E5B', bg: '#E7F4EC',
+      url: function (it) { return it.href || '/agenda'; } },
+    { ep: '/api/campaigns', label: ['Campaña', 'Campanya'], color: '#B3261E', bg: '#FDECEC',
+      url: function (it) { return it.href || '/campanas'; } },
+    { ep: '/api/actuaciones', label: ['Actuación', 'Actuació'], color: '#5C6B7A', bg: '#F0F4F9',
+      url: function (it) { return it.href || '/mapa-actuaciones'; } }
+  ];
+
+  function itemText(it) {
+    return norm([it.title, it.titulo, it.excerpt, it.desc, it.descripcion, it.cat, it.barrio].filter(Boolean).join(' '));
+  }
+  function itemTitle(it) { return it.title || it.titulo || ''; }
+  function itemSub(it) { return it.excerpt || it.desc || it.descripcion || it.date || it.fecha || ''; }
+
+  function ensureBox(anchor) {
+    var box = document.getElementById('acg-srch-results');
+    if (!box) {
+      box = document.createElement('div');
+      box.id = 'acg-srch-results';
+      box.style.cssText = 'max-width:1080px;margin:26px auto 10px;padding:0 20px';
+      anchor.insertAdjacentElement('afterend', box);
+    }
+    return box;
+  }
+
+  function render(box, q, groups, searching) {
+    if (searching) {
+      box.innerHTML = '<div style="text-align:center;color:#5C6B7A;font:600 15px Public Sans;padding:18px">' + T('Buscando…', 'Cercant…') + '</div>';
+      return;
+    }
+    var total = groups.reduce(function (n, g) { return n + g.items.length; }, 0);
+    var h = '<div style="font:700 15px Public Sans;color:#0A2A5E;margin:4px 0 14px">' +
+      (total ? (total + ' ' + T('resultados para', 'resultats per a') + ' “' + q + '”')
+             : T('Sin resultados para', 'Sense resultats per a') + ' “' + q + '”. ' + T('Prueba con otra palabra.', 'Prova amb una altra paraula.')) + '</div>';
+    groups.forEach(function (g) {
+      if (!g.items.length) return;
+      g.items.slice(0, 6).forEach(function (it) {
+        h += '<a href="' + g.t.url(it) + '" style="display:block;background:#fff;border:1.5px solid #E9EEF4;border-radius:3px;padding:14px 18px;margin-bottom:10px;text-decoration:none" ' +
+          'onmouseover="this.style.borderColor=\'#CFDDEC\'" onmouseout="this.style.borderColor=\'#E9EEF4\'">' +
+          '<span style="display:inline-block;font:700 11px Public Sans;letter-spacing:.08em;text-transform:uppercase;color:' + g.t.color + ';background:' + g.t.bg + ';padding:3px 9px;border-radius:3px;margin-bottom:6px">' + (lang() === 'va' ? g.t.label[1] : g.t.label[0]) + '</span>' +
+          '<div style="font:700 15.5px Public Sans;color:#0A2A5E">' + itemTitle(it) + '</div>' +
+          (itemSub(it) ? '<div style="font:400 13.5px Public Sans;color:#5C6B7A;margin-top:3px">' + String(itemSub(it)).slice(0, 140) + '</div>' : '') +
+          '</a>';
+      });
+    });
+    box.innerHTML = h;
+  }
+
+  function doSearch() {
+    var inp = document.querySelector('.acg-srch-in');
+    if (!inp) return;
+    var q = String(inp.value || '').trim();
+    var hero = inp.closest('div[style*="border-radius"]') || inp.parentElement.parentElement;
+    // ancla: el contenedor grande del hero (subir hasta seccion)
+    var anchor = inp;
+    for (var i = 0; i < 6 && anchor.parentElement; i++) {
+      anchor = anchor.parentElement;
+      if ((anchor.getAttribute('style') || '').indexOf('background') > -1 && anchor.offsetWidth > 600) break;
+    }
+    var box = ensureBox(anchor);
+    if (q.length < 2) { box.innerHTML = '<div style="text-align:center;color:#5C6B7A;font:600 14px Public Sans;padding:10px">' + T('Escribe al menos 2 letras.', 'Escriu almenys 2 lletres.') + '</div>'; return; }
+    render(box, q, [], true);
+    var nq = norm(q);
+    Promise.all(TYPES.map(function (t) {
+      return fetch(t.ep + '?lang=' + lang()).then(function (r) { return r.ok ? r.json() : { items: [] }; }).catch(function () { return { items: [] }; });
+    })).then(function (results) {
+      var groups = results.map(function (d, i) {
+        var items = (d.items || []).filter(function (it) { return itemText(it).indexOf(nq) > -1; });
+        return { t: TYPES[i], items: items };
+      });
+      render(box, q, groups, false);
+    });
+  }
+
+  document.addEventListener('click', function (e) {
+    if (e.target.closest && e.target.closest('.acg-srch-btn')) { e.preventDefault(); doSearch(); }
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('acg-srch-in')) { e.preventDefault(); doSearch(); }
+  });
+})();
+
+/* === ACG: imágenes con fundido — nunca se ve el icono de "imagen rota" mientras cargan === */
+(function () {
+  var LOADED = {};
+  function fix(img) {
+    if (img.getAttribute('data-acg-img')) return;
+    img.setAttribute('data-acg-img', '1');
+    var src = img.currentSrc || img.src || '';
+    if ((img.complete && img.naturalWidth) || LOADED[src]) { img.style.opacity = '1'; return; }  // ya cargada/cacheada: sin fundido
+    img.style.opacity = '0';
+    img.style.transition = 'opacity .35s ease';
+    img.addEventListener('load', function () { LOADED[img.currentSrc || img.src || ''] = 1; img.style.opacity = '1'; });
+    img.addEventListener('error', function () { img.style.opacity = '0'; });                      // rota: no mostrar icono
+  }
+  function scanAll() { var im = document.querySelectorAll('img'); for (var i = 0; i < im.length; i++) fix(im[i]); }
+  scanAll();
+  try {
+    new MutationObserver(function (muts) {
+      for (var i = 0; i < muts.length; i++) {
+        var a = muts[i].addedNodes;
+        for (var k = 0; k < a.length; k++) {
+          var nd = a[k]; if (!nd || nd.nodeType !== 1) continue;
+          if (nd.tagName === 'IMG') fix(nd);
+          else if (nd.querySelectorAll) { var im2 = nd.querySelectorAll('img'); for (var j = 0; j < im2.length; j++) fix(im2[j]); }
+        }
+      }
+    }).observe(document.documentElement, { childList: true, subtree: true });
+  } catch (e) {}
+})();
+
+// Recuperación de contraseña: Supabase redirige a la raíz con #access_token…&type=recovery.
+// Este bloque captura ese hash y muestra el formulario para fijar la nueva contraseña.
+(function () {
+  var h = location.hash || '';
+  if (h.indexOf('access_token') === -1 && h.indexOf('error_description') === -1) return;
+  var p = {};
+  h.replace(/^#/, '').split('&').forEach(function (kv) {
+    var i = kv.indexOf('=');
+    if (i > -1) p[kv.slice(0, i)] = decodeURIComponent(kv.slice(i + 1).replace(/\+/g, ' '));
+  });
+  var VA = (localStorage.getItem('acg_lang') || 'es') === 'va';
+  function T(es, va) { return VA ? va : es; }
+  var SUPA = 'https://msbrdowdkwqrrdlfeztj.supabase.co';
+  var ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1zYnJkb3dka3dxcnJkbGZlenRqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0NDc5NTAsImV4cCI6MjA5OTAyMzk1MH0.ByomcWyS0YiQHg8KjdYvx32vxwa1ilGZOE-1aD0TRR0';
+
+  function overlay(inner) {
+    var ov = document.createElement('div');
+    ov.id = 'acg-recovery';
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(10,42,94,.55);z-index:99999;display:flex;align-items:center;justify-content:center;padding:18px';
+    ov.innerHTML = '<div style="background:#fff;border-radius:3px;max-width:400px;width:100%;padding:28px 26px;font-family:Public Sans,Arial,sans-serif;box-shadow:0 24px 60px rgba(10,42,94,.35)">' + inner + '</div>';
+    document.body.appendChild(ov);
+    return ov;
+  }
+
+  function arrancar() {
+    if (!p.access_token) {
+      var msg = p.error_description || T('El enlace no es válido o ha caducado.', 'L’enllaç no és vàlid o ha caducat.');
+      var ov0 = overlay(
+        '<h3 style="margin:0 0 10px;color:#0A2A5E;font-size:19px">' + T('Enlace caducado', 'Enllaç caducat') + '</h3>' +
+        '<p style="margin:0 0 18px;color:#33414F;font-size:14.5px;line-height:1.6">' + msg + ' ' + T('Vuelve a pedir el correo de recuperación.', 'Torna a demanar el correu de recuperació.') + '</p>' +
+        '<button id="acg-rec-cerrar" style="background:#0A2A5E;color:#fff;border:0;border-radius:3px;padding:11px 20px;font-weight:700;cursor:pointer;width:100%">' + T('Entendido', 'Entés') + '</button>');
+      ov0.querySelector('#acg-rec-cerrar').onclick = function () { ov0.remove(); };
+      history.replaceState(null, '', location.pathname + location.search);
+      return;
+    }
+    if (p.type !== 'recovery') {
+      // Confirmación de cuenta o enlace mágico: guardar sesión y avisar.
+      try {
+        localStorage.setItem('acg_session', p.access_token);
+        if (p.refresh_token) localStorage.setItem('acg_refresh', p.refresh_token);
+      } catch (err) {}
+      history.replaceState(null, '', location.pathname + location.search);
+      var esAlta = p.type === 'signup' || p.type === 'invite';
+      var ov1 = overlay(
+        '<h3 style="margin:0 0 10px;color:#0A2A5E;font-size:19px">' + (esAlta ? T('Cuenta confirmada ✓', 'Compte confirmat ✓') : T('Sesión iniciada ✓', 'Sessió iniciada ✓')) + '</h3>' +
+        '<p style="margin:0 0 18px;color:#33414F;font-size:14.5px;line-height:1.6">' + (esAlta
+          ? T('Tu correo queda verificado y tu sesión iniciada. Ya puedes participar: proponer, votar y comentar.', 'El teu correu queda verificat i la teua sessió iniciada. Ja pots participar: proposar, votar i comentar.')
+          : T('Has entrado con tu enlace de acceso.', 'Has entrat amb el teu enllaç d’accés.')) + '</p>' +
+        '<div style="display:flex;gap:10px">' +
+        '<a href="/cuenta" style="flex:1;background:#1563C4;color:#fff;border-radius:3px;padding:12px 0;font-weight:700;text-align:center;text-decoration:none">' + T('Ir a mi cuenta', 'Anar al meu compte') + '</a>' +
+        '<button id="acg-rec-seguir" style="flex:1;background:#EEF2F7;color:#0A2A5E;border:0;border-radius:3px;padding:12px 0;font-weight:700;cursor:pointer">' + T('Seguir aquí', 'Seguir ací') + '</button></div>');
+      ov1.querySelector('#acg-rec-seguir').onclick = function () { ov1.remove(); };
+      return;
+    }
+    var ov = overlay(
+      '<h3 style="margin:0 0 6px;color:#0A2A5E;font-size:19px">' + T('Nueva contraseña', 'Nova contrasenya') + '</h3>' +
+      '<p style="margin:0 0 16px;color:#5C6B7A;font-size:13.5px">' + T('Elige la nueva contraseña de tu cuenta (mínimo 8 caracteres).', 'Tria la nova contrasenya del teu compte (mínim 8 caràcters).') + '</p>' +
+      '<input id="acg-rec-p1" type="password" autocomplete="new-password" placeholder="' + T('Nueva contraseña', 'Nova contrasenya') + '" style="width:100%;box-sizing:border-box;border:1.5px solid #D7E0EA;border-radius:3px;padding:12px 14px;font-size:14.5px;margin-bottom:10px">' +
+      '<input id="acg-rec-p2" type="password" autocomplete="new-password" placeholder="' + T('Repite la contraseña', 'Repeteix la contrasenya') + '" style="width:100%;box-sizing:border-box;border:1.5px solid #D7E0EA;border-radius:3px;padding:12px 14px;font-size:14.5px;margin-bottom:14px">' +
+      '<div id="acg-rec-msg" style="min-height:18px;color:#C0392B;font-size:13px;margin-bottom:8px"></div>' +
+      '<button id="acg-rec-ok" style="background:#1563C4;color:#fff;border:0;border-radius:3px;padding:12px 20px;font-weight:700;cursor:pointer;width:100%;font-size:15px">' + T('Guardar contraseña', 'Guardar contrasenya') + '</button>');
+    var msgEl = ov.querySelector('#acg-rec-msg');
+    ov.querySelector('#acg-rec-ok').onclick = function () {
+      var v1 = ov.querySelector('#acg-rec-p1').value, v2 = ov.querySelector('#acg-rec-p2').value;
+      if (v1.length < 8) { msgEl.textContent = T('Mínimo 8 caracteres.', 'Mínim 8 caràcters.'); return; }
+      if (v1 !== v2) { msgEl.textContent = T('Las contraseñas no coinciden.', 'Les contrasenyes no coincideixen.'); return; }
+      var btn = this; btn.disabled = true; btn.style.opacity = '.6'; msgEl.textContent = '';
+      fetch(SUPA + '/auth/v1/user', {
+        method: 'PUT',
+        headers: { apikey: ANON, authorization: 'Bearer ' + p.access_token, 'content-type': 'application/json' },
+        body: JSON.stringify({ password: v1 })
+      }).then(function (r) { return r.json().then(function (j) { return { s: r.status, j: j }; }); }).then(function (res) {
+        if (res.s >= 200 && res.s < 300) {
+          try {
+            localStorage.setItem('acg_session', p.access_token);
+            if (p.refresh_token) localStorage.setItem('acg_refresh', p.refresh_token);
+          } catch (err) {}
+          history.replaceState(null, '', location.pathname + location.search);
+          ov.firstChild.innerHTML = '<h3 style="margin:0 0 10px;color:#0A2A5E;font-size:19px">' + T('Contraseña actualizada ✓', 'Contrasenya actualitzada ✓') + '</h3>' +
+            '<p style="margin:0 0 18px;color:#33414F;font-size:14.5px;line-height:1.6">' + T('Ya puedes usar tu nueva contraseña. Tu sesión ha quedado iniciada.', 'Ja pots usar la teua nova contrasenya. La teua sessió ha quedat iniciada.') + '</p>' +
+            '<button style="background:#0A2A5E;color:#fff;border:0;border-radius:3px;padding:11px 20px;font-weight:700;cursor:pointer;width:100%" onclick="document.getElementById(\'acg-recovery\').remove()">' + T('Perfecto', 'Perfecte') + '</button>';
+        } else {
+          btn.disabled = false; btn.style.opacity = '1';
+          msgEl.textContent = (res.j && (res.j.msg || res.j.message || res.j.error_description)) || T('No se pudo guardar. Inténtalo de nuevo.', 'No s’ha pogut guardar. Torna-ho a intentar.');
+        }
+      }).catch(function () {
+        btn.disabled = false; btn.style.opacity = '1';
+        msgEl.textContent = T('Error de red. Inténtalo de nuevo.', 'Error de xarxa. Torna-ho a intentar.');
+      });
+    };
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', arrancar);
+  else arrancar();
+})();
+
+// CTAs funcionales: Compartir, Confirmar asistencia y Descargar PDF (antes eran solo estética).
+(function () {
+  var VA = (function () { try { return (localStorage.getItem('acg_lang') || 'es') === 'va'; } catch (e) { return false; } })();
+  function aviso(msg) {
+    var t = document.createElement('div');
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0A2A5E;color:#fff;padding:12px 22px;border-radius:3px;font:700 14px Public Sans,sans-serif;z-index:99999;box-shadow:0 10px 30px rgba(10,42,94,.35)';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function () { t.remove(); }, 2600);
+  }
+  function asistencia(slug) {
+    var old = document.getElementById('acg-asist'); if (old) old.remove();
+    if (!slug) { var m0 = location.pathname.match(/^\/agenda\/([a-z0-9-]+)/); slug = m0 ? m0[1] : ''; }
+    if (!slug) { aviso(VA ? 'Obri l’acte per a inscriure’t' : 'Abre el acto para inscribirte'); return; }
+    var titulo = (document.title || '').split('—')[0].trim();
+    var ov = document.createElement('div');
+    ov.id = 'acg-asist';
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(10,42,94,.55);z-index:99999;display:flex;align-items:center;justify-content:center;padding:18px';
+    ov.innerHTML = '<div style="background:#fff;border-radius:3px;max-width:400px;width:100%;padding:26px 24px;font-family:Public Sans,Arial,sans-serif">'
+      + '<h3 style="margin:0 0 6px;color:#0A2A5E;font-size:18px">' + (VA ? 'Confirma la teua assistència' : 'Confirma tu asistencia') + '</h3>'
+      + '<p style="margin:0 0 14px;color:#5C6B7A;font-size:13.5px">' + (VA ? 'T’apuntem a: ' : 'Te apuntamos a: ') + '<b>' + titulo.replace(/</g, '&lt;') + '</b></p>'
+      + '<input id="acg-as-n" placeholder="' + (VA ? 'El teu nom' : 'Tu nombre') + '" style="width:100%;box-sizing:border-box;border:1.5px solid #D7E0EA;border-radius:3px;padding:11px 13px;font-size:14px;margin-bottom:9px">'
+      + '<input id="acg-as-e" type="email" placeholder="' + (VA ? 'El teu correu' : 'Tu correo') + '" style="width:100%;box-sizing:border-box;border:1.5px solid #D7E0EA;border-radius:3px;padding:11px 13px;font-size:14px;margin-bottom:12px">'
+      + '<div id="acg-as-m" style="min-height:16px;color:#C0392B;font-size:12.5px;margin-bottom:6px"></div>'
+      + '<div style="display:flex;gap:10px"><button id="acg-as-ok" style="flex:1;background:#1563C4;color:#fff;border:0;border-radius:3px;padding:12px 0;font-weight:700;cursor:pointer">' + (VA ? 'Confirmar' : 'Confirmar') + '</button>'
+      + '<button id="acg-as-no" style="flex:1;background:#EEF2F7;color:#42525F;border:0;border-radius:3px;padding:12px 0;font-weight:700;cursor:pointer">' + (VA ? 'Cancel·lar' : 'Cancelar') + '</button></div></div>';
+    document.body.appendChild(ov);
+    ov.querySelector('#acg-as-no').onclick = function () { ov.remove(); };
+    ov.addEventListener('click', function (e) { if (e.target === ov) ov.remove(); });
+    ov.querySelector('#acg-as-ok').onclick = function () {
+      var n = ov.querySelector('#acg-as-n').value.trim(), em = ov.querySelector('#acg-as-e').value.trim();
+      var m = ov.querySelector('#acg-as-m');
+      if (n.length < 2) { m.textContent = VA ? 'Escriu el teu nom' : 'Escribe tu nombre'; return; }
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) { m.textContent = VA ? 'Correu no vàlid' : 'Correo no válido'; return; }
+      var btn = this; btn.disabled = true;
+      var h = { 'content-type': 'application/json' };
+      try { var tk = localStorage.getItem('acg_session'); if (tk) h.authorization = 'Bearer ' + tk; } catch (e2) {}
+      fetch('/api/inscripcion', {
+        method: 'POST', headers: h,
+        body: JSON.stringify({ eventSlug: slug, nombre: n, email: em, lang: VA ? 'va' : 'es' })
+      }).then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { s: r.status, j: j }; }); })
+      .then(function (r) {
+        if (r.j && r.j.ok) { ov.remove(); aviso(VA ? 'Inscripció feta. T’hem enviat la confirmació per correu ✓' : 'Inscripción hecha. Te hemos enviado la confirmación por correo ✓'); }
+        else if (r.j && r.j.error && r.j.error.code === 'no_inscribible') { ov.remove(); aviso(VA ? 'Este acte és informatiu: vine directament, sense inscripció' : 'Este acto es informativo: ven directamente, sin inscripción'); }
+        else { btn.disabled = false; m.textContent = (r.j && r.j.error && r.j.error.message) || (VA ? 'No s’ha pogut enviar' : 'No se pudo enviar'); }
+      }).catch(function () { btn.disabled = false; m.textContent = 'Error'; });
+    };
+  }
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest && e.target.closest('button,a');
+    if (!el) return;
+    var t = (el.textContent || '').trim().toLowerCase();
+    var alb = ((el.getAttribute && el.getAttribute('aria-label')) || '').toLowerCase();
+    if (t === 'compartir' || t === 'compartir en redes' || t === 'compartir en xarxes' || alb.indexOf('compartir') === 0) {
+      e.preventDefault();
+      if (navigator.share) navigator.share({ title: document.title, url: location.href }).catch(function () {});
+      else { try { navigator.clipboard.writeText(location.href); aviso(VA ? 'Enllaç copiat ✓' : 'Enlace copiado ✓'); } catch (err) {} }
+      return;
+    }
+    if (t === 'confirmar asistencia' || t === 'confirmar assistència') { e.preventDefault(); asistencia(el.getAttribute('data-slug') || ''); return; }
+    if (el.hasAttribute && el.hasAttribute('data-slug') && el.getAttribute('data-slug')) {
+      var sl = el.getAttribute('data-slug');
+      if (t.indexOf('inscri') === 0) { e.preventDefault(); asistencia(sl); return; }
+      if (t.indexOf('más informaci') === 0 || t.indexOf('més informaci') === 0) { e.preventDefault(); location.href = '/agenda/' + sl; return; }
+    }
+    if (t.indexOf('descargar pdf') === 0 || t.indexOf('descarregar pdf') === 0 || t.indexOf('descargar programa') === 0 || t.indexOf('descarregar programa') === 0) {
+      e.preventDefault(); window.open('/programa-electoral?print=1', '_blank'); return;
+    }
+  }, true);
+  // Llegada con ?print=1: abrir el diálogo de imprimir/guardar como PDF cuando cargue el contenido.
+  if (/[?&]print=1/.test(location.search)) setTimeout(function () { window.print(); }, 1800);
+})();
+
+// Analítica propia: página vista + clicks a redes sociales (sid pseudónimo, sin cookies de terceros).
+(function () {
+  if (location.pathname.indexOf('/admin') === 0) return;
+  if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) return;
+  var sid = '';
+  try {
+    sid = localStorage.getItem('acg_sid') || '';
+    if (!sid) { sid = Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem('acg_sid', sid); }
+  } catch (err) {}
+  function hit(t, extra) {
+    var data = { t: t, p: location.pathname, sid: sid, l: (function () { try { return localStorage.getItem('acg_lang') || 'es'; } catch (e) { return 'es'; } })(), r: document.referrer || '' };
+    if (extra) for (var k in extra) data[k] = extra[k];
+    try {
+      var body = JSON.stringify(data);
+      if (navigator.sendBeacon) navigator.sendBeacon('/api/hit', body);
+      else fetch('/api/hit', { method: 'POST', body: body, keepalive: true });
+    } catch (err) {}
+  }
+  // Red social de ORIGEN de la visita (referrer o utm_source/fbclid/igshid)
+  var REDIN = [['facebook.', 'facebook'], ['fb.me', 'facebook'], ['instagram.', 'instagram'], ['l.instagram', 'instagram'], ['tiktok.', 'tiktok'], ['youtube.', 'youtube'], ['youtu.be', 'youtube'], ['twitter.', 'x'], ['t.co/', 'x'], ['x.com', 'x'], ['whatsapp.', 'whatsapp'], ['wa.me', 'whatsapp'], ['t.me', 'telegram'], ['telegram.', 'telegram'], ['linkedin.', 'linkedin']];
+  function redEntrante() {
+    try {
+      var q = location.search || '';
+      var m = q.match(/[?&]utm_source=([^&]+)/i);
+      if (m) {
+        var u = decodeURIComponent(m[1]).toLowerCase();
+        for (var i = 0; i < REDIN.length; i++) if (u.indexOf(REDIN[i][1]) === 0 || u.indexOf(REDIN[i][0]) > -1) return REDIN[i][1];
+        return u.slice(0, 20);
+      }
+      if (/[?&]fbclid=/.test(q)) return 'facebook';
+      if (/[?&]igshid=/.test(q)) return 'instagram';
+      var r = (document.referrer || '').toLowerCase();
+      if (r) for (var j = 0; j < REDIN.length; j++) if (r.indexOf(REDIN[j][0]) > -1) return REDIN[j][1];
+    } catch (er) {}
+    return '';
+  }
+  var rin = redEntrante();
+  hit('pv', rin ? { red: rin } : null);
+  var REDES = [['facebook.com', 'facebook'], ['instagram.com', 'instagram'], ['twitter.com', 'x'], ['x.com', 'x'], ['youtube.com', 'youtube'], ['tiktok.com', 'tiktok'], ['t.me', 'telegram'], ['wa.me', 'whatsapp'], ['whatsapp.com', 'whatsapp'], ['linkedin.com', 'linkedin']];
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href]');
+    if (!a) return;
+    var href = a.href || '';
+    for (var i = 0; i < REDES.length; i++) {
+      if (href.indexOf(REDES[i][0]) > -1) { hit('social', { red: REDES[i][1] }); break; }
+    }
+  }, true);
+})();
+
+// Volver atras restaura la posicion de scroll (el runtime pinta tarde y el navegador no puede solo).
+(function () {
+  var KEY = 'acg_scroll_' + location.pathname + location.search;
+  var t;
+  window.addEventListener('scroll', function () {
+    clearTimeout(t);
+    t = setTimeout(function () { try { sessionStorage.setItem(KEY, String(window.scrollY || 0)); } catch (e) {} }, 120);
+  }, { passive: true });
+  var nav = (performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {};
+  if (nav.type === 'back_forward') {
+    var y = 0; try { y = Number(sessionStorage.getItem(KEY) || 0); } catch (e) {}
+    if (y > 0) {
+      var n = 0;
+      var iv = setInterval(function () {
+        window.scrollTo(0, y);
+        if (Math.abs((window.scrollY || 0) - y) < 4 || ++n > 25) clearInterval(iv);
+      }, 200);
+    }
+  }
+})();
+
+/* anti-FOUC: cache-first para datos remotos */
+;(function(){
+  // Antes servía la última versión cacheada al instante (podía verse "vieja" 1 frame antes de la fresca).
+  // Ahora NO se usa caché en el arranque: cada página muestra ESQUELETO gris hasta que llega lo real/fresco.
+  window.__cfGet=function(){ return null; };
+  // Purga cualquier caché de contenido antigua (acg_c_*) que un build viejo pudiera repintar.
+  try{ for(var i=localStorage.length-1;i>=0;i--){ var k=localStorage.key(i); if(k&&k.indexOf('acg_c_')===0) localStorage.removeItem(k); } }catch(e){}
 })();
