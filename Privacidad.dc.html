@@ -11,22 +11,21 @@
 <title>Política de privacidad — Acción Civil Gandia</title>
 <meta name="description" content="Política de privacidad de Acción Civil Gandia. Tratamiento de datos personales, derechos ARCO y base legal.">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://accioncivilgandia.netlify.app/privacidad">
-<link rel="alternate" hreflang="es" href="https://accioncivilgandia.netlify.app/privacidad">
-<link rel="alternate" hreflang="ca" href="https://accioncivilgandia.netlify.app/privacidad?lang=va">
-<link rel="alternate" hreflang="x-default" href="https://accioncivilgandia.netlify.app/privacidad">
+<link rel="canonical" href="https://accioncivilgandia.es/privacidad">
+<link rel="alternate" hreflang="es" href="https://accioncivilgandia.es/privacidad">
+<link rel="alternate" hreflang="ca" href="https://accioncivilgandia.es/privacidad?lang=va">
+<link rel="alternate" hreflang="x-default" href="https://accioncivilgandia.es/privacidad">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Política de privacidad — Acción Civil Gandia">
 <meta property="og:description" content="Política de privacidad y protección de datos de Acción Civil Gandia conforme al RGPD.">
-<meta property="og:image" content="https://accioncivilgandia.netlify.app/assets/og-home.jpg">
+<meta property="og:image" content="https://accioncivilgandia.es/assets/og-default.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Oswald:wght@500;600;700&family=Public+Sans:ital,wght@0,400..700;1,400&display=swap" rel="stylesheet">
+<link href="/assets/fonts.css" rel="stylesheet">
 <style>
   *{box-sizing:border-box}
   body{margin:0}
@@ -53,7 +52,7 @@
   html[data-acg-mobile='1'] [data-om-raster]{display:none!important}
 </style>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"PoliticalParty","name":"Acción Civil Gandia","alternateName":"Acció Civil Gandia","url":"https://accioncivilgandia.netlify.app","description":"Partido político local, ciudadano e independiente de Gandia, Valencia. Formación municipalista centrada en los problemas reales de los vecinos de Gandia, el Grao de Gandia y la Playa de Gandia.","foundingDate":"2022","address":{"@type":"PostalAddress","streetAddress":"Avda. República Argentina 42, entresuelo","addressLocality":"Gandia","addressRegion":"Valencia","postalCode":"46702","addressCountry":"ES"},"areaServed":{"@type":"City","name":"Gandia","containedInPlace":{"@type":"AdministrativeArea","name":"Valencia, Comunitat Valenciana, España"}},"knowsLanguage":["es","ca"],"keywords":"partido político Gandia, elecciones municipales Gandia, propuestas Gandia, participación ciudadana Gandia, Grao de Gandia, Playa de Gandia, seguridad Gandia, policía proximidad Gandia, pequeño comercio Gandia, municipalista Gandia"}
+{"@context":"https://schema.org","@type":"PoliticalParty","name":"Acción Civil Gandia","alternateName":"Acció Civil Gandia","url":"https://accioncivilgandia.es","description":"Partido político local, ciudadano e independiente de Gandia, Valencia. Formación municipalista centrada en los problemas reales de los vecinos de Gandia, el Grao de Gandia y la Playa de Gandia.","foundingDate":"2022","address":{"@type":"PostalAddress","streetAddress":"Avda. República Argentina 42, entresuelo","addressLocality":"Gandia","addressRegion":"Valencia","postalCode":"46702","addressCountry":"ES"},"areaServed":{"@type":"City","name":"Gandia","containedInPlace":{"@type":"AdministrativeArea","name":"Valencia, Comunitat Valenciana, España"}},"knowsLanguage":["es","ca"],"keywords":"partido político Gandia, elecciones municipales Gandia, propuestas Gandia, participación ciudadana Gandia, Grao de Gandia, Playa de Gandia, seguridad Gandia, policía proximidad Gandia, pequeño comercio Gandia, municipalista Gandia"}
 </script>
 <style id="acg-serio">
 /* Anti-scroll horizontal en todo monitor */
@@ -169,7 +168,7 @@ header{border-top:3px solid #0A2A5E}
     <footer id="footer" role="contentinfo" style="background:#071E45;color:#B7C7DD;padding:{{ footerPad }}">
       <div style="max-width:1240px;margin:0 auto;padding:{{ pagePad }}">
         <div style="display:grid;grid-template-columns:{{ footerGrid }};gap:{{ footerGap }};padding-bottom:{{ footerGap }};border-bottom:1px solid rgba(255,255,255,.1)">
-          <div>
+          <div style="{{ footerSpan }}">
             <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
               <div style="background:#fff;border-radius:50%;padding:8px;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.12)"><img loading="lazy" src="/assets/logo-icon.webp" alt="Acción Civil Gandia" style="height:44px;width:44px;object-fit:contain" width="512" height="467"></div>
             </div>
@@ -198,7 +197,7 @@ header{border-top:3px solid #0A2A5E}
               </sc-for>
             </div>
           </div>
-          <div>
+          <div style="{{ footerSpan }}">
             <div style="font:700 13px Public Sans;letter-spacing:.1em;text-transform:uppercase;color:#fff;margin-bottom:16px">{{ t.newsletter }}</div>
             <p style="font-size:14px;color:#8FA6C4;margin:0 0 14px">{{ t.newsletterText }}</p>
             <div style="display:flex;gap:8px;margin-bottom:18px">
@@ -320,9 +319,9 @@ class Component extends DCLogic {
         s4l5:V('Solicitar la portabilidad de los datos','Sol·licitar la portabilitat de les dades'),
         s4Text2:V('Para ejercer estos derechos, puede escribir a accioncivilgandia@gmail.com. Asimismo, tiene derecho a presentar una reclamación ante la Agencia Española de Protección de Datos (www.aepd.es).','Per a exercir estos drets, pot escriure a accioncivilgandia@gmail.com. Així mateix, té dret a presentar una reclamació davant l\x27Agència Espanyola de Protecció de Dades (www.aepd.es).'),
         s5Title:V('5. Conservación de datos','5. Conservació de dades'),
-        s5Text:V('Contacto: hasta resolver su consulta y como máximo 1 año. Boletín: hasta que se dé de baja (enlace en cada envío). Propuestas: mientras estén en estudio o publicadas. Denuncias: los plazos que marca la Ley 2/2023 (acuse en 7 días, resolución en 3 meses) y posterior bloqueo legal. Los datos funcionales del navegador permanecen en su dispositivo hasta que los borre.','Contacte: fins a resoldre la seua consulta i com a màxim 1 any. Butlletí: fins que es done de baixa (enllaç en cada enviament). Propostes: mentre estiguen en estudi o publicades. Denúncies: els terminis que marca la Llei 2/2023 (justificant de recepció en 7 dies, resolució en 3 mesos) i posterior bloqueig legal. Les dades funcionals del navegador romanen al seu dispositiu fins que les esborre.'),
+        s5Text:V('Contacto: hasta resolver su consulta y como máximo 1 año. Boletín: hasta que se dé de baja (enlace en cada envío). Propuestas: mientras estén en estudio o publicadas. Denuncias: los plazos que marca la Ley 2/2023 (acuse en 7 días, resolución en 3 meses) y posterior bloqueo legal. Los datos funcionales del navegador permanecen en su dispositivo hasta que los borre. Edad mínima: la creación de cuenta y la participación (votos, comentarios, propuestas) están reservadas a mayores de 14 años (art. 7 LOPDGDD); si detectamos la cuenta de un menor de 14 años sin consentimiento de sus tutores, la eliminaremos.','Contacte: fins a resoldre la seua consulta i com a màxim 1 any. Butlletí: fins que es done de baixa (enllaç en cada enviament). Propostes: mentre estiguen en estudi o publicades. Denúncies: els terminis que marca la Llei 2/2023 (justificant de recepció en 7 dies, resolució en 3 mesos) i posterior bloqueig legal. Les dades funcionals del navegador romanen al seu dispositiu fins que les esborre. Edat mínima: la creació de compte i la participació (vots, comentaris, propostes) estan reservades a majors de 14 anys (art. 7 LOPDGDD); si detectem el compte d’un menor de 14 anys sense consentiment dels seus tutors, l’eliminarem.'),
         s6Title:V('6. Transferencias internacionales','6. Transferències internacionals'),
-        s6Text:V('Encargados del tratamiento: Netlify (alojamiento web), Supabase (base de datos, autenticación y almacenamiento, servidores en la Unión Europea), Brevo (boletín, servidores en la UE) y Resend (envío de emails transaccionales; puede implicar transferencias a EE. UU. amparadas en cláusulas contractuales tipo). Si eliges identificarte con tu cuenta de Google, Google LLC actúa como proveedor de identidad (OAuth) y nos comunica tu correo y nombre. El sitio carga tipografías de Google Fonts. No cedemos datos a terceros con fines comerciales.','Encarregats del tractament: Netlify (allotjament web), Supabase (base de dades, servidors a la Unió Europea), Brevo (butlletí, servidors a la UE) i Resend (enviament ’mails transaccionals; pot implicar transferències als EUA emparades en clàusules contractuals tipus). El lloc carrega tipografies de Google Fonts. No cedim dades a tercers amb fins comercials.'),
+        s6Text:V('Encargados del tratamiento y destinatarios: Netlify (alojamiento web), Cloudflare (red de entrega y seguridad; procesa direcciones IP de las visitas), Supabase (base de datos, autenticación y almacenamiento, servidores en la Unión Europea), Brevo (boletín, servidores en la UE), Resend (envío de emails transaccionales), Stripe (pago seguro de donaciones, cuotas y tienda: tus datos de pago los trata Stripe, nunca esta web) y Sentry (diagnóstico técnico de errores: recibe datos técnicos del navegador y dirección IP). Las transferencias a EE. UU. de estos proveedores están amparadas en el Marco de Privacidad de Datos UE-EE. UU. o en cláusulas contractuales tipo. Si eliges identificarte con tu cuenta de Google, Google LLC actúa como proveedor de identidad (OAuth) y nos comunica tu correo y nombre. Al usar el buscador de direcciones de los mapas, el texto buscado se envía a OpenStreetMap (Nominatim) y Photon (Komoot) para localizarlo. Las tipografías y librerías de mapas se sirven desde nuestro propio dominio (no se envía tu IP a Google Fonts ni a CDNs de terceros). No cedemos datos a terceros con fines comerciales.','Encarregats del tractament i destinataris: Netlify (allotjament web), Cloudflare (xarxa d’entrega i seguretat; processa adreces IP de les visites), Supabase (base de dades, autenticació i emmagatzematge, servidors a la Unió Europea), Brevo (butlletí, servidors a la UE), Resend (enviament de correus transaccionals), Stripe (pagament segur de donacions, quotes i tenda: les teues dades de pagament les tracta Stripe, mai esta web) i Sentry (diagnòstic tècnic d’errors: rep dades tècniques del navegador i adreça IP). Les transferències als EUA d’estos proveïdors estan emparades en el Marc de Privacitat de Dades UE-EUA o en clàusules contractuals tipus. Si tries identificar-te amb el teu compte de Google, Google LLC actua com a proveïdor d’identitat (OAuth) i ens comunica el teu correu i nom. En usar el cercador d’adreces dels mapes, el text buscat s’envia a OpenStreetMap (Nominatim) i Photon (Komoot) per a localitzar-lo. Les tipografies i llibreries de mapes se servixen des del nostre propi domini (no s’envia la teua IP a Google Fonts ni a CDNs de tercers). No cedim dades a tercers amb fins comercials.'),
         s7Title:V('7. Área ciudadana, participación y chat','7. Àrea ciutadana, participació i xat'),
         s7Intro:V('Si creas una cuenta (con correo y contraseña o con tu cuenta de Google) para participar en la plataforma, tratamos los siguientes datos:','Si crees un compte (amb correu i contrasenya o amb el teu compte de Google) per a participar a la plataforma, tractem les dades següents:'),
         s7l1:V('Datos de cuenta: correo electrónico y nombre público que elijas. Base jurídica: ejecución de tu solicitud de alta y consentimiento.','Dades de compte: correu electrònic i nom públic que tries. Base jurídica: execució de la teua sol·licitud d’alta i consentiment.'),
@@ -365,7 +364,7 @@ class Component extends DCLogic {
       ],
       isMob,
       footerPad: isMob?'36px 0 24px':'64px 0 30px',
-      footerGrid: isMob?'1fr':'1.6fr 1fr 1fr 1.4fr',
+      footerGrid: isMob?'1fr 1fr':'1.6fr 1fr 1fr 1.4fr', footerSpan: isMob?'grid-column:1/-1':'',
       footerGap: isMob?'28px':'44px',
       menuOpen:s.menuOpen,
       btNavDisp: isMob?'flex':'none',
@@ -379,7 +378,7 @@ class Component extends DCLogic {
 </script>
 <style>html[data-acg-prod] [data-om-raster]{display:none!important}</style>
 <script>if(!/^(localhost|127\.0\.0\.1)$/.test(location.hostname))document.documentElement.setAttribute('data-acg-prod','1')</script>
-<script src="/assets/acg-forms.js?v=42" defer></script>
+<script src="/assets/acg-forms.js?v=53" defer></script>
 <script src="/assets/acg-shop.js?v=7" defer></script>
 </body>
 </html>

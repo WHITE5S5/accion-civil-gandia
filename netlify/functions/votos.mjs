@@ -12,11 +12,19 @@ async function counts(proposalId) {
 
 export default async (req, context) => {
   if (!supaConfigured()) return jsonErr(503, 'unconfigured', 'No disponible todavía');
-  const ip = context.ip || '0.0.0.0';
+  const ip = req.headers.get('cf-connecting-ip') || context.ip || req.headers.get('x-nf-client-connection-ip') || '0.0.0.0';
   if (rateLimited('votos:' + ip, 60)) return jsonErr(429, 'rate_limited', 'Demasiadas peticiones');
 
   const user = await getUser(req);
   if (!user) return jsonErr(401, 'login_required', 'Inicia sesión para votar');
+
+  // GET ?mine=1 — todos MIS votos (mapa proposal_id→valor) para inicializar la lista (botones en verde + toggle quitar)
+  if (req.method === 'GET' && new URL(req.url).searchParams.get('mine')) {
+    const v = await supa('GET', `votes?user_id=eq.${user.id}&select=proposal_id,valor`);
+    const mine = {};
+    for (const row of v.json || []) mine[row.proposal_id] = row.valor;
+    return jsonOk({ ok: true, mine });
+  }
 
   // GET ?proposalId= — estado inicial: mi voto actual + contadores (para pintar el botón al cargar)
   if (req.method === 'GET') {

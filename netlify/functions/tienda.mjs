@@ -64,7 +64,7 @@ async function handleGet(url) {
 }
 
 async function handleCheckout(req, context) {
-  const ip = context.ip || req.headers.get('x-nf-client-connection-ip') || '0.0.0.0';
+  const ip = req.headers.get('cf-connecting-ip') || context.ip || req.headers.get('x-nf-client-connection-ip') || '0.0.0.0';
   if (rateLimited(ip, 10)) return jsonErr(429, 'rate_limited', 'Demasiados intentos');
   if (!stripeConfigured() || !supaConfigured())
     return jsonErr(503, 'service_unconfigured', 'La tienda aún no está activa');

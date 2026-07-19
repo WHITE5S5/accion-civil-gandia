@@ -1,3 +1,13 @@
+# Dominio único: todo lo que llegue por *.netlify.app va al dominio propio (consolida SEO)
+https://accioncivilgandia.netlify.app/*    https://accioncivilgandia.es/:splat         301!
+
+# 301 de URLs de la web ANTIGUA aún indexadas en Google (verificado con site: el 2026-07-19)
+/nuestra-gente                             /equipo                                     301
+/es/nuestra-gente                          /equipo                                     301
+/acciones-poilticas-desde-nuestra-fundacion    /historia                               301
+/es/acciones-poilticas-desde-nuestra-fundacion /historia                               301
+/es/*                                      /:splat                                     301
+
 # URLs canónicas (esquema del sitemap.xml) -> archivos
 /accesibilidad                             /Accesibilidad.dc.html                      200
 /accion-en-gandia                          /Accion.dc.html                             200

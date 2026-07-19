@@ -11,23 +11,22 @@
 <title>Programa electoral 2027 — Acción Civil Gandia</title>
 <meta name="description" content="Programa electoral de Acción Civil Gandia para las elecciones municipales del 23 de mayo de 2027. Lo estamos construyendo con los vecinos de Gandia.">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://accioncivilgandia.netlify.app/programa-electoral">
-<link rel="alternate" hreflang="es" href="https://accioncivilgandia.netlify.app/programa-electoral">
-<link rel="alternate" hreflang="ca" href="https://accioncivilgandia.netlify.app/programa-electoral?lang=va">
-<link rel="alternate" hreflang="x-default" href="https://accioncivilgandia.netlify.app/programa-electoral">
+<link rel="canonical" href="https://accioncivilgandia.es/programa-electoral">
+<link rel="alternate" hreflang="es" href="https://accioncivilgandia.es/programa-electoral">
+<link rel="alternate" hreflang="ca" href="https://accioncivilgandia.es/programa-electoral?lang=va">
+<link rel="alternate" hreflang="x-default" href="https://accioncivilgandia.es/programa-electoral">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Programa electoral 2027 — Acción Civil Gandia">
 <meta property="og:description" content="Cuenta atrás para las elecciones municipales de Gandia del 23 de mayo de 2027. El programa se construye con los vecinos.">
-<meta property="og:url" content="https://accioncivilgandia.netlify.app/programa-electoral">
-<meta property="og:image" content="https://accioncivilgandia.netlify.app/assets/og-propuestas.jpg">
+<meta property="og:url" content="https://accioncivilgandia.es/programa-electoral">
+<meta property="og:image" content="https://accioncivilgandia.es/assets/og-default.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Oswald:wght@500;600;700&family=Public+Sans:ital,wght@0,400..700;1,400&display=swap" rel="stylesheet">
+<link href="/assets/fonts.css" rel="stylesheet">
 <style>
   *{box-sizing:border-box}
   body{margin:0}
@@ -58,7 +57,7 @@
   @keyframes acgPulse{0%,100%{opacity:1}50%{opacity:.55}}
 </style>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"PoliticalParty","name":"Acción Civil Gandia","alternateName":"Acció Civil Gandia","url":"https://accioncivilgandia.netlify.app","description":"Partido político local, ciudadano e independiente de Gandia, Valencia. Formación municipalista centrada en los problemas reales de los vecinos de Gandia, el Grao de Gandia y la Playa de Gandia.","foundingDate":"2022","address":{"@type":"PostalAddress","streetAddress":"Avda. República Argentina 42, entresuelo","addressLocality":"Gandia","addressRegion":"Valencia","postalCode":"46702","addressCountry":"ES"},"areaServed":{"@type":"City","name":"Gandia","containedInPlace":{"@type":"AdministrativeArea","name":"Valencia, Comunitat Valenciana, España"}},"knowsLanguage":["es","ca"],"keywords":"programa electoral Gandia 2027, elecciones municipales Gandia 2027, partido político Gandia, propuestas Gandia, participación ciudadana Gandia"}
+{"@context":"https://schema.org","@type":"PoliticalParty","name":"Acción Civil Gandia","alternateName":"Acció Civil Gandia","url":"https://accioncivilgandia.es","description":"Partido político local, ciudadano e independiente de Gandia, Valencia. Formación municipalista centrada en los problemas reales de los vecinos de Gandia, el Grao de Gandia y la Playa de Gandia.","foundingDate":"2022","address":{"@type":"PostalAddress","streetAddress":"Avda. República Argentina 42, entresuelo","addressLocality":"Gandia","addressRegion":"Valencia","postalCode":"46702","addressCountry":"ES"},"areaServed":{"@type":"City","name":"Gandia","containedInPlace":{"@type":"AdministrativeArea","name":"Valencia, Comunitat Valenciana, España"}},"knowsLanguage":["es","ca"],"keywords":"programa electoral Gandia 2027, elecciones municipales Gandia 2027, partido político Gandia, propuestas Gandia, participación ciudadana Gandia"}
 </script>
 <style id="acg-serio">
 /* Anti-scroll horizontal en todo monitor */
@@ -256,7 +255,7 @@ header{border-top:3px solid #0A2A5E}
     <footer id="footer" role="contentinfo" style="background:#071E45;color:#B7C7DD;padding:{{ footerPad }}">
       <div style="max-width:1240px;margin:0 auto;padding:{{ pagePad }}">
         <div style="display:grid;grid-template-columns:{{ footerGrid }};gap:{{ footerGap }};padding-bottom:{{ footerGap }};border-bottom:1px solid rgba(255,255,255,.1)">
-          <div>
+          <div style="{{ footerSpan }}">
             <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
               <div style="background:#fff;border-radius:50%;padding:8px;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.12)"><img loading="lazy" src="/assets/logo-icon.webp" alt="Acción Civil Gandia" style="height:44px;width:44px;object-fit:contain" width="512" height="467"></div>
             </div>
@@ -285,7 +284,7 @@ header{border-top:3px solid #0A2A5E}
               </sc-for>
             </div>
           </div>
-          <div>
+          <div style="{{ footerSpan }}">
             <div style="font:700 13px Public Sans;letter-spacing:.1em;text-transform:uppercase;color:#fff;margin-bottom:16px">{{ t.newsletter }}</div>
             <p style="font-size:14px;color:#8FA6C4;margin:0 0 14px">{{ t.newsletterText }}</p>
             <div style="display:flex;gap:8px;margin-bottom:18px">
@@ -497,7 +496,7 @@ class Component extends DCLogic {
       secPadX: isMob?'16px':'40px',
       ...d, lang:s.lang, isMob,
       footerPad: isMob?'36px 0 24px':'64px 0 30px',
-      footerGrid: isMob?'1fr':'1.6fr 1fr 1fr 1.4fr',
+      footerGrid: isMob?'1fr 1fr':'1.6fr 1fr 1fr 1.4fr', footerSpan: isMob?'grid-column:1/-1':'',
       footerGap: isMob?'28px':'44px',
       frameMax: forcedMob?'430px':'100%',
       frameStyle: forcedMob?'box-shadow:0 30px 80px rgba(10,42,94,.28);border-radius:3px;overflow:hidden;margin-top:24px;margin-bottom:24px;border:10px solid #0B1F3F;background:#F4F7FB':'background:transparent',
@@ -548,7 +547,7 @@ class Component extends DCLogic {
 </script>
 <style>html[data-acg-prod] [data-om-raster]{display:none!important}</style>
 <script>if(!/^(localhost|127\.0\.0\.1)$/.test(location.hostname))document.documentElement.setAttribute('data-acg-prod','1')</script>
-<script src="/assets/acg-forms.js?v=42" defer></script>
+<script src="/assets/acg-forms.js?v=53" defer></script>
 <script src="/assets/acg-shop.js?v=7" defer></script>
 </body>
 </html>

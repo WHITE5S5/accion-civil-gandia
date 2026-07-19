@@ -55,7 +55,7 @@ export default async (req, context) => {
     return jsonOk();
   }
 
-  const ip = context.ip || '0.0.0.0';
+  const ip = req.headers.get('cf-connecting-ip') || context.ip || req.headers.get('x-nf-client-connection-ip') || '0.0.0.0';
   if (rateLimited('chat:' + user.id, 15)) return jsonErr(429, 'rate_limited', 'Vas muy rápido — espera un momento');
   const perfil = await rolDe(user.id);
   if (perfil.bloqueado) return jsonErr(403, 'blocked', 'Tu cuenta ha sido bloqueada y no puede publicar en la comunidad.');

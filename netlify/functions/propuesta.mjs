@@ -65,7 +65,7 @@ const BARRIO_SLUG = {
 
 export default async (req, context) => {
   if (req.method !== 'POST') return err(405, 'method_not_allowed', 'Solo POST');
-  const ip = context.ip || req.headers.get('x-nf-client-connection-ip') || '0.0.0.0';
+  const ip = req.headers.get('cf-connecting-ip') || context.ip || req.headers.get('x-nf-client-connection-ip') || '0.0.0.0';
   if (rateLimited(ip, 5)) return err(429, 'rate_limited', 'Demasiadas propuestas seguidas');
 
   let b;

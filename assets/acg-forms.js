@@ -12,6 +12,24 @@
   } catch (e) {}
 })();
 
+/* Google Analytics 4 (gtag) — analítica de audiencia. Cubre todas las páginas vía acg-forms.
+   No trackea en localhost (dev no contamina). CSP permite googletagmanager.com + google-analytics.com. */
+(function () {
+  try {
+    if (window.__acgGA) return; window.__acgGA = 1;
+    if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') return;
+    var ID = 'G-RFPXGHZMFN';
+    var g = document.createElement('script');
+    g.async = true;
+    g.src = 'https://www.googletagmanager.com/gtag/js?id=' + ID;
+    (document.head || document.documentElement).appendChild(g);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', ID);
+  } catch (e) {}
+})();
+
 /* acg-forms.js — conecta los formularios estáticos con /api/* (Fase 1).
    Delegación global: funciona en las 67 páginas sin tocar los componentes dc.
    - Newsletter del footer (todas las páginas) → POST /api/newsletter (double opt-in)
@@ -65,7 +83,7 @@ window.__acgOnRender = window.__acgOnRender || function (fn) {
     el.textContent = msg;
     el.style.color = ok ? '#2E9E5B' : '#C0392B';
   }
-  function post(url, data, btn, st, okMsg, onOk) {
+  function post(url, data, btn, st, okMsg, onOk, onErr) {
     var old = btn.textContent;
     btn.disabled = true; btn.style.opacity = '.6'; btn.textContent = T.sending;
     fetch(url, { method: 'POST', headers: (function(){var h={'content-type':'application/json'};try{var t=localStorage.getItem('acg_session');if(t)h.authorization='Bearer '+t;}catch(e){}return h;})(), body: JSON.stringify(data) })
@@ -74,12 +92,39 @@ window.__acgOnRender = window.__acgOnRender || function (fn) {
         if (r.s >= 200 && r.s < 300 && r.j && r.j.ok) { show(st, okMsg, true); if (onOk) onOk(); }
         else if (r.s === 503) show(st, T.errUnconfigured, false);
         else if (r.s === 429) show(st, T.errRate, false);
-        else show(st, (r.j && r.j.error && r.j.error.message) ? T.errFields + r.j.error.message : T.errGeneric, false);
+        else { show(st, (r.j && r.j.error && r.j.error.message) ? T.errFields + r.j.error.message : T.errGeneric, false); if (onErr) { try { onErr(r); } catch (e) {} } }
       })
       .catch(function () { show(st, T.errGeneric, false); })
       .then(function () { btn.disabled = false; btn.style.opacity = '1'; btn.textContent = old; });
   }
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  // ---- Errores de campo con scroll directo: marca la casilla en rojo, escribe el motivo debajo
+  // y lleva al usuario hasta ella (nada de descubrir el fallo arriba tras hacer scroll).
+  function limpiaErrores(f) {
+    var ms = f.querySelectorAll('.acg-field-err');
+    for (var i = 0; i < ms.length; i++) ms[i].remove();
+    var ins = f.querySelectorAll('[data-acg-bad]');
+    for (var j = 0; j < ins.length; j++) { ins[j].style.borderColor = ''; ins[j].style.boxShadow = ''; ins[j].removeAttribute('data-acg-bad'); ins[j].removeAttribute('aria-invalid'); }
+  }
+  function marcaError(el, msg, esPrimero) {
+    if (!el) return;
+    el.style.borderColor = '#D93B3B';
+    el.style.boxShadow = '0 0 0 3px rgba(217,59,59,.14)';
+    el.setAttribute('data-acg-bad', '1'); el.setAttribute('aria-invalid', 'true');
+    var m = document.createElement('div');
+    m.className = 'acg-field-err'; m.setAttribute('role', 'alert');
+    m.style.cssText = 'color:#C0392B;font:600 13px Public Sans,sans-serif;margin-top:6px;line-height:1.45';
+    m.textContent = '⚠ ' + msg;
+    el.parentNode.insertBefore(m, el.nextSibling);
+    function clear() { el.style.borderColor = ''; el.style.boxShadow = ''; el.removeAttribute('data-acg-bad'); el.removeAttribute('aria-invalid'); if (m.parentNode) m.remove(); }
+    el.addEventListener('input', clear, { once: true });
+    el.addEventListener('change', clear, { once: true });
+    if (esPrimero) {
+      try { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) { el.scrollIntoView(); }
+      try { el.focus({ preventScroll: true }); } catch (e2) {}
+    }
+  }
 
   // ---- Newsletter del footer (delegado, todas las páginas)
   document.addEventListener('click', function (ev) {
@@ -129,6 +174,25 @@ window.__acgOnRender = window.__acgOnRender || function (fn) {
       var sesion = false; try { sesion = !!localStorage.getItem('acg_session'); } catch (e) {}
       if (!sesion) { if (window.acgLoginPopup) window.acgLoginPopup(); return; }
       var titulo = f.querySelector('input[maxlength]') || texts[0];
+      var catSel = selects[0];
+      // Validación en cliente (mismas reglas que el backend): marcar cada casilla que falla y llevar a la primera.
+      limpiaErrores(f);
+      var FLD = {
+        invalid_titulo: es ? 'El título debe tener entre 5 y 140 caracteres.' : 'El títol ha de tindre entre 5 i 140 caràcters.',
+        invalid_descripcion: es ? 'La descripción debe tener al menos 30 caracteres (máx. 5000). Cuéntanos tu idea con algo más de detalle.' : 'La descripció ha de tindre almenys 30 caràcters (màx. 5000). Conta’ns la teua idea amb una mica més de detall.',
+        invalid_categoria: es ? 'Elige una categoría de la lista.' : 'Tria una categoria de la llista.'
+      };
+      var fallos = [];
+      var _tv = titulo ? titulo.value.trim() : '';
+      var _dv = area ? area.value.trim() : '';
+      if (_tv.length < 5 || _tv.length > 140) fallos.push([titulo, FLD.invalid_titulo]);
+      if (_dv.length < 30 || _dv.length > 5000) fallos.push([area, FLD.invalid_descripcion]);
+      if (catSel && catSel.selectedIndex <= 0) fallos.push([catSel, FLD.invalid_categoria]);
+      if (fallos.length) {
+        for (var _fi = 0; _fi < fallos.length; _fi++) marcaError(fallos[_fi][0], fallos[_fi][1], _fi === 0);
+        show(st, es ? 'Revisa los campos marcados en rojo.' : 'Revisa els camps marcats en roig.', false);
+        return;
+      }
       // Nombre y correo salen de la cuenta (backend). Barrio se detecta del mapa (window._acgPropBarrio).
       post('/api/propuesta', {
         titulo: titulo ? titulo.value.trim() : '',
@@ -152,6 +216,11 @@ window.__acgOnRender = window.__acgOnRender || function (fn) {
           + '<button id="acg-prop-ok" type="button" style="width:100%;border:none;cursor:pointer;background:#1563C4;color:#fff;font:700 16px Public Sans,system-ui,sans-serif;padding:15px;border-radius:10px">' + (lang === 'va' ? 'Tancar' : 'Cerrar') + '</button></div>';
         document.body.appendChild(ov);
         document.getElementById('acg-prop-ok').addEventListener('click', function () { location.href = '/participacion'; });
+      }, function (r) {
+        // Error del backend: llevar directamente a la casilla culpable y explicar el motivo en rojo.
+        var code = r.j && r.j.error && r.j.error.code;
+        var mapa = { invalid_titulo: titulo, invalid_descripcion: area, invalid_categoria: catSel };
+        if (code && mapa[code]) { limpiaErrores(f); marcaError(mapa[code], FLD[code] || r.j.error.message, true); }
       });
     }
   });
@@ -191,49 +260,50 @@ window.__acgOnRender = window.__acgOnRender || function (fn) {
         [/platja|playa/, 'Playa de Gandia'],
         [/historic|centre|centro/, 'Centro Histórico']
       ];
-      function detectBarrio(lat, lng) {
-        window._acgPropBarrio = null;
+      var _lastValid = null;
+      function norm(x){ return String(x||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+      function revertir() {
         var h = document.getElementById('acg-prop-hint');
+        if (_lastValid) { if (mk) mk.setLatLng(_lastValid); }
+        else { if (mk) { try { map.removeLayer(mk); } catch (e) {} mk = null; } window._acgPropCoords = null; window._acgPropBarrio = null; window._acgPropMk = null;
+          if (h) { h.textContent = VA ? 'Cap ubicacio fixada' : 'Sin ubicacion fijada'; h.style.color = ''; h.style.fontWeight = ''; } }
+      }
+      // Fija la ubicacion SOLO si el municipio es Gandia (rechaza Rafelcofer, Real de Gandia, Oliva, el mar de otros terminos, etc.)
+      function fijar(ll) {
+        var lat = +ll.lat.toFixed(6), lng = +ll.lng.toFixed(6);
+        var h = document.getElementById('acg-prop-hint');
+        if (h) { h.textContent = (VA ? 'Comprovant la zona...' : 'Comprobando la zona...'); h.style.color = '#8A6D0B'; h.style.fontWeight = '700'; }
         fetch('https://nominatim.openstreetmap.org/reverse?format=json&zoom=16&addressdetails=1&lat=' + lat + '&lon=' + lng)
           .then(function (r) { return r.json(); }).then(function (j) {
             var a = (j && j.address) || {};
-            // Del más específico al más general: así "Playa de Gandía" (quarter) gana a "Grao y Playa" (suburb).
+            // Municipio EXACTO Gandia. Ojo: "el Real de Gandia" es OTRO pueblo que contiene "gandia" en el nombre
+            // (viene en a.village, no en town/city) -> por eso comparamos igualdad exacta y no incluimos village.
+            var esGandia = [a.city, a.town, a.municipality].some(function (v) { return norm(v) === 'gandia'; });
+            if (!esGandia) { avisoFuera(); revertir(); return; }
+            window._acgPropCoords = { lat: lat, lng: lng }; window._acgPropMk = mk; _lastValid = [lat, lng];
             var campos = [a.quarter, a.neighbourhood, a.suburb, a.city_district, a.hamlet, a.residential, a.village];
             var found = '';
-            for (var f = 0; f < campos.length && !found; f++) {
-              if (!campos[f]) continue;
-              var s = String(campos[f]).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-              for (var i = 0; i < BKW.length; i++) { if (BKW[i][0].test(s)) { found = BKW[i][1]; break; } }
-            }
+            for (var f = 0; f < campos.length && !found; f++) { if (!campos[f]) continue; var sN = norm(campos[f]); for (var i = 0; i < BKW.length; i++) { if (BKW[i][0].test(sN)) { found = BKW[i][1]; break; } } }
             window._acgPropBarrio = found || null;
-            if (h) {
-              var base = '📍 ' + (VA ? 'Ubicació fixada' : 'Ubicación fijada');
-              h.textContent = found ? (base + ' · ' + (VA ? 'Barri' : 'Barrio') + ': ' + found)
-                : (base + ' · ' + (VA ? 'barri no detectat (tota la ciutat)' : 'barrio no detectado (toda la ciudad)'));
-              h.style.color = '#1E7A45'; h.style.fontWeight = '700';
-            }
-          }).catch(function () {});
-      }
-      function setC(ll) {
-        window._acgPropCoords = { lat: +ll.lat.toFixed(6), lng: +ll.lng.toFixed(6) };
-        window._acgPropMk = mk;   // WYSIWYG: al enviar se lee la posición real del marcador visible
-        var h = document.getElementById('acg-prop-hint');
-        if (h) { h.textContent = '📍 ' + (VA ? 'Detectant barri…' : 'Detectando barrio…') + ' (' + window._acgPropCoords.lat + ', ' + window._acgPropCoords.lng + ')'; h.style.color = '#1E7A45'; h.style.fontWeight = '700'; }
-        detectBarrio(window._acgPropCoords.lat, window._acgPropCoords.lng);
+            if (h) { var base = (VA ? 'Ubicacio fixada' : 'Ubicacion fijada'); h.textContent = found ? (base + ' - ' + (VA ? 'Barri' : 'Barrio') + ': ' + found) : (base + ' - ' + (VA ? 'tota la ciutat' : 'toda la ciudad')); h.style.color = '#1E7A45'; h.style.fontWeight = '700'; }
+          }).catch(function () {
+            window._acgPropCoords = { lat: lat, lng: lng }; window._acgPropMk = mk; _lastValid = [lat, lng]; window._acgPropBarrio = null;
+            if (h) { h.textContent = (VA ? 'Ubicacio fixada' : 'Ubicacion fijada'); h.style.color = '#1E7A45'; h.style.fontWeight = '700'; }
+          });
       }
       function dentro(ll) { return enCaja([ll.lng, ll.lat]); }
       function avisoFuera() { if (window.acgToast) window.acgToast(VA ? 'Només pots marcar dins de Gandia i els seus barris.' : 'Solo puedes marcar dentro de Gandia y sus barrios.', false); }
-      function onDrag() { var p = mk.getLatLng(); if (!dentro(p)) { avisoFuera(); if (window._acgPropCoords) mk.setLatLng([window._acgPropCoords.lat, window._acgPropCoords.lng]); return; } setC(p); }
+      function onDrag() { var p = mk.getLatLng(); if (!dentro(p)) { avisoFuera(); if (_lastValid) mk.setLatLng(_lastValid); else if (window._acgPropCoords) mk.setLatLng([window._acgPropCoords.lat, window._acgPropCoords.lng]); return; } fijar(p); }
       function ensureMk(ll) { if (!mk) { mk = L.marker(ll, { draggable: true }).addTo(map); mk.on('dragend', onDrag); } else mk.setLatLng(ll); }
       map.on('click', function (e) {
         try { map.invalidateSize({ pan: false, animate: false }); } catch (er) {}
         var ll = e.latlng;
         try { if (e.originalEvent) ll = map.mouseEventToLatLng(e.originalEvent) || e.latlng; } catch (er) {}
         if (!dentro(ll)) { avisoFuera(); return; }   // fuera de Gandia y sus barrios: no se puede marcar
-        ensureMk(ll); setC(ll);
+        ensureMk(ll); fijar(ll);
       });
       // Buscador acotado ESTRICTO a Gandia (enCaja): no salen ubicaciones de otros pueblos (Oliva, etc.).
-      function ponPin(ll) { ensureMk(ll); map.setView(ll, 17); setC(ll); }
+      function ponPin(ll) { ensureMk(ll); map.setView(ll, 17); fijar(ll); }
       var E2V = { 'calle': 'carrer', 'avenida': 'avinguda', 'avda': 'avinguda', 'av': 'avinguda', 'plaza': 'plaça', 'paseo': 'passeig', 'camino': 'camí', 'iglesia': 'església', 'ayuntamiento': 'ajuntament', 'playa': 'platja', 'puerto': 'port', 'mercado': 'mercat', 'san': 'sant', 'nueva': 'nova', 'mayor': 'major', 'parque': 'parc', 'estación': 'estació', 'estacion': 'estació', 'jardín': 'jardí', 'jardin': 'jardí', 'río': 'riu', 'rio': 'riu', 'centro': 'centre', 'ciudad': 'ciutat', 'colegio': 'escola', 'teatro': 'teatre', 'museo': 'museu', 'puente': 'pont', 'castillo': 'castell', 'cementerio': 'cementeri', 'polideportivo': 'poliesportiu', 'estadio': 'estadi' };
       var V2E = { 'carrer': 'calle', 'avinguda': 'avenida', 'plaça': 'plaza', 'passeig': 'paseo', 'camí': 'camino', 'cami': 'camino', 'església': 'iglesia', 'esglesia': 'iglesia', 'ajuntament': 'ayuntamiento', 'platja': 'playa', 'port': 'puerto', 'mercat': 'mercado', 'sant': 'san', 'nova': 'nueva', 'major': 'mayor', 'parc': 'parque', 'estació': 'estación', 'estacio': 'estación', 'jardí': 'jardín', 'jardi': 'jardín', 'riu': 'río', 'centre': 'centro', 'ciutat': 'ciudad', 'escola': 'colegio', 'teatre': 'teatro', 'museu': 'museo', 'pont': 'puente', 'castell': 'castillo', 'cementeri': 'cementerio', 'poliesportiu': 'polideportivo', 'estadi': 'estadio' };
       function geoSwap(s, m2) { return s.split(' ').map(function (w) { var lw = w.toLowerCase(); return m2[lw] || w; }).join(' '); }
@@ -298,9 +368,41 @@ window.__acgOnRender = window.__acgOnRender || function (fn) {
     if (document.getElementById('acg-hbtn-css')) return;
     var st = document.createElement('style'); st.id = 'acg-hbtn-css';
     st.textContent =
+      // El texto normal NO es editable: cursor flecha en vez del I-beam de "escribir" (y sin caret
+      // parpadeante al clicar). Los campos reales (input/textarea) conservan su cursor y su caret;
+      // botones, enlaces, selects y checks van con la mano.
+      'body{cursor:default;caret-color:transparent}' +
+      'input,textarea{cursor:text;caret-color:auto}' +
+      '[contenteditable],[contenteditable] *{cursor:text;caret-color:auto}' +
+      'a[href],button,select,option,input[type=checkbox],input[type=radio],input[type=file],summary{cursor:pointer}' +
+      // Esqueleto de carga GLOBAL: 20 páginas usaban la clase acg-sk sin definir su CSS → la demo
+      // se veía tal cual mientras cargaba ("muestra una cosa y luego la real"). Definición única aquí.
+      '.acg-sk{background:#eef2f6!important;border-color:#e3e9f0!important;pointer-events:none;position:relative;overflow:hidden}' +
+      '.acg-sk *{color:transparent!important;visibility:hidden!important}' +
+      '.acg-sk::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);transform:translateX(-100%);animation:acgshim 1.3s infinite}' +
+      '@keyframes acgshim{100%{transform:translateX(100%)}}' +
       'header div[style*="margin-left:auto"],header div[style*="margin-left: auto"]{min-width:0;flex-wrap:nowrap}' +
       '.acg-hbtn{transition:padding .12s}' +
-      '@media(max-width:1100px){#acg-unete-btn .acg-hbtn-txt,#acg-auth-btn .acg-hbtn-txt{display:none}#acg-unete-btn,#acg-auth-btn{padding-left:9px!important;padding-right:9px!important}}';
+      // Tamaño UNIFORME (38px de alto) para TODOS los controles del lado derecho del nav, en PC y móvil:
+      // toggle ES/VA (32px dentro de su envoltorio de 3px = 38px), CTA Participa, buscador Home, Únete, Cuenta y carrito.
+      'header div[style*="margin-left:auto"]>a.acg-btn,header div[style*="margin-left: auto"]>a.acg-btn,#acg-mobbar>a.acg-btn,' +
+      'header div[style*="margin-left:auto"]>button.acg-btn,header div[style*="margin-left: auto"]>button.acg-btn,#acg-mobbar>button.acg-btn' +
+      '{height:38px!important;box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;padding-top:0!important;padding-bottom:0!important}' +
+      'header div[style*="margin-left:auto"]>a[href*="Participacion"],header div[style*="margin-left: auto"]>a[href*="Participacion"]' +
+      '{font-size:13px!important;padding-left:16px!important;padding-right:16px!important;justify-content:center}' +
+      '#acg-unete-btn,#acg-auth-btn{font-size:13px!important;padding-left:14px!important;padding-right:14px!important}' +
+      // Toggle ES/VA: el envoltorio siempre con 3px y los botones a 32px (los selectores largos empatan en
+      // especificidad con el override !important de cada página y ganan por venir después en el <head>).
+      'header div[style*="margin-left:auto"]>div:has(>button),header div[style*="margin-left: auto"]>div:has(>button),#acg-mobbar>div:has(>button){padding:3px!important;display:inline-flex;align-items:center}' +
+      "header>div[style*='height:70px']>div[style*='margin-left:auto']>div button,header>div[style*='height:70px']>div[style*='margin-left: auto']>div button," +
+      'header div[style*="margin-left:auto"]>div>button.acg-btn,header div[style*="margin-left: auto"]>div>button.acg-btn,#acg-mobbar>div>button.acg-btn' +
+      '{height:32px!important;box-sizing:border-box!important;padding:0 11px!important;font-size:12px!important;display:inline-flex;align-items:center}' +
+      // Buscador de la Home en modo icono: mismo 38×38 que el resto (la página lo pone a 40/36).
+      '#acg-mobbar .acg-search-btn{width:38px!important;padding:0!important;justify-content:center!important;font-size:0!important;gap:0!important}' +
+      '@media(max-width:1439px){header .acg-search-btn{width:38px!important}}' +
+      // ≤1300px (portátiles justos incluidos): Únete/Cuenta a solo-icono 38×38 — sin esto el carrito se recortaba a 1280.
+      '@media(max-width:1300px){#acg-unete-btn .acg-hbtn-txt,#acg-auth-btn .acg-hbtn-txt{display:none}#acg-unete-btn,#acg-auth-btn{width:38px!important;padding-left:0!important;padding-right:0!important;justify-content:center!important}' +
+      'header div[style*="margin-left:auto"],header div[style*="margin-left: auto"]{gap:8px!important}}';
     (document.head || document.documentElement).appendChild(st);
   })();
 
@@ -454,6 +556,9 @@ window.__acgOnRender = window.__acgOnRender || function (fn) {
       for (var i = 0; i < leaves.length; i++) {
         var el2 = leaves[i];
         if (el2.children.length) continue;
+        // El denominador de "X / Y" (la meta) va precedido por "/": es la meta, NO un contador → no tocarlo.
+        var _pv = el2.previousSibling;
+        if (_pv && /\/\s*$/.test(_pv.textContent || '')) continue;
         var tx = (el2.textContent || '').trim();
         var m = tx.match(/^(\d+)(\s*(apoyos?|suports?))$/i);
         if (m) { el2.textContent = j.aFavor + m[2]; continue; }
@@ -489,8 +594,9 @@ window.__acgOnRender = window.__acgOnRender || function (fn) {
           var m = tx.match(/^([\d.]+)(\s*\/\s*[\d.]+.*)$/); if (m) { c.textContent = val + m[2]; return; }  // "X / Y" (lista)
         }
       }
-      // 1) Barras de progreso: recalcular el ancho desde la meta que aparece en su encabezado
-      var fills = root.querySelectorAll('div[style*="transition:width"]');
+      // 1) Barras de progreso: recalcular el ancho desde la meta que aparece en su encabezado.
+      // Selector por "cubic-bezier" (no lleva ':' → el navegador no lo normaliza con espacios como haría con "transition:width").
+      var fills = root.querySelectorAll('div[style*="cubic-bezier"]');
       for (var i = 0; i < fills.length; i++) {
         var fill = fills[i], track = fill.parentElement, head = track && track.previousElementSibling;
         if (!head) continue;
@@ -516,16 +622,19 @@ window.__acgOnRender = window.__acgOnRender || function (fn) {
   function pintaBtnVotado(el, valor, n, esApoyo) {
     var VA = (localStorage.getItem('acg_lang') || 'es') === 'va';
     if (!el.getAttribute('data-orig')) el.setAttribute('data-orig', el.innerHTML);
+    if (el.getAttribute('data-ostyle') == null) el.setAttribute('data-ostyle', el.getAttribute('style') || '');   // guarda el estilo original (color azul, etc.) para restaurarlo al quitar el voto
     el.setAttribute('data-voted', String(valor));
     el.style.background = valor === 1 ? '#2E9E5B' : '#D93B3B'; el.style.color = '#fff'; el.style.border = 'none';
     var txt = esApoyo ? (VA ? 'Recolzada' : 'Apoyada') : (valor === 1 ? 'A favor' : 'En contra');
-    el.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"></path></svg>' + txt + ' (' + n + ')';
+    el.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"></path></svg>' + txt + ((n === '' || n == null) ? '' : ' (' + n + ')');
   }
   function pintaBtnNeutro(el) {
     var orig = el.getAttribute('data-orig');
     if (orig != null) el.innerHTML = orig;
     el.removeAttribute('data-voted');
-    el.style.background = ''; el.style.color = ''; el.style.border = '';
+    var os = el.getAttribute('data-ostyle');
+    if (os != null) el.setAttribute('style', os);   // restaura el estilo original (vuelve a azul), no dejarlo gris
+    else { el.style.background = ''; el.style.color = ''; el.style.border = ''; }
   }
   // Solo un sentido puede estar activo: al votar (o cambiar el sentido), el otro botón se apaga.
   function apagaHermanos(scope, el) {
@@ -564,17 +673,67 @@ window.__acgOnRender = window.__acgOnRender || function (fn) {
       .then(function (j) {
         if (!j || !j.ok) return;
         MIVOTO[pid] = j.miVoto || 0;
+        // Sincroniza el número de apoyos y la barra con el recuento REAL (/api/votos, sin caché).
+        // Evita que al recargar se vea el valor viejo que sirve el CDN cacheado de /api/proposals.
+        var sync = function () { pintaContadores(document, j); pintaApoyoUI(document, j); };
+        sync(); setTimeout(sync, 900); setTimeout(sync, 2200);
         if (!j.miVoto) return;
         var marca = function () {
           var btns = document.querySelectorAll('button, a');
           for (var i = 0; i < btns.length; i++) {
             var t = (btns[i].textContent || '').trim().toLowerCase();
-            if (j.miVoto === 1 && /^(votar a favor|a favor)\b/.test(t) && !btns[i].getAttribute('data-orig')) { pintaBtnVotado(btns[i], 1, j.aFavor, false); return true; }
+            if (j.miVoto === 1 && /^(votar a favor|a favor|apoyar|recolzar|donar suport|dóna suport|suport)\b/.test(t) && !btns[i].getAttribute('data-orig')) { pintaBtnVotado(btns[i], 1, j.aFavor, /^(apoyar|recolzar|donar suport|dóna suport|suport)\b/.test(t)); return true; }
             if (j.miVoto === -1 && /^(votar en contra|en contra)\b/.test(t) && !btns[i].getAttribute('data-orig')) { pintaBtnVotado(btns[i], -1, j.enContra, false); return true; }
           }
           return false;
         };
         if (!marca()) { var tries = 0; var tm = setInterval(function () { if (marca() || ++tries > 10) clearInterval(tm); }, 800); }
+      }).catch(function () {});
+  })();
+
+  // En páginas con LISTA de tarjetas: marcar en verde ("Apoyada") las que YA has apoyado y activar el toggle
+  // (al pulsarlas de nuevo se quita el voto y la barra retrocede). Antes solo se hacía en el detalle.
+  (function estadoListaInicial() {
+    if (!token() || !document.querySelector('[data-pid]')) return;
+    var apoyoBtn = function (card) {
+      var bs = card.querySelectorAll('button');
+      for (var k = 0; k < bs.length; k++) { if (/^(apoyar|recolzar|donar suport|dóna suport|suport)\b/.test((bs[k].textContent || '').trim().toLowerCase())) return bs[k]; }
+      return null;
+    };
+    // Nº de apoyos REAL desde /api/votos (nunca rascar el número de la tarjeta: en la Home el elemento
+    // sobre la barra es "Meta: 100 apoyos" y el marcado tras recargar mostraba ese 100 como contador).
+    var CNT = {};
+    var pideCnt = function (pid) {
+      if (CNT[pid] != null) return;
+      CNT[pid] = '';   // en curso: mientras tanto el botón se pinta sin número
+      authFetch('/api/votos?proposalId=' + pid, {})
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (jj) {
+          if (!jj || !jj.ok) { delete CNT[pid]; return; }
+          CNT[pid] = String(jj.aFavor || 0);
+          var c2 = document.querySelector('[data-pid="' + pid + '"]');
+          var b2 = c2 && (c2.querySelector('button[data-voted]') || apoyoBtn(c2));
+          if (b2) pintaBtnVotado(b2, 1, CNT[pid], true);
+        }).catch(function () { delete CNT[pid]; });
+    };
+    authFetch('/api/votos?mine=1', {})
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) {
+        if (!j || !j.ok || !j.mine) return;
+        for (var pid in j.mine) { if (j.mine[pid] === 1 && MIVOTO[pid] == null) MIVOTO[pid] = 1; }   // semilla (respeta si luego quitas el voto)
+        var aplica = function () {
+          var cs = document.querySelectorAll('[data-pid]');
+          for (var i = 0; i < cs.length; i++) {
+            var card = cs[i], pid = card.getAttribute('data-pid');
+            if (!pid || MIVOTO[pid] !== 1) continue;                 // solo las que sigues apoyando ahora
+            var btn = apoyoBtn(card);
+            if (!btn || btn.getAttribute('data-voted')) continue;
+            pideCnt(pid);
+            pintaBtnVotado(btn, 1, CNT[pid] || '', true);
+          }
+        };
+        aplica();
+        var tries = 0; var tm = setInterval(function () { aplica(); if (++tries > 15) clearInterval(tm); }, 700);   // el runtime re-renderiza: re-aplicar
       }).catch(function () {});
   })();
 
@@ -667,12 +826,74 @@ window.__acgOnRender = window.__acgOnRender || function (fn) {
       }).catch(function () { el.removeAttribute('data-liking'); });
   }, true);
 
+  // Denunciar propuesta (botón del detalle): popup con motivos → POST /api/reportes (revisión manual en admin)
+  function abreDenuncia(pid) {
+    if (document.getElementById('acg-den-pop')) return;
+    var VA = (localStorage.getItem('acg_lang') || 'es') === 'va';
+    var motivos = [
+      ['spam', VA ? 'Spam o publicitat' : 'Spam o publicidad'],
+      ['ofensivo', VA ? 'Contingut ofensiu o insults' : 'Contenido ofensivo o insultos'],
+      ['falso', VA ? 'Informació falsa o enganyosa' : 'Información falsa o engañosa'],
+      ['duplicado', VA ? 'Proposta duplicada' : 'Propuesta duplicada'],
+      ['otro', VA ? 'Un altre motiu' : 'Otro motivo']
+    ];
+    var o = document.createElement('div');
+    o.id = 'acg-den-pop';
+    o.style.cssText = 'position:fixed;inset:0;z-index:9500;background:rgba(7,30,69,.5);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px';
+    var opts = motivos.map(function (m) {
+      return '<label style="display:flex;gap:10px;align-items:flex-start;padding:11px 13px;border:1px solid #E4EBF2;border-radius:9px;cursor:pointer;font:500 14px Public Sans,sans-serif;color:#33414F"><input type="radio" name="acg-den-mot" value="' + m[0] + '" style="margin-top:2px;accent-color:#D93B3B;flex-shrink:0">' + m[1] + '</label>';
+    }).join('');
+    o.innerHTML = '<div style="background:#fff;border-radius:18px;max-width:430px;width:100%;padding:26px;box-shadow:0 30px 70px rgba(10,42,94,.3);position:relative;max-height:88vh;overflow:auto">' +
+      '<button id="acg-den-x" aria-label="Cerrar" style="position:absolute;top:12px;right:14px;border:none;background:none;font-size:22px;color:#8A99A8;cursor:pointer;line-height:1">×</button>' +
+      '<h3 style="font:800 20px Fraunces,serif;color:#0A2A5E;margin:0 0 6px">' + (VA ? 'Denunciar proposta' : 'Denunciar propuesta') + '</h3>' +
+      '<p style="font:400 13.5px Public Sans,sans-serif;color:#5C6B7A;margin:0 0 16px;line-height:1.5">' + (VA ? 'Conta’ns què passa amb aquesta proposta. L’equip la revisarà.' : 'Cuéntanos qué pasa con esta propuesta. El equipo la revisará.') + '</p>' +
+      '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">' + opts + '</div>' +
+      '<textarea id="acg-den-nota" maxlength="500" placeholder="' + (VA ? 'Detalls (opcional)' : 'Detalles (opcional)') + '" style="width:100%;min-height:64px;resize:vertical;border:1px solid #E4EBF2;border-radius:9px;padding:11px 13px;font:400 14px Public Sans,sans-serif;color:#17232F;outline:none;box-sizing:border-box"></textarea>' +
+      '<div id="acg-den-st" style="font:600 13px Public Sans,sans-serif;margin:10px 0 0;min-height:18px"></div>' +
+      '<div style="display:flex;gap:9px;margin-top:12px">' +
+      '<button id="acg-den-cancel" style="flex:1;border:1px solid #E4EBF2;background:#fff;color:#42525F;font:700 14px Public Sans,sans-serif;padding:12px;border-radius:9px;cursor:pointer">' + (VA ? 'Cancel·lar' : 'Cancelar') + '</button>' +
+      '<button id="acg-den-go" style="flex:1;border:none;background:#D93B3B;color:#fff;font:800 14px Public Sans,sans-serif;padding:12px;border-radius:9px;cursor:pointer">' + (VA ? 'Enviar denúncia' : 'Enviar denuncia') + '</button>' +
+      '</div></div>';
+    document.body.appendChild(o);
+    function cerrar() { o.remove(); }
+    o.addEventListener('click', function (e) { if (e.target === o) cerrar(); });
+    document.getElementById('acg-den-x').addEventListener('click', cerrar);
+    document.getElementById('acg-den-cancel').addEventListener('click', cerrar);
+    var go = document.getElementById('acg-den-go');
+    go.addEventListener('click', function () {
+      var st = document.getElementById('acg-den-st');
+      var sel = o.querySelector('input[name="acg-den-mot"]:checked');
+      if (!sel) { st.style.color = '#D93B3B'; st.textContent = VA ? 'Tria un motiu.' : 'Elige un motivo.'; return; }
+      if (go.getAttribute('data-sending')) return;
+      go.setAttribute('data-sending', '1'); go.style.opacity = '.7';
+      var nota = (document.getElementById('acg-den-nota').value || '').trim();
+      authFetch('/api/reportes', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ proposalId: pid, motivo: sel.value, nota: nota }) })
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { s: r.status, j: j }; }); })
+        .then(function (r) {
+          go.removeAttribute('data-sending'); go.style.opacity = '1';
+          if (r.j && r.j.ok) {
+            o.querySelector('div').innerHTML = '<div style="text-align:center;padding:10px 4px"><div style="width:56px;height:56px;border-radius:50%;background:#E7F4EC;display:flex;align-items:center;justify-content:center;margin:0 auto 14px"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1E7A45" stroke-width="2.6"><path d="M20 6 9 17l-5-5"></path></svg></div><h3 style="font:800 19px Fraunces,serif;color:#0A2A5E;margin:0 0 8px">' + (VA ? 'Denúncia enviada' : 'Denuncia enviada') + '</h3><p style="font:400 14px Public Sans,sans-serif;color:#5C6B7A;margin:0 0 18px;line-height:1.5">' + (VA ? 'Gràcies. L’equip ho revisarà.' : 'Gracias. El equipo lo revisará.') + '</p><button id="acg-den-ok" style="width:100%;border:none;background:#1563C4;color:#fff;font:700 15px Public Sans,sans-serif;padding:13px;border-radius:9px;cursor:pointer">' + (VA ? 'Tancar' : 'Cerrar') + '</button></div>';
+            document.getElementById('acg-den-ok').addEventListener('click', cerrar);
+          } else if (r.s === 401) { cerrar(); window.acgLoginPopup(); }
+          else { st.style.color = '#D93B3B'; st.textContent = (r.j && r.j.error && r.j.error.message) || (VA ? 'No s’ha pogut enviar.' : 'No se pudo enviar.'); }
+        }).catch(function () { go.removeAttribute('data-sending'); go.style.opacity = '1'; st.style.color = '#D93B3B'; st.textContent = VA ? 'Error de connexió.' : 'Error de conexión.'; });
+    });
+  }
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest ? e.target.closest('[data-acg-denunciar]') : null;
+    if (!el) return;
+    e.preventDefault(); e.stopPropagation();
+    if (!conSesion()) { window.acgLoginPopup(); return; }
+    var pid = urlPid();
+    if (pid) abreDenuncia(pid);
+  }, true);
+
   // CTAs de participación (delegado, cubre botones renderizados por el runtime)
   document.addEventListener('click', function (e) {
     var el = e.target.closest('button, a');
     if (!el || el.closest('#acg-login-pop')) return;
     var t = (el.textContent || '').trim().toLowerCase();
-    var esApoyar = /^(apoyar|recolzar)\b/.test(t);
+    var esApoyar = /^(apoyar|recolzar|apoyada|recolzada|donar suport|dóna suport|suport)\b/.test(t);   // "apoyada/recolzada" = ya votada → 2º clic quita el voto; en VA los botones dicen "Donar suport"/"Suport"
     var esFavor = /^(votar a favor|a favor)\b/.test(t);
     var esContra = /^(votar en contra|en contra)\b/.test(t);
     var esComentar = /^(comentar|enviar comentario|enviar comentari|publicar)\b/.test(t);

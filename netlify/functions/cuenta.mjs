@@ -15,7 +15,7 @@ async function api(req, context) {
   try { b = await req.json(); } catch { return jsonErr(400, 'bad_json', 'Cuerpo inválido'); }
 
   if (b.action === 'privacy-consent') {          // registro del consentimiento en el alta
-    const ip = context.ip || '0.0.0.0';
+    const ip = req.headers.get('cf-connecting-ip') || context.ip || req.headers.get('x-nf-client-connection-ip') || '0.0.0.0';
     if (rateLimited('consent:' + ip, 10)) return jsonErr(429, 'rate_limited', 'Espera un momento');
     const email = String(b.email || '').trim().toLowerCase();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return jsonErr(400, 'invalid_email', 'Email no válido');
@@ -27,7 +27,7 @@ async function api(req, context) {
   }
 
   if (b.action === 'marketing-consent') {        // opt-in del registro (RGPD: activo, jamás premarcado)
-    const ip = context.ip || '0.0.0.0';
+    const ip = req.headers.get('cf-connecting-ip') || context.ip || req.headers.get('x-nf-client-connection-ip') || '0.0.0.0';
     if (rateLimited('consent:' + ip, 10)) return jsonErr(429, 'rate_limited', 'Espera un momento');
     const email = String(b.email || '').trim().toLowerCase();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return jsonErr(400, 'invalid_email', 'Email no válido');

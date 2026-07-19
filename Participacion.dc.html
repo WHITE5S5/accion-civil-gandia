@@ -11,23 +11,22 @@
 <title>Participación ciudadana — Acción Civil Gandia</title>
 <meta name="description" content="Participa en la política local de Gandia. Propón ideas, debate y vota. Acción Civil Gandia: participación ciudadana real.">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://accioncivilgandia.netlify.app/participacion">
-<link rel="alternate" hreflang="es" href="https://accioncivilgandia.netlify.app/participacion">
-<link rel="alternate" hreflang="ca" href="https://accioncivilgandia.netlify.app/participacion?lang=va">
-<link rel="alternate" hreflang="x-default" href="https://accioncivilgandia.netlify.app/participacion">
+<link rel="canonical" href="https://accioncivilgandia.es/participacion">
+<link rel="alternate" hreflang="es" href="https://accioncivilgandia.es/participacion">
+<link rel="alternate" hreflang="ca" href="https://accioncivilgandia.es/participacion?lang=va">
+<link rel="alternate" hreflang="x-default" href="https://accioncivilgandia.es/participacion">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Participación ciudadana — Acción Civil Gandia">
 <meta property="og:description" content="Crea propuestas y apoya iniciativas vecinales en Gandia.">
-<meta property="og:url" content="https://accioncivilgandia.netlify.app/participacion">
-<meta property="og:image" content="https://accioncivilgandia.netlify.app/assets/og-participacion.jpg">
+<meta property="og:url" content="https://accioncivilgandia.es/participacion">
+<meta property="og:image" content="https://accioncivilgandia.es/assets/og-default.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Oswald:wght@500;600;700&family=Public+Sans:ital,wght@0,400..700;1,400&display=swap" rel="stylesheet">
+<link href="/assets/fonts.css" rel="stylesheet">
 <style>
   *{box-sizing:border-box}
   body{margin:0}
@@ -63,7 +62,7 @@
   html[data-acg-mobile='1'] [data-om-raster]{display:none!important}
 </style>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"PoliticalParty","name":"Acción Civil Gandia","alternateName":"Acció Civil Gandia","url":"https://accioncivilgandia.netlify.app","description":"Partido político local, ciudadano e independiente de Gandia, Valencia. Formación municipalista centrada en los problemas reales de los vecinos de Gandia, el Grao de Gandia y la Playa de Gandia.","foundingDate":"2022","address":{"@type":"PostalAddress","streetAddress":"Avda. República Argentina 42, entresuelo","addressLocality":"Gandia","addressRegion":"Valencia","postalCode":"46702","addressCountry":"ES"},"areaServed":{"@type":"City","name":"Gandia","containedInPlace":{"@type":"AdministrativeArea","name":"Valencia, Comunitat Valenciana, España"}},"knowsLanguage":["es","ca"],"keywords":"partido político Gandia, elecciones municipales Gandia, propuestas Gandia, participación ciudadana Gandia, Grao de Gandia, Playa de Gandia, seguridad Gandia, policía proximidad Gandia, pequeño comercio Gandia, municipalista Gandia"}
+{"@context":"https://schema.org","@type":"PoliticalParty","name":"Acción Civil Gandia","alternateName":"Acció Civil Gandia","url":"https://accioncivilgandia.es","description":"Partido político local, ciudadano e independiente de Gandia, Valencia. Formación municipalista centrada en los problemas reales de los vecinos de Gandia, el Grao de Gandia y la Playa de Gandia.","foundingDate":"2022","address":{"@type":"PostalAddress","streetAddress":"Avda. República Argentina 42, entresuelo","addressLocality":"Gandia","addressRegion":"Valencia","postalCode":"46702","addressCountry":"ES"},"areaServed":{"@type":"City","name":"Gandia","containedInPlace":{"@type":"AdministrativeArea","name":"Valencia, Comunitat Valenciana, España"}},"knowsLanguage":["es","ca"],"keywords":"partido político Gandia, elecciones municipales Gandia, propuestas Gandia, participación ciudadana Gandia, Grao de Gandia, Playa de Gandia, seguridad Gandia, policía proximidad Gandia, pequeño comercio Gandia, municipalista Gandia"}
 </script>
 <style id="acg-serio">
 /* Anti-scroll horizontal en todo monitor */
@@ -251,8 +250,8 @@ header{border-top:3px solid #0A2A5E}
                 </div>
                 <span style="margin-left:auto;background:{{ p.catBg }};color:{{ p.catColor }};font:700 11.5px Public Sans;padding:5px 11px;border-radius:3px;white-space:nowrap">{{ p.cat }}</span>
               </div>
-              <a href="/propuesta-ciudadana?id={{ p.id }}" style="text-decoration:none"><h3 style="font:700 19px/1.25 Fraunces;color:#17232F;margin:0 0 8px;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ p.title }}</h3></a>
-              <p style="font-size:14px;color:#5C6B7A;margin:0 0 14px;text-wrap:pretty;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">{{ p.excerpt }}</p>
+              <a href="/propuesta-ciudadana?id={{ p.id }}" style="text-decoration:none"><h3 style="font:700 19px/1.25 Fraunces;color:#17232F;margin:0 0 8px;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.5em">{{ p.title }}</h3></a>
+              <p style="font-size:14px;line-height:1.5;color:#5C6B7A;margin:0 0 14px;text-wrap:pretty;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;min-height:4.5em">{{ p.excerpt }}</p>
               <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
                 <span style="display:inline-flex;align-items:center;gap:5px;font-size:12.5px;color:#5C6B7A"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-5.6 7-11a7 7 0 0 0-14 0c0 5.4 7 11 7 11Z"></path><circle cx="12" cy="10" r="2.4"></circle></svg>{{ p.barrio }}</span>
                 <span style="background:{{ p.estadoBg }};color:{{ p.estadoColor }};font:700 11.5px Public Sans;padding:4px 11px;border-radius:3px">{{ p.estado }}</span>
@@ -332,7 +331,7 @@ header{border-top:3px solid #0A2A5E}
     <footer id="footer" role="contentinfo" style="background:#071E45;color:#B7C7DD;padding:{{ footerPad }}">
       <div style="max-width:1240px;margin:0 auto;padding:{{ pagePad }}">
         <div style="display:grid;grid-template-columns:{{ footerGrid }};gap:{{ footerGap }};padding-bottom:{{ footerGap }};border-bottom:1px solid rgba(255,255,255,.1)">
-          <div>
+          <div style="{{ footerSpan }}">
             <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
               <div style="background:#fff;border-radius:50%;padding:8px;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.12)"><img loading="lazy" src="/assets/logo-icon.webp" alt="Acción Civil Gandia" style="height:44px;width:44px;object-fit:contain" width="512" height="467"></div>
             </div>
@@ -361,7 +360,7 @@ header{border-top:3px solid #0A2A5E}
               </sc-for>
             </div>
           </div>
-          <div>
+          <div style="{{ footerSpan }}">
             <div style="font:700 13px Public Sans;letter-spacing:.1em;text-transform:uppercase;color:#fff;margin-bottom:16px">{{ t.newsletter }}</div>
             <p style="font-size:14px;color:#8FA6C4;margin:0 0 14px">{{ t.newsletterText }}</p>
             <div style="display:flex;gap:8px;margin-bottom:18px">
@@ -474,7 +473,7 @@ class Component extends DCLogic {
       
       if(j.ok && Array.isArray(j.items)) this.setState({remoteProposals:j.items, remoteRecibidas:(typeof j.recibidas==='number'?j.recibidas:j.items.length)});
     }catch(e){ console.error('proposals feed', e); }
-    if(this.state.remoteBarrios==null){ try{ const rb=await fetch('/api/barrios'); if(rb.ok){ const jb=await rb.json(); const arr=Array.isArray(jb)?jb:(jb&&jb.items)||[]; if(arr.length) this.setState({remoteBarrios:arr.length}); } }catch(e){} }
+    if(this.state.remoteBarrios==null){ try{ const rb=await fetch('/api/barrios',{cache:'no-store'}); if(rb.ok){ const jb=await rb.json(); const arr=Array.isArray(jb)?jb:(jb&&jb.items)||[]; if(arr.length) this.setState({remoteBarrios:arr.length}); } }catch(e){} }
   }
   componentWillUnmount(){
     if(this._to) clearTimeout(this._to);
@@ -674,7 +673,7 @@ class Component extends DCLogic {
       ...d,
       lang:s.lang, isMob, stats, filtered:filteredPage, catChips, barrioChips, sortOptions, pages, showPager, prevPage, nextPage,
       footerPad: isMob?'36px 0 24px':'64px 0 30px',
-      footerGrid: isMob?'1fr':'1.6fr 1fr 1fr 1.4fr',
+      footerGrid: isMob?'1fr 1fr':'1.6fr 1fr 1fr 1.4fr', footerSpan: isMob?'grid-column:1/-1':'',
       footerGap: isMob?'28px':'44px',
       resultCount:filtered.length, isEmpty:filtered.length===0, showList:filtered.length>0,
       menuOpen:s.menuOpen,
@@ -734,7 +733,7 @@ class Component extends DCLogic {
 </script>
 <style>html[data-acg-prod] [data-om-raster]{display:none!important}</style>
 <script>if(!/^(localhost|127\.0\.0\.1)$/.test(location.hostname))document.documentElement.setAttribute('data-acg-prod','1')</script>
-<script src="/assets/acg-forms.js?v=42" defer></script>
+<script src="/assets/acg-forms.js?v=53" defer></script>
 <script src="/assets/acg-shop.js?v=7" defer></script>
 </body>
 </html>

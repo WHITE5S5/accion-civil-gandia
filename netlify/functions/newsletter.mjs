@@ -30,7 +30,7 @@ export function verifyToken(token, secret, maxAgeMs = 48 * 3600_000) {
 
 export default async (req, context) => {
   if (req.method !== 'POST') return err(405, 'method_not_allowed', 'Solo POST');
-  const ip = context.ip || req.headers.get('x-nf-client-connection-ip') || '0.0.0.0';
+  const ip = req.headers.get('cf-connecting-ip') || context.ip || req.headers.get('x-nf-client-connection-ip') || '0.0.0.0';
   if (rateLimited(ip)) return err(429, 'rate_limited', 'Demasiadas peticiones');
 
   let b;

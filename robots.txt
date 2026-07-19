@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /*-print-*
 
-Sitemap: https://accioncivilgandia.netlify.app/sitemap.xml
+Sitemap: https://accioncivilgandia.es/sitemap.xml

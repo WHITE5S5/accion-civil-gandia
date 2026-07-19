@@ -9,7 +9,7 @@ const MIN_CENTS = 500, MAX_CENTS = 1_000_000;
 
 export default async (req, context) => {
   if (req.method !== 'POST') return jsonErr(405, 'method_not_allowed', 'Solo POST');
-  const ip = context.ip || req.headers.get('x-nf-client-connection-ip') || '0.0.0.0';
+  const ip = req.headers.get('cf-connecting-ip') || context.ip || req.headers.get('x-nf-client-connection-ip') || '0.0.0.0';
   if (rateLimited(ip, 5)) return jsonErr(429, 'rate_limited', 'Demasiados intentos');
   if (!stripeConfigured() || !supaConfigured() || !process.env.ENCRYPTION_KEY)
     return jsonErr(503, 'service_unconfigured', 'Las donaciones aún no están activas');

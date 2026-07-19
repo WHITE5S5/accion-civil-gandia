@@ -158,6 +158,7 @@ function normalizePost(row, lang) {
     imgRaw: absUrl(clean(row.imagen)),
     body: pick(row.cuerpo_es, row.cuerpo_va, lang),
     videoUrl: clean(row.video_url) || '',
+    imagenVertical: absUrl(clean(row.imagen_vertical)) || '',
     dateISO: row.publicado_at || row.created_at || null,
   };
 }
@@ -288,14 +289,26 @@ async function fetchRows(path, seedRows, normalizer, lang) {
   }
 }
 
+// Probe: la columna posts.imagen_vertical llega con una migración. Si aún no existe,
+// NO la seleccionamos (evita 400 que tiraría el feed a datos seed). Se cachea.
+let POSTS_VERT = null;
+async function postsTieneVertical() {
+  if (POSTS_VERT !== null) return POSTS_VERT;
+  if (!supaReadConfigured()) { POSTS_VERT = false; return false; }
+  try { const r = await supaRead('posts?select=imagen_vertical&limit=1'); POSTS_VERT = !!r.ok; }
+  catch { POSTS_VERT = false; }
+  return POSTS_VERT;
+}
+
 export async function getPosts(params = {}) {
   const lang = isVa(params.lang) ? 'va' : 'es';
   const tipo = clean(params.tipo);
   const limit = clamp(Number(params.limit || 12) || 12, 1, 24);
   const offset = clamp(Number(params.offset || 0) || 0, 0, 200);
   const slug = clean(params.slug);
+  const hayVert = await postsTieneVertical();
   const query = new URLSearchParams({
-    select: 'slug,tipo,titulo_es,titulo_va,extracto_es,extracto_va,cuerpo_es,cuerpo_va,imagen,video_url,estado,publicado_at,created_at',
+    select: 'slug,tipo,titulo_es,titulo_va,extracto_es,extracto_va,cuerpo_es,cuerpo_va,imagen,video_url,estado,publicado_at,created_at' + (hayVert ? ',imagen_vertical' : ''),
     order: 'publicado_at.desc.nullslast,created_at.desc',
     limit: String(limit),
     offset: String(offset),
@@ -315,15 +328,22 @@ export async function getPosts(params = {}) {
     featured: items[0] || null,
     items,
     total: items.length,
-    videos: items.filter((item) => item.catKey === 'video' && item.videoUrl).slice(0, 3).map((item) => {
-      // Miniatura oficial de YouTube a partir del enlace del vídeo
-      const yt = String(item.videoUrl).match(/(?:youtu\.be\/|v=|\/shorts\/)([\w-]{6,})/);
+    videos: items.filter((item) => item.catKey === 'video' && item.videoUrl && /[^/]$/.test(item.videoUrl)).slice(0, 3).map((item) => {
+      // YouTube → miniatura + enlace; fichero directo (mp4/webm…) → src para reproducir embebido.
+      const yt = String(item.videoUrl).match(/(?:youtu\.be\/|v=|\/shorts\/|embed\/)([\w-]{6,})/);
+      const esFichero = !yt && /\.(mp4|webm|mov|ogg|ogv)(\?|$)/i.test(item.videoUrl);
       return {
         title: item.title,
         date: item.date,
         dur: item.read,
         views: '—',
-        url: item.videoUrl,
+        url: yt ? item.videoUrl : (esFichero ? '' : item.videoUrl),
+        src: esFichero ? item.videoUrl : '',
+        isFile: !!esFichero,
+        href: esFichero ? item.href : '',   // fichero → tarjeta clicable que abre el detalle (donde se reproduce)
+        excerpt: item.excerpt || '',
+        imgVert: item.imagenVertical || item.imgSrc,   // miniatura vertical (Inicio); cae a la horizontal si no hay
+        imgHoriz: item.imgSrc,
         imgSrc: item.imgRaw ? item.imgSrc : (yt ? `https://i.ytimg.com/vi/${yt[1]}/hqdefault.jpg` : item.imgSrc),
       };
     }),
@@ -523,7 +543,7 @@ export async function getBarrios(params = {}) {
 export async function getHome(params = {}) {
   const lang = isVa(params.lang) ? 'va' : 'es';
   const [posts, events, campaigns, actuaciones] = await Promise.all([
-    getPosts({ lang, limit: 3 }),
+    getPosts({ lang, limit: 10 }),
     getEvents({ lang }),
     getCampaigns({ lang }),
     getActuaciones({ lang }),
@@ -532,6 +552,7 @@ export async function getHome(params = {}) {
     ok: true,
     source: [posts.source, events.source, campaigns.source, actuaciones.source].includes('supabase') ? 'mixed' : 'seed',
     posts: posts.items.slice(0, 3),
+    ultimoVideo: (posts.videos && posts.videos[0]) || null,   // último vídeo real (tile de la Home)
     events: events.upcoming.slice(0, 3),
     campaign: campaigns.featured,
     actuaciones: actuaciones.items.slice(0, 5),

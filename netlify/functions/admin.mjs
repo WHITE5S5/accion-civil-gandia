@@ -62,8 +62,8 @@ const slugify = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '')
 
 const TABLAS = {
   posts: {
-    select: 'id,slug,tipo,titulo_es,titulo_va,extracto_es,extracto_va,cuerpo_es,cuerpo_va,imagen,video_url,estado,publicado_at,created_at',
-    campos: ['slug', 'tipo', 'titulo_es', 'titulo_va', 'extracto_es', 'extracto_va', 'cuerpo_es', 'cuerpo_va', 'imagen', 'video_url', 'estado', 'publicado_at'],
+    select: 'id,slug,tipo,titulo_es,titulo_va,extracto_es,extracto_va,cuerpo_es,cuerpo_va,imagen,imagen_vertical,video_url,estado,publicado_at,created_at',
+    campos: ['slug', 'tipo', 'titulo_es', 'titulo_va', 'extracto_es', 'extracto_va', 'cuerpo_es', 'cuerpo_va', 'imagen', 'imagen_vertical', 'video_url', 'estado', 'publicado_at'],
     orden: 'created_at.desc', borrable: true, slugDe: 'titulo_es',
   },
   events: {
@@ -242,7 +242,7 @@ async function api(req, context) {
   try { b = await req.json(); } catch { return jsonErr(400, 'bad_json', 'Cuerpo inválido'); }
 
   if (b.action === 'login') {
-    const ip = context.ip || req.headers.get('x-nf-client-connection-ip') || '0.0.0.0';
+    const ip = req.headers.get('cf-connecting-ip') || context.ip || req.headers.get('x-nf-client-connection-ip') || '0.0.0.0';
     if (rateLimited('admin:' + ip, 8)) return jsonErr(429, 'rate_limited', 'Demasiados intentos, espera una hora');
     if (!safeEqual(b.password || '', key)) return jsonErr(401, 'bad_password', 'Contraseña incorrecta');
     const totp = process.env.ADMIN_TOTP_SECRET;
@@ -298,12 +298,13 @@ async function api(req, context) {
   // ---- Panel de inicio (resumen) ----
   if (b.action === 'dashboard') {
     const list = async (p) => { const r = await supa('GET', p); return Array.isArray(r.json) ? r.json : []; };
-    const [prop, com, den, tes, msg] = await Promise.all([
+    const [prop, com, den, tes, msg, rep] = await Promise.all([
       list('proposals?estado=eq.pendiente_moderacion&select=id'),
       list('comments?estado=eq.pendiente&select=id'),
       list('denuncias?estado=in.(nueva,en_tramite)&select=id'),
       list('tesoreria?select=tipo,importe_cents'),
       list('messages?estado=eq.publicado&select=id'),
+      list('proposal_reports?estado=eq.pendiente&select=id'),
     ]);
     let ing = 0, gas = 0;
     for (const m of tes) { if (m.tipo === 'ingreso') ing += m.importe_cents; else gas += m.importe_cents; }
@@ -323,7 +324,7 @@ async function api(req, context) {
     }
     return jsonOk({ ok: true, data: {
       propuestasPendientes: prop.length, comentariosPendientes: com.length,
-      denunciasAbiertas: den.length, mensajesChat: msg.length, contactosNuevos, apelacionesPendientes,
+      denunciasAbiertas: den.length, reportesPendientes: rep.length, mensajesChat: msg.length, contactosNuevos, apelacionesPendientes,
       saldoCents: ing - gas, ingresosCents: ing, gastosCents: gas,
       afiliadosNuevos, afiliadoMaxTs,
     } });
@@ -797,6 +798,40 @@ async function api(req, context) {
     return jsonOk({ ok: true });
   }
 
+  // Denuncias de propuestas ciudadanas: listar (para revisión manual) y marcar como revisadas.
+  if (b.action === 'reportes-list') {
+    const r = await supa('GET', 'proposal_reports?select=id,motivo,nota,estado,created_at,proposal_id,proposals:proposals(titulo)&order=created_at.desc&limit=400');
+    if (!r.ok) return jsonErr(502, 'db_error', 'No se pudieron cargar las denuncias');
+    return jsonOk({ ok: true, items: r.json || [] });
+  }
+  if (b.action === 'reporte-revisar') {
+    const id = String(b.id || '');
+    if (!/^[0-9a-f-]{36}$/.test(id)) return jsonErr(400, 'bad_id', 'Id no válido');
+    const r = await supa('PATCH', `proposal_reports?id=eq.${id}`, { estado: 'revisado' });
+    if (!r.ok) return jsonErr(502, 'db_error', 'No se pudo actualizar');
+    await audit('reporte_revisar', 'proposal_reports', id, {});
+    return jsonOk({ ok: true });
+  }
+  if (b.action === 'reportes-descartar') {   // la propuesta es correcta: descarta TODAS sus denuncias
+    const pid = String(b.proposalId || '');
+    if (!/^[0-9a-f-]{36}$/.test(pid)) return jsonErr(400, 'bad_id', 'Id no válido');
+    const r = await supa('DELETE', `proposal_reports?proposal_id=eq.${pid}`);
+    if (!r.ok) return jsonErr(502, 'db_error', 'No se pudo descartar');
+    await audit('reportes_descartar', 'proposal_reports', pid, {});
+    return jsonOk({ ok: true });
+  }
+  // Preview de una propuesta dentro del admin (para revisar denuncias sin salir del panel).
+  if (b.action === 'propuesta-get') {
+    const id = String(b.id || '');
+    if (!/^[0-9a-f-]{36}$/.test(id)) return jsonErr(400, 'bad_id', 'Id no válido');
+    const r = await supa('GET', `proposals?id=eq.${id}&select=titulo,descripcion,categoria,estado,created_at,imagenes,contacto_nombre&limit=1`);
+    const p = (r.json && r.json[0]) || null;
+    if (!p) return jsonErr(404, 'not_found', 'Propuesta no encontrada');
+    const c = await supa('GET', `proposal_vote_counts?proposal_id=eq.${id}&select=a_favor`);
+    p.aFavor = (c.json && c.json[0] && c.json[0].a_favor) || 0;
+    return jsonOk({ ok: true, propuesta: p });
+  }
+
   // Limpiar propuestas rechazadas: archivar (se conserva, sale de la lista) o eliminar (definitivo).
   if (b.action === 'prop-archivar') {
     const id = String(b.id || '');
@@ -1163,6 +1198,20 @@ async function api(req, context) {
     }
     return jsonOk({ ok: true, item: ped });
   }
+  if (b.action === 'pedido-eliminar') {
+    // Borrado definitivo de pedidos erróneos: solo si ya está cancelado, con motivo obligatorio (queda en audit_log)
+    if (!b.id) return jsonErr(400, 'bad_id', 'Falta el id del pedido');
+    const motivo = String(b.motivo || '').trim();
+    if (!motivo) return jsonErr(400, 'bad_motivo', 'Indica el motivo del borrado');
+    const pr = await supa('GET', `orders?id=eq.${b.id}&select=id,estado,numero,email,total_cents`);
+    const ped = pr.json?.[0];
+    if (!ped) return jsonErr(404, 'not_found', 'Pedido no encontrado');
+    if (ped.estado !== 'cancelado') return jsonErr(400, 'not_cancelado', 'Solo se pueden eliminar pedidos ya cancelados. Cancélalo primero.');
+    const dr = await supa('DELETE', `orders?id=eq.${b.id}`);   // order_items cae en cascada (FK on delete cascade)
+    if (!dr.ok) return jsonErr(502, 'db_error', 'No se pudo eliminar el pedido');
+    await audit('pedido_eliminar', 'orders', b.id, { motivo, numero: ped.numero, email: ped.email, total_cents: ped.total_cents });
+    return jsonOk({ ok: true });
+  }
   if (b.action === 'tienda-stats') {
     const ym = new Date().toLocaleDateString('sv', { timeZone: 'Europe/Madrid' }).slice(0, 7);
     const mesDesde = ym + '-01T00:00:00Z';
@@ -1230,7 +1279,12 @@ async function api(req, context) {
     return jsonOk({ ok: true, donantes: donIds.size, afiliados: afiIds.size, cambiados });
   }
   if (b.action === 'list') {
-    const r = await supa('GET', `${b.tabla}?select=${cfg.select}&order=${cfg.orden}&limit=200`);
+    let sel = cfg.select;
+    let r = await supa('GET', `${b.tabla}?select=${sel}&order=${cfg.orden}&limit=200`);
+    if (!r.ok && sel.includes('imagen_vertical')) {   // columna aún sin migrar → reintenta sin ella
+      sel = sel.replace(',imagen_vertical', '');
+      r = await supa('GET', `${b.tabla}?select=${sel}&order=${cfg.orden}&limit=200`);
+    }
     if (!r.ok) return jsonErr(502, 'db_error', 'Error leyendo ' + b.tabla);
     return jsonOk({ ok: true, items: r.json });
   }
@@ -1252,8 +1306,11 @@ async function api(req, context) {
     const row = {};
     for (const c of cfg.campos) if (b.row[c] !== undefined) row[c] = b.row[c];
     await autotraducir(row);                          // el idioma que falte se traduce solo
+    // Reintento sin imagen_vertical si esa columna aún no existe (migración pendiente).
+    const _sinVert = () => { if ('imagen_vertical' in row) { delete row.imagen_vertical; return true; } return false; };
     if (b.row.id) {                                    // editar
-      const r = await supa('PATCH', `${b.tabla}?id=eq.${b.row.id}`, row);
+      let r = await supa('PATCH', `${b.tabla}?id=eq.${b.row.id}`, row);
+      if (!r.ok && _sinVert()) r = await supa('PATCH', `${b.tabla}?id=eq.${b.row.id}`, row);
       if (!r.ok) return jsonErr(502, 'db_error', 'No se pudo guardar: ' + (r.text || '').slice(0, 140));
       await audit('editar', b.tabla, b.row.id, { campos: Object.keys(row) });
       return jsonOk({ ok: true, item: r.json?.[0] });
@@ -1261,7 +1318,8 @@ async function api(req, context) {
     if (cfg.soloEditar) return jsonErr(403, 'edit_only', 'En esta tabla solo se puede editar');
     if (cfg.slugDe && !row.slug) row.slug = slugify(b.row[cfg.slugDe]) + '-' + Math.random().toString(36).slice(2, 6);
     if (b.tabla === 'posts' && row.estado === 'publicado' && !row.publicado_at) row.publicado_at = new Date().toISOString();
-    const r = await supa('POST', b.tabla, row);
+    let r = await supa('POST', b.tabla, row);
+    if (!r.ok && _sinVert()) r = await supa('POST', b.tabla, row);
     if (!r.ok) return jsonErr(502, 'db_error', 'No se pudo crear: ' + (r.text || '').slice(0, 140));
     await audit('crear', b.tabla, r.json?.[0]?.id, {});
     return jsonOk({ ok: true, item: r.json?.[0] });
@@ -1457,6 +1515,7 @@ const F_VA={
  afiliados:['Afiliats','Registre intern de persones afiliades i les seues quotes. Dades privades: no ixen a la web.'],
  proposals:['Propostes ciutadanes','Moderació: publica, marca en estudi o rebutja (amb motiu). El que es publique eixirà a Participació.'],
  comments:['Comentaris','Moderació de comentaris en propostes (Fase 3).'],
+ reportes:['Denúncies de propostes','Propostes que la gent ha denunciat. Revisa-les i, si cal, oculta/esborra des de «Propostes ciutadanes».'],
  denuncias:['Canal de denúncies',"⚠ Llei 2/2023: justificant de recepció en 7 dies i resolució en 3 mesos. La resposta la veu l'informant amb el seu codi."],
  members_inbox:['Afiliacions',"Altes pagades via Stripe (s'activa en Fase 4)."],
  donations:['Donacions','Donacions rebudes (Fase 4). Export complet per al Tribunal de Comptes.'],
@@ -1512,17 +1571,18 @@ const F={ // definición de formularios por pestaña
  afiliados:{titulo:'Afiliados',desc:'Registro interno de personas afiliadas y sus cuotas. Datos privados: no aparecen en la web.',cols:[['numero','Nº'],['nombre','Nombre'],['apellidos','Apellidos'],['estado','Estado'],['cuota','Cuota €/mes'],['total','Total €']],campos:[
   ['numero','Nº de socio','text'],['nombre','Nombre','text'],['apellidos','Apellidos','text'],['dni','DNI / NIE','text'],['telefono','Teléfono','text'],['estado','Estado','select',['activo','baja']],['cuota','Cuota mensual (€)','text'],['total','Total pagado (€)','text'],['notas','Notas','textarea']]},
  proposals:{titulo:'Propuestas ciudadanas',desc:'Moderación: publica, marca en estudio o rechaza (con motivo). Lo publicado saldrá en Participación.',cols:[['titulo','Título'],['categoria','Categoría'],['estado','Estado'],['created_at','Recibida']],campos:[
-  ['estado','Decisión','select',['pendiente_moderacion','publicada','en_estudio','aprobada','rechazada']],['motivo_rechazo','Motivo (si se rechaza)','textarea'],['_mapa','Ubicación en el mapa','map'],['recorrido','Recorrido de la propuesta','repeater',[['date','Fecha','text'],['title','Título','text'],['text','Detalle','text']]],['umbrales','Umbrales (vacío = usa los globales)','repeater',[['n','Apoyos','number'],['label','Qué pasa al llegar','text']]],['destacada','Realzar en web (sale en la página Propuestas)','check']],ro:['titulo','descripcion','contacto_nombre','contacto_email']},
+  ['estado','Decisión','select',['pendiente_moderacion','publicada','en_estudio','aprobada','rechazada']],['motivo_rechazo','Motivo (si se rechaza)','textarea'],['_mapa','Ubicación en el mapa','map'],['recorrido','Recorrido de la propuesta','repeater',[['estado','Estado','select',['hecho','en curso','pendiente']],['title','Título','text'],['date','Fecha','text'],['text','Detalle','text']]],['umbrales','Umbrales (vacío = usa los globales)','repeater',[['n','Apoyos','number'],['label','Qué pasa al llegar','text']]],['destacada','Realzar en web (sale en la página Propuestas)','check']],ro:['titulo','descripcion','contacto_nombre','contacto_email']},
  comments:{titulo:'Comentarios',desc:'Moderación de comentarios en propuestas (Fase 3).',cols:[['texto','Comentario'],['estado','Estado'],['created_at','Fecha']],campos:[
   ['estado','Estado','select',['pendiente','publicado','oculto']]],ro:['texto']},
+ reportes:{titulo:'Denuncias de propuestas',desc:'Propuestas que la gente ha denunciado. Revísalas y, si hace falta, oculta/borra la propuesta desde «Propuestas ciudadanas».',cols:[],campos:[]},
  denuncias:{titulo:'Canal de denuncias',desc:'⚠ Ley 2/2023: acuse en 7 días y resolución en 3 meses. La respuesta la ve el informante con su código.',cols:[['codigo','Código'],['categoria','Categoría'],['estado','Estado'],['created_at','Recibida']],campos:[
   ['estado','Estado','select',['nueva','en_tramite','cerrada']],['respuesta','Respuesta al informante','textarea']],ro:['texto','contacto']},
  members_inbox:{titulo:'Afiliaciones',desc:'Altas pagadas vía Stripe (se activa en Fase 4).',cols:[['nombre','Nombre'],['apellidos','Apellidos'],['cuota_tipo','Cuota'],['estado','Estado']],campos:[]},
  donations:{titulo:'Donaciones',desc:'Donaciones recibidas (Fase 4). Export completo para Tribunal de Cuentas: ver spec.',cols:[['donor_nombre','Nombre'],['importe_cents','Importe'],['created_at','Fecha'],['estado','Estado'],['liquidada_at','Ingresada']],campos:[]},
  tienda:{titulo:'Tienda',desc:'Productos de merchandising y pedidos de la tienda online.',cols:[],campos:[]}
 };
-const ORDEN=['inicio','posts','events','campaigns','actuaciones','equipo','voluntarios','tesoreria','afiliados','donations','tienda','proposals','comments','contactos','leads','comunidad','denuncias'];
-const ICONS={inicio:'🏠',posts:'📰',events:'📅',campaigns:'📣',actuaciones:'📍',equipo:'👥',voluntarios:'🙋',tesoreria:'💶',afiliados:'🤝',proposals:'🗳️',comments:'💬',contactos:'✉️',leads:'📬',comunidad:'💭',denuncias:'🛡️',members_inbox:'🎫',donations:'💛',tienda:'🛍️'};
+const ORDEN=['inicio','posts','events','campaigns','actuaciones','equipo','voluntarios','tesoreria','afiliados','donations','tienda','proposals','comments','contactos','leads','comunidad','reportes','denuncias'];
+const ICONS={inicio:'🏠',posts:'📰',events:'📅',campaigns:'📣',actuaciones:'📍',equipo:'👥',voluntarios:'🙋',tesoreria:'💶',afiliados:'🤝',proposals:'🗳️',comments:'💬',reportes:'🚩',contactos:'✉️',leads:'📬',comunidad:'💭',denuncias:'🛡️',members_inbox:'🎫',donations:'💛',tienda:'🛍️'};
 let TAB='inicio', ROWS=[], BARRIOS=[], POLL=null, AF_MAX_TS=0;
 const EH=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
@@ -1571,6 +1631,7 @@ async function render(){
   if(TAB==='leads')return renderLeads();
   if(TAB==='proposals')return renderModeracion();
   if(TAB==='comments')return renderComments();
+  if(TAB==='reportes')return renderReportes();
   if(TAB==='afiliados')return renderAfiliados();
   if(TAB==='tienda')return renderTienda();
   const f=F[TAB];
@@ -1941,7 +2002,7 @@ function updBadges(d){
   let afN=d.afiliadosNuevos||0;
   const seen=+(localStorage.getItem('acg_af_seen')||0);
   if(!AF_MAX_TS||AF_MAX_TS<=seen)afN=0;
-  const map={proposals:d.propuestasPendientes,comments:d.comentariosPendientes,denuncias:d.denunciasAbiertas,contactos:d.contactosNuevos,comunidad:d.apelacionesPendientes,afiliados:afN};
+  const map={proposals:d.propuestasPendientes,reportes:d.reportesPendientes,comments:d.comentariosPendientes,denuncias:d.denunciasAbiertas,contactos:d.contactosNuevos,comunidad:d.apelacionesPendientes,afiliados:afN};
   document.querySelectorAll('#tabs button').forEach(b=>{
     const n=map[b.dataset.t]||0;
     let s=b.querySelector('.bdg');
@@ -2242,6 +2303,50 @@ async function renderComments(){
 window.cDelComment=async function(id){ var va=LANG==='va'; if(!await askConfirm(va?'Esborrar este comentari definitivament? No es pot desfer.':'¿Borrar este comentario definitivamente? No se puede deshacer.',{danger:true,yes:va?'Esborrar':'Borrar'}))return; var r=await call({action:'comentario-borrar',id:id}); if(r.j&&r.j.ok){toast(va?'Comentari esborrat':'Comentario borrado');renderComments();}else toast((r.j&&r.j.error&&r.j.error.message)||'Error',{error:true}); };
 document.addEventListener('click',function(e){if(!e.target||!e.target.closest)return;var d=e.target.closest('[data-cdel]');if(d)window.cDelComment(d.getAttribute('data-cdel'));});
 
+async function renderReportes(){
+  var va=LANG==='va', ttl='🚩 '+(va?'Denúncies de propostes':'Denuncias de propuestas');
+  $('#main').innerHTML='<div class="page"><h2>'+ttl+'</h2><p class="sub">'+T('cargando')+'</p></div>';
+  var r=await call({action:'reportes-list'});
+  if(!r.j||!r.j.ok){ $('#main').innerHTML='<div class="page"><h2>'+ttl+'</h2><p class="warn">'+((r.j&&r.j.error&&r.j.error.message)||'Error')+'</p></div>'; return; }
+  var items=r.j.items||[];
+  var MOT={spam:'Spam',ofensivo:va?'Ofensiu':'Ofensivo',falso:va?'Info falsa':'Info falsa',duplicado:va?'Duplicada':'Duplicada',otro:va?'Altre motiu':'Otro motivo'};
+  var groups={};
+  items.forEach(function(x){ var g=groups[x.proposal_id]||(groups[x.proposal_id]={tit:(x.proposals&&x.proposals.titulo)||'—',pid:x.proposal_id,list:[]}); g.list.push(x); });
+  var keys=Object.keys(groups);
+  keys.sort(function(a,b){ return groups[b].list.length-groups[a].list.length; });
+  var pend=items.filter(function(x){return x.estado==='pendiente';}).length;
+  var body=keys.length?keys.map(function(k){
+    var g=groups[k];
+    var rows=g.list.map(function(x){
+      return '<div style="border-top:1px solid #EEF2F7;padding-top:8px;margin-top:8px"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><b style="color:#C0392B">'+EH(MOT[x.motivo]||x.motivo)+'</b> '+pill(x.estado)+'<span style="margin-left:auto;color:#8A99A8;font-size:12px">'+String(x.created_at).slice(0,10)+'</span></div>'+(x.nota?'<div style="color:#42525F;font-size:13px;margin-top:4px">'+EH(x.nota)+'</div>':'')+(x.estado==='pendiente'?'<div class="acts" style="margin-top:6px"><button class="btn sm ghost" data-rrev="'+x.id+'">✓ '+(va?'Marcar revisada':'Marcar revisada')+'</button></div>':'')+'</div>';
+    }).join('');
+    return '<div class="cm"><div class="h"><b>'+EH(g.tit)+'</b> <span style="background:#FDF2F2;color:#C0392B;font-weight:700;font-size:12px;padding:2px 9px;border-radius:20px">'+g.list.length+' '+(va?'denúncies':'denuncias')+'</span></div>'+rows+'<div class="acts" style="margin-top:10px;border-top:1px solid #EEF2F7;padding-top:10px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm ghost" data-rprev="'+g.pid+'">👁 '+(va?'Veure proposta':'Ver propuesta')+'</button><button class="btn sm ghost" data-rdesc="'+g.pid+'">✓ '+(va?'Descartar denúncies':'Descartar denuncias')+'</button><button class="btn sm ghost" style="color:#C0392B" data-rpdel="'+g.pid+'">🗑 '+(va?'Eliminar proposta':'Eliminar propuesta')+'</button></div></div>';
+  }).join(''):'<p class="sub">'+(va?'Cap denúncia de moment.':'Ninguna denuncia de momento.')+'</p>';
+  $('#main').innerHTML='<div class="page"><h2>'+ttl+'</h2><p class="sub">'+(va?'Propostes que la gent ha denunciat. Revisa-les i, si cal, oculta o esborra la proposta des de «Propostes ciutadanes».':'Propuestas que la gente ha denunciado. Revísalas y, si hace falta, oculta o borra la propuesta desde «Propuestas ciudadanas».')+'</p>'+(pend?'<div class="warn" style="background:#FDF2F2;border-color:#F5C9C9;color:#C0392B">🚩 '+pend+' '+(va?'denúncia(es) pendent(s) de revisar.':'denuncia(s) pendiente(s) de revisar.')+'</div>':'')+(keys.length>3?SRCH(va?'Busca per proposta o motiu…':'Buscar por propuesta o motivo…'):'')+body+'</div>';
+}
+function rBadges(){ call({action:'dashboard'}).then(function(r){ if(r.j&&r.j.data)updBadges(r.j.data); }); }
+window.rRev=async function(id){ var va=LANG==='va'; var r=await call({action:'reporte-revisar',id:id}); if(r.j&&r.j.ok){toast(va?'Marcada com a revisada':'Marcada como revisada');renderReportes();rBadges();}else toast((r.j&&r.j.error&&r.j.error.message)||'Error',{error:true}); };
+window.rDesc=async function(pid){ var va=LANG==='va'; if(!await askConfirm(va?'Descartar totes les denúncies d’esta proposta? La proposta es queda tal qual.':'¿Descartar todas las denuncias de esta propuesta? La propuesta se queda tal cual.'))return; var r=await call({action:'reportes-descartar',proposalId:pid}); if(r.j&&r.j.ok){toast(va?'Denúncies descartades':'Denuncias descartadas');renderReportes();rBadges();}else toast((r.j&&r.j.error&&r.j.error.message)||'Error',{error:true}); };
+window.rPDel=async function(pid){ var va=LANG==='va'; if(!await askConfirm(va?'Eliminar definitivament esta proposta i tot el seu contingut (comentaris, vots i denúncies)? No es pot desfer.':'¿Eliminar definitivamente esta propuesta y todo su contenido (comentarios, votos y denuncias)? No se puede deshacer.',{danger:true,yes:va?'Eliminar':'Eliminar'}))return; var r=await call({action:'prop-eliminar',id:pid}); if(r.j&&r.j.ok){toast(va?'Proposta eliminada':'Propuesta eliminada');renderReportes();rBadges();}else toast((r.j&&r.j.error&&r.j.error.message)||'Error',{error:true}); };
+window.rPrev=async function(pid){
+  var va=LANG==='va';
+  var o=document.createElement('div'); o.id='rprev-ov';
+  o.style.cssText='position:fixed;inset:0;z-index:9999;background:rgba(7,30,69,.55);display:flex;padding:18px;overflow:auto';
+  o.innerHTML='<div style="max-width:760px;width:100%;margin:auto;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 30px 80px rgba(7,30,69,.4)"><div style="display:flex;align-items:center;gap:10px;padding:13px 18px;border-bottom:1px solid #E7EDF4"><b style="font:800 15px Public Sans;color:#0A2A5E">'+(va?'Vista prèvia de la proposta':'Vista previa de la propuesta')+'</b><button id="rprev-x" style="margin-left:auto;border:1px solid #E2E9F1;background:#fff;color:#42525F;font:700 13px Public Sans;padding:7px 14px;border-radius:9px;cursor:pointer">'+(va?'Eixir ✕':'Salir ✕')+'</button></div><div id="rprev-body" style="padding:20px 22px"><p class="sub">'+T('cargando')+'</p></div></div>';
+  document.body.appendChild(o);
+  function cerrar(){o.remove();}
+  o.addEventListener('click',function(e){if(e.target===o)cerrar();});
+  document.getElementById('rprev-x').addEventListener('click',cerrar);
+  var r=await call({action:'propuesta-get',id:pid});
+  var bd=document.getElementById('rprev-body'); if(!bd)return;
+  if(!r.j||!r.j.ok){ bd.innerHTML='<p class="warn">'+((r.j&&r.j.error&&r.j.error.message)||'Error')+'</p>'; return; }
+  var p=r.j.propuesta;
+  var imgs=Array.isArray(p.imagenes)?p.imagenes:[];
+  var gal=imgs.length?'<div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">'+imgs.map(function(u){return '<img src="'+EH(u)+'" style="width:130px;height:96px;object-fit:cover;border-radius:8px;border:1px solid #E4EBF2">';}).join('')+'</div>':'';
+  bd.innerHTML='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">'+pill(p.estado)+'<span style="background:#EAF3FC;color:#0A2A5E;font:700 11.5px Public Sans;padding:3px 9px;border-radius:20px">'+EH(p.categoria||'—')+'</span><span style="background:#E7F4EC;color:#1E7A45;font:700 11.5px Public Sans;padding:3px 9px;border-radius:20px">'+(p.aFavor||0)+' '+(va?'suports':'apoyos')+'</span></div><h3 style="font:800 21px Fraunces;color:#0A2A5E;margin:0 0 6px">'+EH(p.titulo||'—')+'</h3><div style="color:#8A99A8;font-size:12.5px;margin-bottom:6px">'+EH(p.contacto_nombre||(va?'Anònim':'Anónimo'))+' · '+String(p.created_at).slice(0,10)+'</div>'+gal+'<div style="color:#33414F;font-size:14.5px;line-height:1.6;white-space:pre-wrap">'+EH(p.descripcion||'')+'</div>';
+};
+document.addEventListener('click',function(e){if(!e.target||!e.target.closest)return;var d=e.target.closest('[data-rrev]');if(d)window.rRev(d.getAttribute('data-rrev'));var pv=e.target.closest('[data-rprev]');if(pv)window.rPrev(pv.getAttribute('data-rprev'));var ds=e.target.closest('[data-rdesc]');if(ds)window.rDesc(ds.getAttribute('data-rdesc'));var pd=e.target.closest('[data-rpdel]');if(pd)window.rPDel(pd.getAttribute('data-rpdel'));});
+
 async function renderLeads(){
   const va=LANG==='va', ttl='📬 '+(va?'Subscriptors':'Suscriptores');
   $('#main').innerHTML='<div class="page"><h2>'+ttl+'</h2><p class="sub">'+T('cargando')+'</p></div>';
@@ -2495,17 +2600,31 @@ async function shopPedidos(estadoFiltro){
       +'<div style="margin-top:8px;border-top:1px dashed #EEF2F7;padding-top:8px">'+(items.length?items.map(it=>'<div style="display:flex;justify-content:space-between;font-size:13px;padding:2px 0"><span>'+(it.cantidad||1)+'× '+EH(it.nombre)+(it.talla?' <span style="color:#8A99A8">('+EH(it.talla)+')</span>':'')+'</span><span style="color:#5C6B7A">'+EUR((it.precio_cents||0)*(it.cantidad||1))+'</span></div>').join(''):'<span class="sub">'+(va?'Sense línies':'Sin líneas')+'</span>')
       +(o.envio_cents?'<div style="display:flex;justify-content:space-between;font-size:12.5px;color:#8A99A8;padding:2px 0"><span>'+(va?'Enviament':'Envío')+'</span><span>'+EUR(o.envio_cents)+'</span></div>':'')+'</div>'
       +(o.direccion&&o.metodo_entrega==='envio'?'<div style="font-size:12px;color:#8A99A8;margin-top:6px">📦 '+EH(shopDir(o.direccion))+'</div>':'')
-      +'<div style="display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap"><label style="margin:0;font:600 12px Public Sans;color:#5C6B7A">'+(va?'Estat':'Estado')+'</label><select data-pest="'+EH(o.id)+'" style="width:auto;margin:0">'+opts+'</select></div>'
+      +'<div style="display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap"><label style="margin:0;font:600 12px Public Sans;color:#5C6B7A">'+(va?'Estat':'Estado')+'</label><select data-pest="'+EH(o.id)+'" style="width:auto;margin:0">'+opts+'</select>'
+      +(o.estado==='cancelado'?'<button class="btn sm" data-peddel="'+EH(o.id)+'" data-pnum="'+EH(o.numero||o.id)+'" style="margin:0 0 0 auto;background:#FBECEC;color:#C0392B;border:1px solid #F5C9C9">🗑 '+(va?'Eliminar comanda':'Eliminar pedido')+'</button>':'')
+      +'</div>'
       +'</div>';
   }).join(''):'<p class="sub">'+(va?'Cap comanda'+(window._SHOP_FILTRO!=='todos'?' amb este estat':'')+'.':'Ningún pedido'+(window._SHOP_FILTRO!=='todos'?' con este estado':'')+'.')+'</p>';
   body.innerHTML=filtros+lista;
   document.querySelectorAll('[data-pf]').forEach(bt=>bt.addEventListener('click',function(){shopPedidos(this.getAttribute('data-pf'));}));
   document.querySelectorAll('[data-pest]').forEach(sel=>sel.addEventListener('change',function(){window.shopEstado(this.getAttribute('data-pest'),this.value);}));
+  document.querySelectorAll('[data-peddel]').forEach(bt=>bt.addEventListener('click',function(){window.shopEliminar(this.getAttribute('data-peddel'),this.getAttribute('data-pnum'));}));
 }
 window.shopEstado=async function(id,estado){
   const va=LANG==='va';
   const r=await call({action:'pedido-estado',id:id,estado:estado});
   if(r.j&&r.j.ok){ toast(va?'Estat actualitzat ✓':'Estado actualizado ✓'); shopPedidos(); }
+  else toast((r.j&&r.j.error&&r.j.error.message)||'Error',{error:true});
+};
+window.shopEliminar=async function(id,num){
+  const va=LANG==='va';
+  const motivo=await askPrompt(va?'Motiu de l’esborrat de la comanda #'+num+' (obligatori):':'Motivo del borrado del pedido #'+num+' (obligatorio):','');
+  if(motivo===null)return;
+  if(!String(motivo).trim()){ toast(va?'Cal indicar un motiu.':'Hay que indicar un motivo.',{error:true}); return; }
+  const ok=await askConfirm((va?'Eliminar DEFINITIVAMENT la comanda #':'Eliminar DEFINITIVAMENTE el pedido #')+num+(va?'? No es pot desfer.':'? No se puede deshacer.'),{danger:true,yes:'Eliminar'});
+  if(!ok)return;
+  const r=await call({action:'pedido-eliminar',id:id,motivo:String(motivo).trim()});
+  if(r.j&&r.j.ok){ toast(va?'Comanda eliminada ✓':'Pedido eliminado ✓'); shopPedidos(); }
   else toast((r.j&&r.j.error&&r.j.error.message)||'Error',{error:true});
 };
 
@@ -2703,8 +2822,8 @@ async function denHiloBox(codigo){
 function repSchema(k){var c=(F[TAB].campos||[]).find(function(x){return x[0]===k});return (c&&c[3])||[];}
 function repInit(k,val){var box=document.getElementById('rep_'+k);if(!box)return;box.innerHTML='';(Array.isArray(val)?val:[]).forEach(function(it){repRow(k,it);});}
 window.repAdd=function(k){repRow(k,{});};
-function repRow(k,item){var box=document.getElementById('rep_'+k);if(!box)return;var sub=repSchema(k);var single=sub.length===1&&sub[0][0]==='';var r=document.createElement('div');r.className='repitem';r.style.cssText='display:flex;gap:6px;align-items:flex-start;margin-bottom:6px';var inner='';sub.forEach(function(sf){var sk=sf[0],slab=sf[1]||'',st=sf[2]||'text';var v=single?(typeof item==='string'?item:''):(item&&item[sk]!=null?item[sk]:'');v=String(v).split('"').join('&quot;');inner+='<input data-sk="'+sk+'" type="'+st+'" placeholder="'+slab+'" value="'+v+'" style="flex:1;min-width:0">';});r.innerHTML=inner+'<button type="button" class="btn ghost" style="padding:6px 11px;margin:0" onclick="this.parentNode.remove();if(window.updPrev)window.updPrev()">×</button>';box.appendChild(r);if(window.updPrev)window.updPrev();}
-function repVal(k){var box=document.getElementById('rep_'+k);if(!box)return [];var sub=repSchema(k),single=sub.length===1&&sub[0][0]==='';var out=[];box.querySelectorAll('.repitem').forEach(function(r){if(single){var vv=r.querySelector('input').value.trim();if(vv)out.push(vv);return;}var o={},any=false;r.querySelectorAll('input').forEach(function(inp){var sk=inp.getAttribute('data-sk');var v=inp.value.trim();if(sk){o[sk]=(inp.type==='number'&&v!=='')?Number(v):v;if(v)any=true;}});if(any)out.push(o);});return out;}
+function repRow(k,item){var box=document.getElementById('rep_'+k);if(!box)return;var sub=repSchema(k);var single=sub.length===1&&sub[0][0]==='';var r=document.createElement('div');r.className='repitem';r.style.cssText='display:flex;gap:6px;align-items:flex-start;margin-bottom:6px';var inner='';sub.forEach(function(sf){var sk=sf[0],slab=sf[1]||'',st=sf[2]||'text';var v=single?(typeof item==='string'?item:''):(item&&item[sk]!=null?item[sk]:'');if(st==='select'){var ops=sf[3]||[];inner+='<select data-sk="'+sk+'" title="'+slab+'" style="flex:1;min-width:0"><option value="">'+slab+'…</option>'+ops.map(function(o){var ov=String(o).split('"').join('&quot;');return '<option value="'+ov+'"'+(String(v)===String(o)?' selected':'')+'>'+ov+'</option>';}).join('')+'</select>';}else{v=String(v).split('"').join('&quot;');inner+='<input data-sk="'+sk+'" type="'+st+'" placeholder="'+slab+'" value="'+v+'" style="flex:1;min-width:0">';}});r.innerHTML=inner+'<button type="button" class="btn ghost" style="padding:6px 11px;margin:0" onclick="this.parentNode.remove();if(window.updPrev)window.updPrev()">×</button>';box.appendChild(r);if(window.updPrev)window.updPrev();}
+function repVal(k){var box=document.getElementById('rep_'+k);if(!box)return [];var sub=repSchema(k),single=sub.length===1&&sub[0][0]==='';var out=[];box.querySelectorAll('.repitem').forEach(function(r){if(single){var vv=r.querySelector('input').value.trim();if(vv)out.push(vv);return;}var o={},any=false;r.querySelectorAll('input,select').forEach(function(inp){var sk=inp.getAttribute('data-sk');var v=inp.value.trim();if(sk){o[sk]=(inp.type==='number'&&v!=='')?Number(v):v;if(v)any=true;}});if(any)out.push(o);});return out;}
 function initMapa(el){if(!window.L){el.innerHTML='<p class="sub" style="padding:12px 14px">Mapa no disponible</p>';return;}var la=parseFloat(el.getAttribute('data-lat')),lo=parseFloat(el.getAttribute('data-lng'));var hasP=!isNaN(la)&&!isNaN(lo);var c=hasP?[la,lo]:[38.9686,-0.1817];var map=L.map(el).setView(c,hasP?16:13);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);var mk=L.marker(c,{draggable:true}).addTo(map);function set(ll){var a=document.getElementById('f_lat'),b=document.getElementById('f_lng');if(a)a.value=ll.lat.toFixed(6);if(b)b.value=ll.lng.toFixed(6);if(window.updPrev)window.updPrev();}mk.on('dragend',function(){set(mk.getLatLng());});map.on('click',function(e){try{map.invalidateSize({pan:false,animate:false});}catch(e2){}var ll=e.latlng;try{if(e.originalEvent)ll=map.mouseEventToLatLng(e.originalEvent)||e.latlng;}catch(e2){}mk.setLatLng(ll);set(ll);});window._formMap={map:map,mk:mk,set:set};function kick(){try{map.invalidateSize();}catch(e){}}setTimeout(kick,250);setTimeout(kick,800);setTimeout(kick,1800);try{new IntersectionObserver(function(es,obs){es.forEach(function(en){if(en.isIntersecting){kick();obs.disconnect();}});}).observe(el);}catch(e){}}
 window.mapGeo=async function(){
   const q=document.getElementById('f_mapdir');if(!q||!q.value.trim())return;
@@ -2746,7 +2865,7 @@ window.updPrev=function(){
   const cuerpo=val('cuerpo'), img=pv('imagen')||pv('foto');
   const fecha=pv('fecha'), lugar=pv('lugar'), prog=pv('progreso');
   box.innerHTML='<div style="background:#fff;border:1px solid #E9EEF4;border-radius:16px;overflow:hidden;max-width:430px;margin:0 auto;box-shadow:0 8px 22px rgba(10,42,94,.07)">'+
-    (img?'<img src="'+pesc(img)+'" style="width:100%;height:170px;object-fit:cover;display:block" onerror="this.style.display=\\'none\\'">':'')+
+    (img?'<img src="'+pesc(img)+'" style="width:100%;max-height:300px;object-fit:contain;background:#0F2A55;display:block" onerror="this.style.display=\\'none\\'">':'')+
     '<div style="padding:18px 20px">'+
     (cargo?'<div style="font:700 11px Public Sans;color:#0FA6B6;text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">'+pesc(cargo)+'</div>':'')+
     ((fecha||lugar)?'<div style="font:700 11.5px Public Sans;color:#9A6208;margin-bottom:4px">'+pesc(fecha)+(lugar?' · '+pesc(lugar):'')+'</div>':'')+
@@ -2797,6 +2916,10 @@ function wImg(k,h,ph){const v=wv(k);
   return '<div class="wiximg" data-wimg="'+k+'" style="height:'+h+';background:#EEF3F9 center/cover no-repeat'+(v?';background-image:url('+v.split("'").join('').split('"').join('')+')':'')+'">'
    +(v?'':'<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#8A99A8;font:700 13px Public Sans">📷 '+ph+'</div>')
    +'<div class="cam">📷 '+(WL==='va'?'Canviar imatge':'Cambiar imagen')+'</div></div>';}
+function wImgV(k,ph){const v=wv(k);
+  return '<div class="wiximg" data-wimg="'+k+'" style="height:320px;max-width:220px;border-radius:10px;overflow:hidden;background:#0F2A55 center/contain no-repeat'+(v?';background-image:url('+v.split("'").join('').split('"').join('')+')':'')+'">'
+   +(v?'':'<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#9AA8B8;font:700 12px Public Sans;text-align:center;padding:10px">📱 '+ph+'</div>')
+   +'<div class="cam">📷 '+(WL==='va'?'Canviar':'Cambiar')+'</div></div>';}
 function wBar(extra){
   const va=WL==='va', i=window._wix.i;
   return '<div class="wixbar">'
@@ -2884,6 +3007,7 @@ window.wixRender=function(){
       +wED('extracto_'+WL,(va?'Entradeta breu (ix a les targetes)...':'Entradilla breve (sale en las tarjetas)...'),'font:600 15.5px Public Sans;color:#33414F;line-height:1.6;margin:0 0 14px')
       +wED('cuerpo_'+WL,(va?'Cos de la notícia. Cada salt de línia és un paràgraf nou...':'Cuerpo de la noticia. Cada salto de línea es un párrafo nuevo...'),'font:400 15px Public Sans;color:#42525F;line-height:1.75;min-height:130px')
       +'<div id="wixvidrow" style="margin-top:18px;display:flex;gap:8px;align-items:center;background:#F7FAFD;border:1px dashed #C9D6E4;border-radius:10px;padding:9px 13px"><span style="font:700 11px Public Sans;color:#8A99A8;text-transform:uppercase;flex-shrink:0">▶ Vídeo</span>'+wED('video_url',(va?'Enganxa un enllaç de YouTube, o fes clic al clip / arrossega un vídeo curt...':'Pega un enlace de YouTube, o haz clic en el clip / arrastra un vídeo corto...'),'font:400 12.5px Public Sans;color:#1563C4;flex:1','span')+'<button class="wixadd" style="margin:0;padding:6px 11px" onclick="wixVidPick()">📎</button></div>'
+      +(r.tipo==='video'?'<div style="margin-top:14px"><div style="font:700 11px Public Sans;color:#8A99A8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">📱 '+(va?'Miniatura vertical (per a l Inici) — opcional':'Miniatura vertical (para el Inicio) — opcional')+'</div><div style="font:400 12px Public Sans;color:#8A99A8;margin-bottom:8px">'+(va?'La horitzontal de dalt s usa a la pàgina i a Actualitat; esta vertical, al tile de l Inici.':'La horizontal de arriba se usa en la página y en Actualidad; esta vertical, en el tile del Inicio.')+'</div>'+wImgV('imagen_vertical',(va?'Arrossega la miniatura vertical':'Arrastra la miniatura vertical'))+'</div>':'')
       +'</div></div>';
   } else if(TAB==='events'){
     bar=wBar(wIn('fecha',(va?'Data':'Fecha'),'date')+wIn('hora_inicio',(va?'Inici':'Inicio'),'time')+wIn('hora_fin','Fin','time')+wBarrioSel()+wSel('estado','Estado',['borrador','publicado','cancelado'])+wChk('inscribible',(va?'Admet inscripció':'Admite inscripción')));
@@ -3002,7 +3126,13 @@ window.wixVidFile=function(file){
       if(!sig.j||!sig.j.signedUrl){toast((sig.j&&sig.j.error&&sig.j.error.message)||(WL==='va'?'No s ha pogut pujar':'No se pudo subir'),{error:true});return;}
       const put=await fetch(sig.j.signedUrl,{method:'PUT',headers:{'content-type':file.type||'video/mp4'},body:file});
       if(!put.ok){toast(WL==='va'?'Error en pujar el vídeo':'Error al subir el vídeo',{error:true});return;}
-      wixCollect();window._wix.row.video_url=sig.j.publicUrl;wixRender();toast(T('guardado'));
+      wixCollect();window._wix.row.video_url=sig.j.publicUrl;
+      // Fijar la URL directamente en el campo editable: así, al guardar, wixCollect lee la URL COMPLETA
+      // (no se trunca si wixRender no repinta ese span). Sin esto el video_url se guardaba a medias.
+      var _ed=document.querySelector('#fbox .ed[data-k="video_url"]'); if(_ed) _ed.innerText=sig.j.publicUrl;
+      wixRender();
+      var _ed2=document.querySelector('#fbox .ed[data-k="video_url"]'); if(_ed2) _ed2.innerText=sig.j.publicUrl;
+      toast(WL==='va'?'Vídeo pujat ✓ Recorda desar':'Vídeo subido ✓ Recuerda guardar');
     }catch(e){toast('Error: '+String(e&&e.message||e),{error:true});}
   })();};
 window.wixVidPick=function(){

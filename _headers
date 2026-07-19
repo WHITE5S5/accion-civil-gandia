@@ -5,13 +5,19 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://challenges.cloudflare.com https://*.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.supabase.co https://i.ytimg.com https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://unpkg.com; connect-src 'self' https://*.supabase.co https://photon.komoot.io https://nominatim.openstreetmap.org https://*.sentry.io; frame-src https://challenges.cloudflare.com https://www.openstreetmap.org
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://challenges.cloudflare.com https://*.sentry-cdn.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://*.supabase.co https://i.ytimg.com https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://unpkg.com https://www.google-analytics.com https://*.google-analytics.com; connect-src 'self' https://*.supabase.co https://photon.komoot.io https://nominatim.openstreetmap.org https://*.sentry.io https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; media-src 'self' blob: data: https://*.supabase.co; frame-src https://challenges.cloudflare.com https://www.openstreetmap.org https://www.youtube.com https://www.youtube-nocookie.com https://player.vimeo.com
 
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
 
 # Los JS de assets cambian con cada fase: cache corto y revalidable
 /assets/*.js
+  Cache-Control: public, max-age=300, must-revalidate
+
+# El runtime en la raíz no tiene versionado ?v= — sin regla explícita la caché heurística
+# puede servirlo viejo durante días (p.ej. tras cambiar los CDN a locales, 2026-07-19)
+/support.js
   Cache-Control: public, max-age=300, must-revalidate
 
 # Fotos de miembros: se reemplazan reusando el mismo nombre → NO immutable

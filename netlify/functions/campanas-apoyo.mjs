@@ -26,7 +26,7 @@ export default async (req, context) => {
   }
 
   if (req.method !== 'POST') return jsonErr(405, 'method_not_allowed', 'Método no permitido');
-  const ip = context.ip || '0.0.0.0';
+  const ip = req.headers.get('cf-connecting-ip') || context.ip || req.headers.get('x-nf-client-connection-ip') || '0.0.0.0';
   if (rateLimited('campapoyo:' + ip, 30)) return jsonErr(429, 'rate_limited', 'Demasiadas peticiones');
   const user = await getUser(req);
   if (!user) return jsonErr(401, 'login_required', 'Inicia sesión para apoyar la campaña');

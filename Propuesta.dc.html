@@ -11,25 +11,24 @@
 <title>Detalle de propuesta — Acción Civil Gandia</title>
 <meta name="description" content="Detalle de propuesta ciudadana en Gandia. Consulta apoyos, comentarios, estado y respuesta oficial.">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://accioncivilgandia.netlify.app/propuesta">
-<link rel="alternate" hreflang="es" href="https://accioncivilgandia.netlify.app/propuesta">
-<link rel="alternate" hreflang="ca" href="https://accioncivilgandia.netlify.app/propuesta?lang=va">
-<link rel="alternate" hreflang="x-default" href="https://accioncivilgandia.netlify.app/propuesta">
+<link rel="canonical" href="https://accioncivilgandia.es/propuesta">
+<link rel="alternate" hreflang="es" href="https://accioncivilgandia.es/propuesta">
+<link rel="alternate" hreflang="ca" href="https://accioncivilgandia.es/propuesta?lang=va">
+<link rel="alternate" hreflang="x-default" href="https://accioncivilgandia.es/propuesta">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Propuesta ciudadana — Acción Civil Gandia">
 <meta property="og:description" content="Consulta el detalle de esta propuesta vecinal en Gandia.">
-<meta property="og:url" content="https://accioncivilgandia.netlify.app/propuesta">
-<meta property="og:image" content="https://accioncivilgandia.netlify.app/assets/og-propuestas.jpg">
+<meta property="og:url" content="https://accioncivilgandia.es/propuesta">
+<meta property="og:image" content="https://accioncivilgandia.es/assets/og-default.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Oswald:wght@500;600;700&family=Public+Sans:ital,wght@0,400..700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/leaflet/leaflet.css">
+<script src="/assets/leaflet/leaflet.js"></script>
+<link href="/assets/fonts.css" rel="stylesheet">
 <style>
   *{box-sizing:border-box}
   body{margin:0}
@@ -41,6 +40,10 @@
   .acg-btn:active{transform:translateY(1px)}
   .acg-tile{transition:background .16s,border-color .16s}
   .acg-tile:hover{background:#F8FBFF;border-color:#CFDDEC}
+  .acg-sk{background:#eef2f6!important;border-color:#e3e9f0!important;pointer-events:none;position:relative;overflow:hidden}
+  .acg-sk *{color:transparent!important;visibility:hidden!important}
+  .acg-sk::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);transform:translateX(-100%);animation:acgshim 1.3s infinite}
+  @keyframes acgshim{100%{transform:translateX(100%)}}
   .acg-skip{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;z-index:9999}
   .acg-skip:focus{position:fixed;top:12px;left:12px;width:auto;height:auto;padding:12px 20px;background:#1563C4;color:#fff;font:700 14px Public Sans;border-radius:3px;box-shadow:0 8px 24px rgba(0,0,0,.25);text-decoration:none;outline:none}
   :focus-visible{outline:3px solid #1563C4;outline-offset:2px;border-radius:3px}
@@ -56,7 +59,7 @@
   html[data-acg-mobile='1'] [data-om-raster]{display:none!important}
 </style>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"PoliticalParty","name":"Acción Civil Gandia","alternateName":"Acció Civil Gandia","url":"https://accioncivilgandia.netlify.app","description":"Partido político local, ciudadano e independiente de Gandia, Valencia. Formación municipalista centrada en los problemas reales de los vecinos de Gandia, el Grao de Gandia y la Playa de Gandia.","foundingDate":"2022","address":{"@type":"PostalAddress","streetAddress":"Avda. República Argentina 42, entresuelo","addressLocality":"Gandia","addressRegion":"Valencia","postalCode":"46702","addressCountry":"ES"},"areaServed":{"@type":"City","name":"Gandia","containedInPlace":{"@type":"AdministrativeArea","name":"Valencia, Comunitat Valenciana, España"}},"knowsLanguage":["es","ca"],"keywords":"partido político Gandia, elecciones municipales Gandia, propuestas Gandia, participación ciudadana Gandia, Grao de Gandia, Playa de Gandia, seguridad Gandia, policía proximidad Gandia, pequeño comercio Gandia, municipalista Gandia"}
+{"@context":"https://schema.org","@type":"PoliticalParty","name":"Acción Civil Gandia","alternateName":"Acció Civil Gandia","url":"https://accioncivilgandia.es","description":"Partido político local, ciudadano e independiente de Gandia, Valencia. Formación municipalista centrada en los problemas reales de los vecinos de Gandia, el Grao de Gandia y la Playa de Gandia.","foundingDate":"2022","address":{"@type":"PostalAddress","streetAddress":"Avda. República Argentina 42, entresuelo","addressLocality":"Gandia","addressRegion":"Valencia","postalCode":"46702","addressCountry":"ES"},"areaServed":{"@type":"City","name":"Gandia","containedInPlace":{"@type":"AdministrativeArea","name":"Valencia, Comunitat Valenciana, España"}},"knowsLanguage":["es","ca"],"keywords":"partido político Gandia, elecciones municipales Gandia, propuestas Gandia, participación ciudadana Gandia, Grao de Gandia, Playa de Gandia, seguridad Gandia, policía proximidad Gandia, pequeño comercio Gandia, municipalista Gandia"}
 </script>
 <style id="acg-serio">
 /* Anti-scroll horizontal en todo monitor */
@@ -337,7 +340,7 @@ header{border-top:3px solid #0A2A5E}
             <div style="display:flex;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid #EEF2F7">
               <button class="acg-btn" onClick="{{ toggleSeguir }}" style="flex:1;border:1px solid {{ seguirBorder }};background:{{ seguirBg }};color:{{ seguirCol }};font:700 13px Public Sans;padding:10px;border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px"><svg width="15" height="15" viewBox="0 0 24 24" fill="{{ seguirFill }}" stroke="currentColor" stroke-width="1.9"><path d="M12 5c-4 0-7 3-9 7 2 4 5 7 9 7s7-3 9-7c-2-4-5-7-9-7ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"></path></svg>{{ seguirLabel }}</button>
               <button class="acg-btn" aria-label="{{ t.compartir }}" title="{{ t.compartir }}" style="width:44px;border:1px solid #E4EBF2;background:#fff;color:#33414F;border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="6" cy="12" r="2.5"></circle><circle cx="17" cy="6" r="2.5"></circle><circle cx="17" cy="18" r="2.5"></circle><path d="M8.2 10.8 14.8 7.2M8.2 13.2l6.6 3.6"></path></svg></button>
-              <button class="acg-btn" aria-label="{{ t.denunciar }}" title="{{ t.denunciar }}" style="width:44px;border:1px solid #E4EBF2;background:#fff;color:#33414F;border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 21V4h11l-1.5 3L15 10H4M4 4v6"></path></svg></button>
+              <button class="acg-btn" data-acg-denunciar="1" aria-label="{{ t.denunciar }}" title="{{ t.denunciar }}" style="width:44px;border:1px solid #E4EBF2;background:#fff;color:#33414F;border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 21V4h11l-1.5 3L15 10H4M4 4v6"></path></svg></button>
             </div>
           </div>
 
@@ -378,7 +381,7 @@ header{border-top:3px solid #0A2A5E}
     <footer id="footer" role="contentinfo" style="background:#071E45;color:#B7C7DD;padding:{{ footerPad }}">
       <div style="max-width:1240px;margin:0 auto;padding:{{ pagePad }}">
         <div style="display:grid;grid-template-columns:{{ footerGrid }};gap:{{ footerGap }};padding-bottom:{{ footerGap }};border-bottom:1px solid rgba(255,255,255,.1)">
-          <div>
+          <div style="{{ footerSpan }}">
             <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
               <div style="background:#fff;border-radius:50%;padding:8px;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.12)"><img loading="lazy" src="/assets/logo-icon.webp" alt="Acción Civil Gandia" style="height:44px;width:44px;object-fit:contain" width="512" height="467"></div>
             </div>
@@ -407,7 +410,7 @@ header{border-top:3px solid #0A2A5E}
               </sc-for>
             </div>
           </div>
-          <div>
+          <div style="{{ footerSpan }}">
             <div style="font:700 13px Public Sans;letter-spacing:.1em;text-transform:uppercase;color:#fff;margin-bottom:16px">{{ t.newsletter }}</div>
             <p style="font-size:14px;color:#8FA6C4;margin:0 0 14px">{{ t.newsletterText }}</p>
             <div style="display:flex;gap:8px;margin-bottom:18px">
@@ -499,7 +502,7 @@ class Component extends DCLogic {
     const id=this.propId(); if(!id) return;
     const lang=this.state.lang==='va'?'va':'es';
     try{
-      const r=await fetch('/api/proposals?id='+encodeURIComponent(id)+'&lang='+lang);
+      const r=await fetch('/api/proposals?id='+encodeURIComponent(id)+'&lang='+lang,{cache:'no-store'});
       if(!r.ok) return;
       const j=await r.json();
       let coments=j.comentarios||[], likesOn=false;
@@ -509,7 +512,7 @@ class Component extends DCLogic {
         if(rc.ok){ const jc=await rc.json(); if(jc.ok&&Array.isArray(jc.items)){ coments=jc.items; likesOn=!!jc.likesOn; } }
       }catch(e){}
       if(j.ok&&j.item){ j.item._id=id; this.setState({remoteProp:{item:j.item, comentarios:coments, likesOn:likesOn}}); setTimeout(()=>this._initPropMap(j.item),150); }
-      const rl=await fetch('/api/proposals?lang='+lang);
+      const rl=await fetch('/api/proposals?lang='+lang,{cache:'no-store'});
       if(rl.ok){ const jl=await rl.json(); if(jl.ok) this.setState({lista:jl.items||[]}); }
     }catch(e){ console.error('prop detail', e); }
   }
@@ -591,10 +594,7 @@ class Component extends DCLogic {
         {autor:'Amparo Císcar', ini:'AC', avBg:'#0FA6B6', fecha:V('hace 3 días','fa 3 dies'), tag:V('Aporta datos','Aporta dades'), tagBg:'#E4F5F7', tagCol:'#0B7C89', text:V('En 2025 se registraron 14 incidencias de ciclistas en ese tramo según datos de la Policía Local. El dato refuerza la urgencia de separar el carril.','El 2025 es van registrar 14 incidències de ciclistes en eixe tram segons dades de la Policia Local. La dada reforça la urgència de separar el carril.')},
         {autor:'Toni Peiró', ini:'TP', avBg:'#D98A0B', fecha:V('hace 4 días','fa 4 dies'), tag:V('Experiencia personal','Experiència personal'), tagBg:'#FBF0DC', tagCol:'#9A6208', text:V('Voy cada día en bici al trabajo por esa avenida y da miedo. Ojalá salga adelante, tiene todo mi apoyo.','Vaig cada dia en bici a la faena per eixa avinguda i fa por. Tant de bo isca avant, té tot el meu suport.')}
       ],
-      relacionadas:[
-        {cat:V('Movilidad','Mobilitat'), catColor:'#6B4EE6', catBg:'#EEEAFB', barrio:'Beniopa', title:V('Más frecuencia de autobús urbano en Beniopa','Més freqüència d\u2019autobús urbà a Beniopa'), apoyos:'5.210', coment:'312'},
-        {cat:V('Movilidad','Mobilitat'), catColor:'#6B4EE6', catBg:'#EEEAFB', barrio:'Centre', title:V('Zona peatonal en el casco histórico los fines de semana','Zona per a vianants al casc antic els caps de setmana'), apoyos:'980', coment:'74'}
-      ],
+      relacionadas:[],
       t:{
         inicio:V('Inicio','Inici'),
         bnInicio:V('Inicio','Inici'),
@@ -721,11 +721,14 @@ class Component extends DCLogic {
       const fotos=Array.isArray(it.imagenes)?it.imagenes:[];
       d.thumbs=fotos.slice(1).map(u=>({img:u}));
       d.docs=[];
-      d.relacionadas=(s.lista||[]).filter(x=>x.id!==it._id).slice(0,2).map(x=>({cat:x.cat,catColor:x.catColor,catBg:x.catBg,barrio:x.barrio,title:x.title,apoyos:this.fmt(x.apoyos||0),coment:String(x.coment||0),href:'/propuesta?id='+x.id}));
+      d.relacionadas=(s.lista||[]).filter(x=>x.id!==it._id).slice(0,2).map(x=>({cat:x.cat,catColor:x.catColor,catBg:x.catBg,barrio:x.barrio,title:x.title,apoyos:this.fmt(x.apoyos||0),coment:String(x.coment||0),href:'/propuesta-ciudadana?id='+x.id}));
     } else { d.relacionadas=d.relacionadas.map(r=>({...r,href:'/participacion'})); }
 
     const apoyos = it ? (it.aFavor||0) : d.p.base + (s.apoyado?1:0);
-    const umbTmp=[100,500,1000,5000,10000];
+    // Umbrales reales de la propuesta (si el admin los definió); si no, escalera global por defecto.
+    const umbTmp=(it&&Array.isArray(it.umbrales)&&it.umbrales.length)
+      ? it.umbrales.map(u=>Number(u.n)||0).filter(n=>n>0).sort((a,b)=>a-b)
+      : [100,500,1000,5000,10000];
     const nextUmb = umbTmp.find(n=>n>apoyos);
     d.p.meta = it ? (nextUmb||apoyos||1) : d.p.meta;
     d.p.metaStr = this.fmt(d.p.meta);
@@ -736,7 +739,7 @@ class Component extends DCLogic {
     if(it){
       const ek=it.estadoKey||'publicada';
       const _rec=Array.isArray(it.recorrido)?it.recorrido:[];
-      if(_rec.length) d.timeline=_rec.map(r=>({title:r.title||r.titulo||'',date:r.date||r.fecha||'',text:r.text||r.texto||'',done:r.done===true||r.done==='true',current:r.current===true}));
+      if(_rec.length) d.timeline=_rec.map(r=>({title:r.title||r.titulo||'',date:r.date||r.fecha||'',text:r.text||r.texto||'',done:r.done===true||r.done==='true'||r.estado==='hecho',current:r.current===true||r.estado==='en curso'||r.estado==='en_curso'}));
       else d.timeline=[
         {title:V('Propuesta publicada','Proposta publicada'), date:it.ultima||'', text:V('Publicada en la plataforma ciudadana tras la revisión.','Publicada a la plataforma ciutadana després de la revisió.'), done:true},
         {title:V('Recogiendo apoyos','Recollint suports'), date:'', text:V(this.fmt(apoyos)+' apoyos hasta ahora. ¡Compártela para que llegue más lejos!',this.fmt(apoyos)+' suports fins ara. Compartix-la perquè arribe més lluny!'), done:ek==='en_estudio'||ek==='aprobada', current:ek==='publicada'},
@@ -750,6 +753,12 @@ class Component extends DCLogic {
       {iconPath:'M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 2.6 2.6L12 9h6a2 2 0 0 1 2 2.4l-1.5 6a2 2 0 0 1-2 1.6H7', value:this.fmt(apoyos), label:V('apoyos','suports')},
       {iconPath:'M20 15a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z', value:String(rp.comentarios.length), label:V('comentarios','comentaris')},
       {iconPath:'M12 21s7-5.6 7-11a7 7 0 0 0-14 0c0 5.4 7 11 7 11ZM12 12.4a2.4 2.4 0 1 0 0-4.8 2.4 2.4 0 0 0 0 4.8Z', value:d.p.barrio, label:''}
+    ] : idURL ? [
+      // Cargando la propuesta real: metadatos neutros (nunca la fecha demo)
+      {iconPath:'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4', value:'…', label:''},
+      {iconPath:'M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 2.6 2.6L12 9h6a2 2 0 0 1 2 2.4l-1.5 6a2 2 0 0 1-2 1.6H7', value:'…', label:V('apoyos','suports')},
+      {iconPath:'M20 15a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z', value:'…', label:V('comentarios','comentaris')},
+      {iconPath:'M12 21s7-5.6 7-11a7 7 0 0 0-14 0c0 5.4 7 11 7 11ZM12 12.4a2.4 2.4 0 1 0 0-4.8 2.4 2.4 0 0 0 0 4.8Z', value:'…', label:''}
     ] : [
       {iconPath:'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4', value:V('3 jun 2026','3 juny 2026'), label:''},
       {iconPath:'M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 2.6 2.6L12 9h6a2 2 0 0 1 2 2.4l-1.5 6a2 2 0 0 1-2 1.6H7', value:this.fmt(apoyos), label:V('apoyos','suports')},
@@ -796,7 +805,7 @@ class Component extends DCLogic {
     return {
       ...d, lang:s.lang, isMob, headMeta, timeline, umbrales, comentarios, sortOptions,
       footerPad: isMob?'36px 0 24px':'64px 0 30px',
-      footerGrid: isMob?'1fr':'1.6fr 1fr 1fr 1.4fr',
+      footerGrid: isMob?'1fr 1fr':'1.6fr 1fr 1fr 1.4fr', footerSpan: isMob?'grid-column:1/-1':'',
       footerGap: isMob?'28px':'44px',
       apoyosStr:this.fmt(apoyos), barW: mounted? pct+'%':'0%',
       heroImg: it ? (fotosReales[0] || '/assets/web/og-gandia-collage.webp') : (idURL ? 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==' : '/assets/web/og-gandia-collage.webp'),
@@ -851,7 +860,7 @@ class Component extends DCLogic {
 </script>
 <style>html[data-acg-prod] [data-om-raster]{display:none!important}</style>
 <script>if(!/^(localhost|127\.0\.0\.1)$/.test(location.hostname))document.documentElement.setAttribute('data-acg-prod','1')</script>
-<script src="/assets/acg-forms.js?v=42" defer></script>
+<script src="/assets/acg-forms.js?v=53" defer></script>
 <script src="/assets/acg-shop.js?v=7" defer></script>
 </body>
 </html>
