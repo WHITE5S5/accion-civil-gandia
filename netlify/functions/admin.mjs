@@ -2579,6 +2579,7 @@ function shopProductoForm(i){
     +'<div style="display:flex;gap:22px;margin-top:12px;flex-wrap:wrap"><label style="display:flex;gap:8px;align-items:center;margin:0"><input type="checkbox" id="pf_activo" style="width:19px;height:19px" '+(p.id?(p.activo?'checked':''):'checked')+'>'+(va?'Visible a la botiga':'Visible en la tienda')+'</label>'
     +'<label style="display:flex;gap:8px;align-items:center;margin:0"><input type="checkbox" id="pf_destacado" style="width:19px;height:19px" '+(p.destacado?'checked':'')+'>'+(va?'Destacat':'Destacado')+'</label></div>'
     +'<label>'+(va?'Imatge':'Imagen')+'</label><div class="drop" data-k="imagen_url">'+(val('imagen_url')?'<img src="'+EH(val('imagen_url'))+'">':'')+'<span>'+(val('imagen_url')?T('cambiar'):T('arrastra'))+'</span><input type="file" id="file_imagen_url" accept="image/*" style="display:none"></div><input type="hidden" id="f_imagen_url" value="'+EH(val('imagen_url'))+'">'
+    +'<button type="button" class="btn sm ghost" id="del_imagen_url" style="margin:8px 0 0;color:#C0392B;border-color:#F5C9C9;'+(val('imagen_url')?'':'display:none')+'">🗑 '+(va?'Llevar la imatge':'Quitar la imagen')+'</button>'
     +'<label style="margin-top:16px">'+(va?'Talles / variants (estoc)':'Tallas / variantes (stock)')+'</label>'
     +'<p class="sub" style="margin:0 0 8px">'+(va?'Deixa «Talla» buida per a un producte sense talles. Preu buit = usa el preu base.':'Deja «Talla» vacía para un producto sin tallas. Precio vacío = usa el precio base.')+'</p>'
     +'<div id="varrows"></div>'
@@ -2593,6 +2594,14 @@ function shopProductoForm(i){
   z.addEventListener('dragleave',()=>z.classList.remove('over'));
   z.addEventListener('drop',e=>{e.preventDefault();z.classList.remove('over');if(e.dataTransfer.files[0])subirImg('imagen_url',e.dataTransfer.files[0]);});
   fi.addEventListener('change',()=>{if(fi.files[0])subirImg('imagen_url',fi.files[0]);});
+  const bdel=document.getElementById('del_imagen_url');
+  if(bdel)bdel.addEventListener('click',function(){
+    document.getElementById('f_imagen_url').value='';   // al guardar → imagen_url null
+    const im=z.querySelector('img'); if(im)im.remove();
+    const sp=z.querySelector('span'); if(sp)sp.textContent=T('arrastra');
+    bdel.style.display='none';
+    if(window.updPrev)updPrev();
+  });
   box.querySelector('[data-varadd]').addEventListener('click',()=>shopAddVarRow({}));
   box.querySelector('[data-psave]').addEventListener('click',shopProductoSave);
   box.querySelector('[data-pcancel]').addEventListener('click',()=>{box.innerHTML='';});
@@ -2950,6 +2959,7 @@ window.subirImg=async function(k,file){
       let im=z.querySelector('img');
       if(!im){im=document.createElement('img');z.insertBefore(im,z.firstChild);}
       im.src=r.j.url;sp.textContent=T('cambiar');
+      const db=document.getElementById('del_'+k); if(db)db.style.display='';   // reaparece el botón "quitar"
       if(window.updPrev)updPrev();
     } else sp.textContent=(r.j.error&&r.j.error.message)||'Error';
   }catch(e){sp.textContent='Error: '+e.message;}
