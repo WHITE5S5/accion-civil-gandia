@@ -96,7 +96,7 @@ export default async (req) => {
     // Solo si NO es anónimo (contacto_nombre presente) para no desanonimizar. profiles requiere service role.
     if (row.user_id && row.contacto_nombre && supaConfigured()) {
       const [prof, props] = await Promise.all([
-        supa('GET', `profiles?id=eq.${row.user_id}&select=voluntariado,es_afiliado,es_donante,avatar_url`),
+        supa('GET', `profiles?id=eq.${row.user_id}&select=nombre,voluntariado,es_afiliado,es_donante,avatar_url`),
         supa('GET', `proposals?user_id=eq.${row.user_id}&estado=in.(publicada,aprobada,en_estudio)&select=id,proposal_vote_counts:proposal_vote_counts(a_favor)`),
       ]);
       const pf = (prof.json && prof.json[0]) || {};

@@ -126,7 +126,7 @@ async function api(req, context) {
       await supa('PATCH', `profiles?id=eq.${user.id}`, { es_donante: donanteLive }).catch(() => {});
       perfil.es_donante = donanteLive;
     }
-    const titulos = titulosPayload({ voluntariado: perfil.voluntariado, es_afiliado: perfil.es_afiliado, es_donante: donanteLive }, perfil.lang === 'va' ? 'va' : 'es', true);
+    const titulos = titulosPayload({ nombre: perfil.nombre, voluntariado: perfil.voluntariado, es_afiliado: perfil.es_afiliado, es_donante: donanteLive }, perfil.lang === 'va' ? 'va' : 'es', true);
     return jsonOk({ ok: true, email: user.email, perfil, titulos, propuestas, comentarios, denuncias, pedidos, stats, likesOn, votos: stats.votosEmitidos });
   }
   if (b.action === 'apelar') {                    // usuario bloqueado: manda su alegación al equipo

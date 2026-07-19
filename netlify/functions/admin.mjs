@@ -6,6 +6,7 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 import { rateLimited, sendEmail, emailShell, emailBtn } from './contacto.mjs';
 import { supa, supaConfigured, jsonErr, jsonOk } from './lib/supa.mjs';
+import { titulosPayload } from './lib/titulos.mjs';
 
 // Cuenta oficial de sistema "Acción Civil" (profile creado vía scripts/ensure_system_account.mjs)
 // con la que el equipo publica en el chat de la comunidad desde este panel.
@@ -1070,17 +1071,18 @@ async function api(req, context) {
       if (esSistema(u.email)) { ocultas++; continue; }
       const p = pById[u.id] || {};
       const meta = u.user_metadata || {};
+      const nombre = p.nombre || meta.full_name || meta.name || '';
       items.push({
         id: u.id,
-        nombre: p.nombre || meta.full_name || meta.name || '',
+        nombre,
         email: u.email || '',
         avatar: (p.avatar_url && p.avatar_url !== 'none') ? p.avatar_url : '',
         via: (u.app_metadata && u.app_metadata.provider) || 'email',
         alta: u.created_at || '',
-        afiliado: !!p.es_afiliado,
-        donante: !!p.es_donante,
-        voluntario: p.voluntariado || '',
+        // Títulos reales (presidente 👑 / vecino 🏘️ / afiliado / voluntario / donante). Pasa nombre para detectar al presi.
+        titulos: titulosPayload({ nombre, es_afiliado: p.es_afiliado, es_donante: p.es_donante, voluntariado: p.voluntariado }, 'es', true),
         bloqueado: !!p.bloqueado,
+        afiliado: !!p.es_afiliado, donante: !!p.es_donante, voluntario: p.voluntariado || '',
         nuevoHoy: String(u.created_at || '') >= hoy,
       });
     }
@@ -1635,7 +1637,7 @@ const F={ // definición de formularios por pestaña
  tienda:{titulo:'Tienda',desc:'Productos de merchandising y pedidos de la tienda online.',cols:[],campos:[]}
 };
 const ORDEN=['inicio','posts','events','campaigns','actuaciones','equipo','voluntarios','tesoreria','afiliados','donations','tienda','proposals','comments','contactos','leads','registros','comunidad','reportes','denuncias'];
-const ICONS={inicio:'🏠',posts:'📰',events:'📅',campaigns:'📣',actuaciones:'📍',equipo:'👥',voluntarios:'🙋',tesoreria:'💶',afiliados:'🤝',proposals:'🗳️',comments:'💬',reportes:'🚩',contactos:'✉️',leads:'📬',registros:'🧑‍💻',comunidad:'💭',denuncias:'🛡️',members_inbox:'🎫',donations:'💛',tienda:'🛍️'};
+const ICONS={inicio:'🏠',posts:'📰',events:'📅',campaigns:'📣',actuaciones:'📍',equipo:'👥',voluntarios:'🙋',tesoreria:'💶',afiliados:'🤝',proposals:'🗳️',comments:'💬',reportes:'🚩',contactos:'✉️',leads:'📬',registros:'👤',comunidad:'💭',denuncias:'🛡️',members_inbox:'🎫',donations:'💛',tienda:'🛍️'};
 let TAB='inicio', ROWS=[], BARRIOS=[], POLL=null, AF_MAX_TS=0;
 const EH=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
@@ -2473,7 +2475,7 @@ window.leadsSend=async function(){
 
 // ===== REGISTROS WEB (cuentas creadas en la web) =====
 async function renderRegistros(){
-  const va=LANG==='va', ttl='🧑‍💻 '+(va?'Registres web':'Registros web');
+  const va=LANG==='va', ttl='👤 '+(va?'Registres web':'Registros web');
   $('#main').innerHTML='<div class="page"><h2>'+ttl+'</h2><p class="sub">'+T('cargando')+'</p></div>';
   const r=await call({action:'registros-list'});
   if(!r.j||!r.j.ok){ $('#main').innerHTML='<div class="page"><h2>'+ttl+'</h2><p class="warn">'+((r.j&&r.j.error&&r.j.error.message)||'Error')+'</p></div>'; return; }
@@ -2484,10 +2486,7 @@ async function renderRegistros(){
     ? '<span class="pill" style="background:#EAF3FC;color:#1563C4">Google</span>'
     : '<span class="pill" style="background:#EEF2F7;color:#5C6B7A">'+(va?'Correu':'Email')+'</span>';
   const badge=(t,bg,fg)=>'<span class="pill" style="background:'+bg+';color:'+fg+'">'+t+'</span>';
-  const flags=m=>{ const a=[];
-    if(m.afiliado)a.push(badge('⭐ '+(va?'Afiliat':'Afiliado'),'#FBF0DC','#9A6208'));
-    if(m.voluntario)a.push(badge('🙋 '+(m.voluntario==='colaborador'?(va?'Col·laborador':'Colaborador'):(va?'Voluntari':'Voluntario')),'#E7F4EC','#1E7A45'));
-    if(m.donante)a.push(badge('💛 '+(va?'Donant':'Donante'),'#FDEAEA','#C0392B'));
+  const flags=m=>{ const a=(m.titulos||[]).map(t=>badge((t.emoji?t.emoji+' ':'')+EH(t.label),t.bg||'#EEF2F7',t.color||'#42525F'));
     if(m.bloqueado)a.push(badge('🚫 '+(va?'Bloquejat':'Bloqueado'),'#FDEAEA','#C0392B'));
     return a.join(' ')||'<span class="sub" style="margin:0">—</span>'; };
   const avat=m=> m.avatar
