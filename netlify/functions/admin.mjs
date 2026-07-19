@@ -357,8 +357,12 @@ async function api(req, context) {
           const j = await r.json().catch(() => ({}));
           const us = j.users || [];
           for (const u of us) {
-            const em = String(u.email || '');
-            if (em.endsWith('@seed.acg') || em.endsWith('@acgtest.local') || em.startsWith('sistema-oficial@')) seedIds.push(u.id);
+            const em = String(u.email || '').toLowerCase();
+            // Cuentas técnicas (semillas/pruebas/sistema) → no cuentan como personas.
+            // Incluye @acg-test.local y test_* (antes se colaban e inflaban el contador de miembros).
+            const sys = em.endsWith('@seed.acg') || em.endsWith('@acgtest.local') || em.endsWith('@acg-test.local')
+              || em.endsWith('@acg.test') || em.startsWith('sistema-oficial@') || em.startsWith('moderacion-test@') || em.startsWith('test_');
+            if (sys) seedIds.push(u.id);
             else out.push(u);
           }
           if (us.length < 100) break;
@@ -1037,6 +1041,53 @@ async function api(req, context) {
     return jsonOk({ ok: true });
   }
 
+  // ---- Registros web: personas que han creado cuenta en la web (Supabase Auth) ----
+  if (b.action === 'registros-list') {
+    const k = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    // Cuentas técnicas (semillas de datos, pruebas, cuenta de sistema): NO son personas → se ocultan.
+    const esSistema = (em) => {
+      const e = String(em || '').toLowerCase();
+      return /@seed\.acg$/.test(e) || /@acgtest\.local$/.test(e) || /@acg-test\.local$/.test(e)
+        || /^sistema-oficial@/.test(e) || /^moderacion-test@/.test(e) || /^test_/.test(e) || /@acg\.test$/.test(e);
+    };
+    // 1) usuarios de auth (paginado)
+    const users = [];
+    for (let page = 1; page <= 10; page++) {
+      const r = await fetch(`${process.env.SUPABASE_URL}/auth/v1/admin/users?page=${page}&per_page=100`, { headers: { apikey: k, authorization: `Bearer ${k}` } });
+      const j = await r.json().catch(() => ({}));
+      const us = j.users || [];
+      users.push(...us);
+      if (us.length < 100) break;
+    }
+    // 2) perfiles (nombre, avatar, títulos/flags)
+    const pr = await supa('GET', 'profiles?select=id,nombre,avatar_url,es_afiliado,es_donante,voluntariado,bloqueado');
+    const pById = {};
+    (pr.json || []).forEach((p) => { pById[p.id] = p; });
+    const hoy = madridDayStart(0);
+    let ocultas = 0;
+    const items = [];
+    for (const u of users) {
+      if (esSistema(u.email)) { ocultas++; continue; }
+      const p = pById[u.id] || {};
+      const meta = u.user_metadata || {};
+      items.push({
+        id: u.id,
+        nombre: p.nombre || meta.full_name || meta.name || '',
+        email: u.email || '',
+        avatar: (p.avatar_url && p.avatar_url !== 'none') ? p.avatar_url : '',
+        via: (u.app_metadata && u.app_metadata.provider) || 'email',
+        alta: u.created_at || '',
+        afiliado: !!p.es_afiliado,
+        donante: !!p.es_donante,
+        voluntario: p.voluntariado || '',
+        bloqueado: !!p.bloqueado,
+        nuevoHoy: String(u.created_at || '') >= hoy,
+      });
+    }
+    items.sort((a, b2) => String(b2.alta).localeCompare(String(a.alta)));   // más recientes primero
+    return jsonOk({ ok: true, items, total: items.length, hoy: items.filter((x) => x.nuevoHoy).length, ocultas });
+  }
+
   // ---- Cuotas mensuales de afiliados ----
   if (b.action === 'cuotas-periodo') {
     const periodo = String(b.periodo || '');
@@ -1505,6 +1556,7 @@ const F_VA={
  comunidad:['Comunitat',"Xat de la comunitat. Respons com a compte oficial i moderes missatges."],
  contactos:['Contactes','Missatges rebuts pel formulari de Contacte.'],
  leads:['Subscriptors','Persones subscrites al newsletter i amb opt-in de màrqueting (des de Brevo).'],
+ registros:['Registres web','Persones que han creat un compte a la web (Supabase Auth). Ací els veus créixer.'],
  posts:['Notícies i blog',"Actualitat, comunicats, vídeos i entrevistes. El que es publica apareix al web a l'instant."],
  events:['Agenda','Actes i esdeveniments. Estat "publicado" perquè isquen al web.'],
  campaigns:['Campanyes','La campanya amb "destacada" activada és la que ix a la Home.'],
@@ -1539,6 +1591,7 @@ const F={ // definición de formularios por pestaña
  comunidad:{titulo:'Comunidad',desc:'Chat de la comunidad. Respondes como cuenta oficial y moderas mensajes.',cols:[],campos:[]},
  contactos:{titulo:'Contactos',desc:'Mensajes recibidos por el formulario de Contacto.',cols:[],campos:[]},
  leads:{titulo:'Suscriptores',desc:'Personas suscritas al newsletter y con opt-in de marketing (desde Brevo).',cols:[],campos:[]},
+ registros:{titulo:'Registros web',desc:'Personas que han creado una cuenta en la web (Supabase Auth). Aquí los ves crecer.',cols:[],campos:[]},
  posts:{titulo:'Noticias y blog',desc:'Actualidad, comunicados, vídeos y entrevistas. Lo publicado aparece en la web al momento.',cols:[['titulo_es','Título'],['tipo','Tipo'],['estado','Estado'],['publicado_at','Publicado']],campos:[
   ['tipo','Tipo','select',['noticia','comunicado','video','entrevista']],['estado','Estado','select',['borrador','publicado','archivado']],
   ['titulo_es','Título (ES)','text'],['titulo_va','Título (VA) — si lo dejas vacío se traduce solo','text'],
@@ -1581,8 +1634,8 @@ const F={ // definición de formularios por pestaña
  donations:{titulo:'Donaciones',desc:'Donaciones recibidas (Fase 4). Export completo para Tribunal de Cuentas: ver spec.',cols:[['donor_nombre','Nombre'],['importe_cents','Importe'],['created_at','Fecha'],['estado','Estado'],['liquidada_at','Ingresada']],campos:[]},
  tienda:{titulo:'Tienda',desc:'Productos de merchandising y pedidos de la tienda online.',cols:[],campos:[]}
 };
-const ORDEN=['inicio','posts','events','campaigns','actuaciones','equipo','voluntarios','tesoreria','afiliados','donations','tienda','proposals','comments','contactos','leads','comunidad','reportes','denuncias'];
-const ICONS={inicio:'🏠',posts:'📰',events:'📅',campaigns:'📣',actuaciones:'📍',equipo:'👥',voluntarios:'🙋',tesoreria:'💶',afiliados:'🤝',proposals:'🗳️',comments:'💬',reportes:'🚩',contactos:'✉️',leads:'📬',comunidad:'💭',denuncias:'🛡️',members_inbox:'🎫',donations:'💛',tienda:'🛍️'};
+const ORDEN=['inicio','posts','events','campaigns','actuaciones','equipo','voluntarios','tesoreria','afiliados','donations','tienda','proposals','comments','contactos','leads','registros','comunidad','reportes','denuncias'];
+const ICONS={inicio:'🏠',posts:'📰',events:'📅',campaigns:'📣',actuaciones:'📍',equipo:'👥',voluntarios:'🙋',tesoreria:'💶',afiliados:'🤝',proposals:'🗳️',comments:'💬',reportes:'🚩',contactos:'✉️',leads:'📬',registros:'🧑‍💻',comunidad:'💭',denuncias:'🛡️',members_inbox:'🎫',donations:'💛',tienda:'🛍️'};
 let TAB='inicio', ROWS=[], BARRIOS=[], POLL=null, AF_MAX_TS=0;
 const EH=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
@@ -1629,6 +1682,7 @@ async function render(){
   if(TAB==='comunidad')return renderComunidad();
   if(TAB==='contactos')return renderContactos();
   if(TAB==='leads')return renderLeads();
+  if(TAB==='registros')return renderRegistros();
   if(TAB==='proposals')return renderModeracion();
   if(TAB==='comments')return renderComments();
   if(TAB==='reportes')return renderReportes();
@@ -2415,6 +2469,55 @@ window.leadsSend=async function(){
   if(btn){ btn.disabled=false; btn.textContent=va?'Enviar el butlletí':'Enviar el boletín'; }
   if(r.j&&r.j.ok){ toast(va?'Correu enviat ✓':'Correo enviado ✓'); var s=$('#lsubj'),c=$('#lbody'); if(s)s.value=''; if(c)c.value=''; window.leadsPrev(); }
   else toast((r.j.error&&r.j.error.message)||'Error',{error:true});
+};
+
+// ===== REGISTROS WEB (cuentas creadas en la web) =====
+async function renderRegistros(){
+  const va=LANG==='va', ttl='🧑‍💻 '+(va?'Registres web':'Registros web');
+  $('#main').innerHTML='<div class="page"><h2>'+ttl+'</h2><p class="sub">'+T('cargando')+'</p></div>';
+  const r=await call({action:'registros-list'});
+  if(!r.j||!r.j.ok){ $('#main').innerHTML='<div class="page"><h2>'+ttl+'</h2><p class="warn">'+((r.j&&r.j.error&&r.j.error.message)||'Error')+'</p></div>'; return; }
+  const items=r.j.items||[]; window._registros=items;
+  const fReg=iso=>{ if(!iso)return '—'; try{ return new Date(iso).toLocaleString('es-ES',{timeZone:'Europe/Madrid',day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}); }catch(e){ return String(iso).slice(0,10); } };
+  const ini=n=>((String(n||'').trim().split(/\s+/).map(w=>w[0]||'').join('').slice(0,2).toUpperCase())||'··');
+  const via=v=>v==='google'
+    ? '<span class="pill" style="background:#EAF3FC;color:#1563C4">Google</span>'
+    : '<span class="pill" style="background:#EEF2F7;color:#5C6B7A">'+(va?'Correu':'Email')+'</span>';
+  const badge=(t,bg,fg)=>'<span class="pill" style="background:'+bg+';color:'+fg+'">'+t+'</span>';
+  const flags=m=>{ const a=[];
+    if(m.afiliado)a.push(badge('⭐ '+(va?'Afiliat':'Afiliado'),'#FBF0DC','#9A6208'));
+    if(m.voluntario)a.push(badge('🙋 '+(m.voluntario==='colaborador'?(va?'Col·laborador':'Colaborador'):(va?'Voluntari':'Voluntario')),'#E7F4EC','#1E7A45'));
+    if(m.donante)a.push(badge('💛 '+(va?'Donant':'Donante'),'#FDEAEA','#C0392B'));
+    if(m.bloqueado)a.push(badge('🚫 '+(va?'Bloquejat':'Bloqueado'),'#FDEAEA','#C0392B'));
+    return a.join(' ')||'<span class="sub" style="margin:0">—</span>'; };
+  const avat=m=> m.avatar
+    ? '<img src="'+EH(m.avatar)+'" alt="" referrerpolicy="no-referrer" style="width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0">'
+    : '<span style="width:34px;height:34px;border-radius:50%;flex-shrink:0;background:#0B7580;color:#fff;font:800 12px Public Sans;display:inline-flex;align-items:center;justify-content:center">'+EH(ini(m.nombre||m.email))+'</span>';
+  const rows=items.map(m=>'<tr>'
+    +'<td><span style="display:inline-flex;align-items:center;gap:9px">'+avat(m)+'<b style="font-weight:700;color:#17232F">'+EH(m.nombre||(va?'(sense nom)':'(sin nombre)'))+'</b></span></td>'
+    +'<td><a href="mailto:'+EH(m.email)+'" style="color:#1563C4">'+EH(m.email)+'</a></td>'
+    +'<td style="white-space:nowrap">'+EH(fReg(m.alta))+(m.nuevoHoy?' <span class="pill" style="background:#E7F4EC;color:#1E7A45">'+(va?'nou':'nuevo')+'</span>':'')+'</td>'
+    +'<td>'+via(m.via)+'</td>'
+    +'<td>'+flags(m)+'</td></tr>').join('');
+  $('#main').innerHTML='<div class="page">'
+    +'<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><div style="flex:1"><h2>'+ttl+'</h2>'
+    +'<p class="sub" style="margin:0">'+(va?'Persones que han creat un compte a la web. Ací els veus créixer.':'Personas que han creado una cuenta en la web. Aquí los ves crecer.')+'</p></div>'
+    +'<button class="btn" style="background:#EEF2F7;color:#42525F" onclick="window.registrosCsv()">'+(va?'Exportar CSV':'Exportar CSV')+'</button></div>'
+    +'<div class="stats" style="margin-top:16px">'
+    +'<div class="stat" style="background:#0A2A5E;border-color:#0A2A5E"><b style="color:#F6BE18">'+items.length+'</b><span style="color:#cdd9ec;font-weight:600">'+(va?'registres reals':'registros reales')+'</span></div>'
+    +(r.j.hoy?'<div class="stat"><b style="color:#1E7A45">+'+r.j.hoy+'</b>'+(va?'hui':'hoy')+'</div>':'')
+    +'</div>'
+    +(r.j.ocultas?'<p class="sub" style="margin:2px 0 10px;font-size:12.5px">'+(va?'S’oculten ':'Se ocultan ')+r.j.ocultas+(va?' comptes de sistema/proves (llavors, tests).':' cuentas de sistema/pruebas (semillas, tests).')+'</p>':'')
+    +(items.length?SRCH(va?'Busca per nom o email…':'Buscar por nombre o email…')+'<table><thead><tr><th>'+(va?'Persona':'Persona')+'</th><th>Email</th><th>'+(va?'Alta':'Alta')+'</th><th>'+(va?'Via':'Vía')+'</th><th>'+(va?'Títols':'Títulos')+'</th></tr></thead><tbody>'+rows+'</tbody></table>':'<p class="sub">'+(va?'Encara no hi ha registres.':'Aún no hay registros.')+'</p>')
+    +'</div>';
+}
+window.registrosCsv=function(){
+  const items=window._registros||[]; if(!items.length)return;
+  const esc=s=>'"'+String(s==null?'':s).replace(/"/g,'""')+'"';
+  const head=['Nombre','Email','Alta','Via','Afiliado','Voluntario','Donante','Bloqueado'];
+  const lines=items.map(m=>[m.nombre,m.email,m.alta,m.via,m.afiliado?'si':'',m.voluntario||'',m.donante?'si':'',m.bloqueado?'si':''].map(esc).join(','));
+  const csv=head.map(esc).join(',')+'\\n'+lines.join('\\n');
+  const a=document.createElement('a'); a.href='data:text/csv;charset=utf-8,﻿'+encodeURIComponent(csv); a.download='registros-web.csv'; a.click();
 };
 
 // ===== TIENDA (productos + pedidos) =====
